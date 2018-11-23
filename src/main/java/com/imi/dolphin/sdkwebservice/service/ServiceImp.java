@@ -823,14 +823,20 @@ public class ServiceImp implements IService {
     @Override
     public ExtensionResult dogetHargaMobil(ExtensionRequest extensionRequest) {
         Map<String, String> output = new HashMap<>();
-        QuickReplyBuilder quickReplyBuilder = new QuickReplyBuilder.Builder("Daftar Harga Mobil")
-                .add("Ayla", "130000000")
-                .add("Agya", "128000000")
-                .add("All New Yaris", "260000000")
-                .add("Grand Sedona", "300000000")
-                .build();
+        
+        StringBuilder respBuilder = new StringBuilder();
+        respBuilder.append("Ayla = 130000000\n")
+                .append("Agya = 128000000\n")
+                .append("All New Yaris = 260000000");
+        
+//        QuickReplyBuilder quickReplyBuilder = new QuickReplyBuilder.Builder("Daftar Harga Mobil")
+//                .add("Ayla", "130000000")
+//                .add("Agya", "128000000")
+//                .add("All New Yaris", "260000000")
+//                .add("Grand Sedona", "300000000")
+//                .build();
 
-        output.put(OUTPUT, quickReplyBuilder.string());
+        output.put(OUTPUT, respBuilder.toString());
         ExtensionResult extensionResult = new ExtensionResult();
         extensionResult.setAgent(false);
         extensionResult.setRepeat(false);
@@ -840,4 +846,5 @@ public class ServiceImp implements IService {
         return extensionResult;
     }
 
+    
 }
