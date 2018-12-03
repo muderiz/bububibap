@@ -149,7 +149,6 @@ public class Controller {
     }
 
     @RequestMapping(path = "/getMerkMobil", method = RequestMethod.GET)
-    @PostMapping
     public ResponseEntity<List<MerkMobil>> listUser() {
         return new ResponseEntity<>(getMerks(), HttpStatus.OK);
     }
