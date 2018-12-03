@@ -846,5 +846,10 @@ public class ServiceImp implements IService {
         return extensionResult;
     }
 
+    @Override
+    public ExtensionResult dogetMerkMobil(ExtensionRequest extensionRequest) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
     
 }

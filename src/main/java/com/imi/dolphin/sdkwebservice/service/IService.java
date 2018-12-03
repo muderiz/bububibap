@@ -57,5 +57,8 @@ public interface IService {
         
         ExtensionResult dogetHargaMobil(ExtensionRequest extensionRequest);
         
+        ExtensionResult dogetMerkMobil(ExtensionRequest extensionRequest);
+        
         ExtensionResult doGetCuaca(String kota, ExtensionRequest extensionRequest);
+        
 }
