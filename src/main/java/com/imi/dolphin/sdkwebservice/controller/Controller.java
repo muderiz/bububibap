@@ -255,7 +255,6 @@ public class Controller {
         bmw13.setType("mvp");
         bmw13.setModel("BMW X6 M");
         
-        
         return Arrays.asList(bmw, bmw1, bmw2, bmw3, bmw4, bmw5, bmw6,
                              bmw7, bmw8, bmw9, bmw10, bmw11, bmw12, bmw13);
     }
