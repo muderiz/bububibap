@@ -9,7 +9,7 @@ package com.imi.dolphin.sdkwebservice.model;
  *
  * @author USER
  */
-public class BMWModel {
+public class ToyotaModel {
     private String id;
     private String type;
     private String model;

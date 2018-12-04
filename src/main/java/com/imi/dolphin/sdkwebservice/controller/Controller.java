@@ -12,7 +12,7 @@
  */
 package com.imi.dolphin.sdkwebservice.controller;
 
-import com.imi.dolphin.sdkwebservice.model.BMWModel;
+import com.imi.dolphin.sdkwebservice.model.ToyotaModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -155,7 +155,7 @@ public class Controller {
     }
     
     @RequestMapping(path = "/getBMW", method = RequestMethod.GET)
-    public ResponseEntity<List<BMWModel>> listBMW() {
+    public ResponseEntity<List<ToyotaModel>> listBMW() {
         return new ResponseEntity<>(getBMW(), HttpStatus.OK);
     }
 
@@ -183,80 +183,95 @@ public class Controller {
         return Arrays.asList(merk, merk1, merk2, merk3, merk4);
     }
 
-    private List<BMWModel> getBMW() {
+    private List<ToyotaModel> getBMW() {
 
-        BMWModel bmw = new BMWModel();
-        bmw.setId("1");
-        bmw.setType("sedan");
-        bmw.setModel("BMW 3 Series");
+        ToyotaModel tm = new ToyotaModel();
+        tm.setId("1");
+        tm.setType("hatchback");
+        tm.setModel("New Yaris");
 
-        BMWModel bmw1 = new BMWModel();
-        bmw1.setId("2");
-        bmw1.setType("sedan");
-        bmw1.setModel("BMW M3");
+        ToyotaModel tm1 = new ToyotaModel();
+        tm1.setId("2");
+        tm1.setType("hatchback");
+        tm1.setModel("New Agya");
 
-        BMWModel bmw2 = new BMWModel();
-        bmw2.setId("3");
-        bmw2.setType("sedan");
-        bmw2.setModel("BMW 5 Series");
+        ToyotaModel tm2 = new ToyotaModel();
+        tm2.setId("3");
+        tm2.setType("suv");
+        tm2.setModel("All New C-HR");
 
-        BMWModel bmw3 = new BMWModel();
-        bmw3.setId("4");
-        bmw3.setType("sedan");
-        bmw3.setModel("All New BMW 7 Series");
+        ToyotaModel tm3 = new ToyotaModel();
+        tm3.setId("4");
+        tm3.setType("suv");
+        tm3.setModel("Land Cruiser");
 
-        BMWModel bmw4 = new BMWModel();
-        bmw4.setId("5");
-        bmw4.setType("sedan");
-        bmw4.setModel("BMW M5 with M xDrive");
+        ToyotaModel tm4 = new ToyotaModel();
+        tm4.setId("5");
+        tm4.setType("suv");
+        tm4.setModel("Fortuner");
 
-        BMWModel bmw5 = new BMWModel();
-        bmw5.setId("6");
-        bmw5.setType("hatchback");
-        bmw5.setModel("BMW 1 Series 5-door");
+        ToyotaModel tm5 = new ToyotaModel();
+        tm5.setId("6");
+        tm5.setType("suv");
+        tm5.setModel("All New Rush");
 
-        BMWModel bmw6 = new BMWModel();
-        bmw6.setId("7");
-        bmw6.setType("suv");
-        bmw6.setModel("BMW X1");
+        ToyotaModel tm6 = new ToyotaModel();
+        tm6.setId("7");
+        tm6.setType("sedan");
+        tm6.setModel("New Vios");
 
-        BMWModel bmw7 = new BMWModel();
-        bmw7.setId("8");
-        bmw7.setType("suv");
-        bmw7.setModel("BMW X3");
+        ToyotaModel tm7 = new ToyotaModel();
+        tm7.setId("8");
+        tm7.setType("sedan");
+        tm7.setModel("New Camry");
 
-        BMWModel bmw8 = new BMWModel();
-        bmw8.setId("9");
-        bmw8.setType("suv");
-        bmw8.setModel("BMW X5");
+        ToyotaModel tm8 = new ToyotaModel();
+        tm8.setId("9");
+        tm8.setType("sedan");
+        tm8.setModel("New Corolla Altis");
 
-        BMWModel bmw9 = new BMWModel();
-        bmw9.setId("10");
-        bmw9.setType("suv");
-        bmw9.setModel("BMW X5 M");
+        ToyotaModel tm9 = new ToyotaModel();
+        tm9.setId("10");
+        tm9.setType("mvp");
+        tm9.setModel("Avanza");
         
-        BMWModel bmw10 = new BMWModel();
-        bmw10.setId("11");
-        bmw10.setType("mvp");
-        bmw10.setModel("BMW X2");
+        ToyotaModel tm10 = new ToyotaModel();
+        tm10.setId("11");
+        tm10.setType("mvp");
+        tm10.setModel("Veloz");
 
-        BMWModel bmw11 = new BMWModel();
-        bmw11.setId("12");
-        bmw11.setType("mvp");
-        bmw11.setModel("BMW X4");
+        ToyotaModel tm11 = new ToyotaModel();
+        tm11.setId("12");
+        tm11.setType("mvp");
+        tm11.setModel("Calya");
 
-        BMWModel bmw12 = new BMWModel();
-        bmw12.setId("13");
-        bmw12.setType("mvp");
-        bmw12.setModel("BMW X6");
+        ToyotaModel tm12 = new ToyotaModel();
+        tm12.setId("13");
+        tm12.setType("mvp");
+        tm12.setModel("All New Voxy");
 
-        BMWModel bmw13 = new BMWModel();
-        bmw13.setId("14");
-        bmw13.setType("mvp");
-        bmw13.setModel("BMW X6 M");
+        ToyotaModel tm13 = new ToyotaModel();
+        tm13.setId("14");
+        tm13.setType("mvp");
+        tm13.setModel("Kijang Inova");
         
-        return Arrays.asList(bmw, bmw1, bmw2, bmw3, bmw4, bmw5, bmw6,
-                             bmw7, bmw8, bmw9, bmw10, bmw11, bmw12, bmw13);
+        ToyotaModel tm14 = new ToyotaModel();
+        tm14.setId("15");
+        tm14.setType("mvp");
+        tm14.setModel("New Sienta");
+        
+        ToyotaModel tm15 = new ToyotaModel();
+        tm15.setId("16");
+        tm15.setType("mvp");
+        tm15.setModel("New Alphard");
+        
+        ToyotaModel tm16 = new ToyotaModel();
+        tm16.setId("17");
+        tm16.setType("mvp");
+        tm16.setModel("New Vellfire");
+        
+        return Arrays.asList(tm, tm1, tm2, tm3, tm4, tm5, tm6, tm7, tm8,
+                            tm9, tm10, tm11, tm12, tm13, tm14, tm15, tm16);
     }
 
 }
