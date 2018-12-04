@@ -235,8 +235,29 @@ public class Controller {
         bmw9.setType("suv");
         bmw9.setModel("BMW X5 M");
         
+        BMWModel bmw10 = new BMWModel();
+        bmw10.setId("11");
+        bmw10.setType("mvp");
+        bmw10.setModel("BMW X2");
+
+        BMWModel bmw11 = new BMWModel();
+        bmw11.setId("12");
+        bmw11.setType("mvp");
+        bmw11.setModel("BMW X4");
+
+        BMWModel bmw12 = new BMWModel();
+        bmw12.setId("13");
+        bmw12.setType("mvp");
+        bmw12.setModel("BMW X6");
+
+        BMWModel bmw13 = new BMWModel();
+        bmw13.setId("14");
+        bmw13.setType("mvp");
+        bmw13.setModel("BMW X6 M");
         
-        return Arrays.asList(bmw, bmw1, bmw2, bmw3, bmw4, bmw5, bmw6, bmw7, bmw8, bmw9);
+        
+        return Arrays.asList(bmw, bmw1, bmw2, bmw3, bmw4, bmw5, bmw6,
+                             bmw7, bmw8, bmw9, bmw10, bmw11, bmw12, bmw13);
     }
 
 }
