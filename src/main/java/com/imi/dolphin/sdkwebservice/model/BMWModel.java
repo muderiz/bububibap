@@ -9,12 +9,11 @@ package com.imi.dolphin.sdkwebservice.model;
  *
  * @author USER
  */
-public class MerkMobil {
-
+public class BMWModel {
     private String id;
-    private String merk;
+    private String type;
+    private String model;
 
-    
     public String getId() {
         return id;
     }
@@ -23,14 +22,22 @@ public class MerkMobil {
         this.id = id;
     }
 
-    public String getMerk() {
-        return merk;
+    public String getType() {
+        return type;
     }
 
-    public void setMerk(String merk) {
-        this.merk = merk;
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
     }
     
     
-
+    
 }

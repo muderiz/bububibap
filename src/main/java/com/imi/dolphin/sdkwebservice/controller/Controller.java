@@ -12,6 +12,7 @@
  */
 package com.imi.dolphin.sdkwebservice.controller;
 
+import com.imi.dolphin.sdkwebservice.model.BMWModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -149,8 +150,13 @@ public class Controller {
     }
 
     @RequestMapping(path = "/getMerkMobil", method = RequestMethod.GET)
-    public ResponseEntity<List<MerkMobil>> listUser() {
+    public ResponseEntity<List<MerkMobil>> listMerks() {
         return new ResponseEntity<>(getMerks(), HttpStatus.OK);
+    }
+    
+    @RequestMapping(path = "/getBMW", method = RequestMethod.GET)
+    public ResponseEntity<List<BMWModel>> listBMW() {
+        return new ResponseEntity<>(getBMW(), HttpStatus.OK);
     }
 
     private List<MerkMobil> getMerks() {
@@ -176,4 +182,61 @@ public class Controller {
 
         return Arrays.asList(merk, merk1, merk2, merk3, merk4);
     }
+
+    private List<BMWModel> getBMW() {
+
+        BMWModel bmw = new BMWModel();
+        bmw.setId("1");
+        bmw.setType("sedan");
+        bmw.setModel("BMW 3 Series");
+
+        BMWModel bmw1 = new BMWModel();
+        bmw1.setId("2");
+        bmw1.setType("sedan");
+        bmw1.setModel("BMW M3");
+
+        BMWModel bmw2 = new BMWModel();
+        bmw2.setId("3");
+        bmw2.setType("sedan");
+        bmw2.setModel("BMW 5 Series");
+
+        BMWModel bmw3 = new BMWModel();
+        bmw3.setId("4");
+        bmw3.setType("sedan");
+        bmw3.setModel("All New BMW 7 Series");
+
+        BMWModel bmw4 = new BMWModel();
+        bmw4.setId("5");
+        bmw4.setType("sedan");
+        bmw4.setModel("BMW M5 with M xDrive");
+
+        BMWModel bmw5 = new BMWModel();
+        bmw5.setId("6");
+        bmw5.setType("hatchback");
+        bmw5.setModel("BMW 1 Series 5-door");
+
+        BMWModel bmw6 = new BMWModel();
+        bmw6.setId("7");
+        bmw6.setType("suv");
+        bmw6.setModel("BMW X1");
+
+        BMWModel bmw7 = new BMWModel();
+        bmw7.setId("8");
+        bmw7.setType("suv");
+        bmw7.setModel("BMW X3");
+
+        BMWModel bmw8 = new BMWModel();
+        bmw8.setId("9");
+        bmw8.setType("suv");
+        bmw8.setModel("BMW X5");
+
+        BMWModel bmw9 = new BMWModel();
+        bmw9.setId("10");
+        bmw9.setType("suv");
+        bmw9.setModel("BMW X5 M");
+        
+        
+        return Arrays.asList(bmw, bmw1, bmw2, bmw3, bmw4, bmw5, bmw6, bmw7, bmw8, bmw9);
+    }
+
 }
