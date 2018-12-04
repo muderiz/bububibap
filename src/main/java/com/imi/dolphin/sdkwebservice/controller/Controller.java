@@ -156,7 +156,7 @@ public class Controller {
     
     @RequestMapping(path = "/getToyota", method = RequestMethod.GET)
     public ResponseEntity<List<ToyotaModel>> listBMW() {
-        return new ResponseEntity<>(getBMW(), HttpStatus.OK);
+        return new ResponseEntity<>(getToyota(), HttpStatus.OK);
     }
 
     private List<MerkMobil> getMerks() {
@@ -183,7 +183,7 @@ public class Controller {
         return Arrays.asList(merk, merk1, merk2, merk3, merk4);
     }
 
-    private List<ToyotaModel> getBMW() {
+    private List<ToyotaModel> getToyota() {
 
         ToyotaModel tm = new ToyotaModel();
         tm.setId("1");
