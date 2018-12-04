@@ -154,7 +154,7 @@ public class Controller {
         return new ResponseEntity<>(getMerks(), HttpStatus.OK);
     }
     
-    @RequestMapping(path = "/getBMW", method = RequestMethod.GET)
+    @RequestMapping(path = "/getToyota", method = RequestMethod.GET)
     public ResponseEntity<List<ToyotaModel>> listBMW() {
         return new ResponseEntity<>(getBMW(), HttpStatus.OK);
     }
