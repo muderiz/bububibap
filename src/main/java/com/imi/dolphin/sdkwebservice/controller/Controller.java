@@ -232,7 +232,7 @@ public class Controller {
 
         ToyotaModel tm9 = new ToyotaModel();
         tm9.setId("10");
-        tm9.setType("mvp");
+        tm9.setType("mpv");
         tm9.setModel("Avanza");
         
         ToyotaModel tm10 = new ToyotaModel();
