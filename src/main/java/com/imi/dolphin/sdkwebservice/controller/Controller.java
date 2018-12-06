@@ -237,37 +237,37 @@ public class Controller {
         
         ToyotaModel tm10 = new ToyotaModel();
         tm10.setId("11");
-        tm10.setType("mvp");
+        tm10.setType("mpv");
         tm10.setModel("Veloz");
 
         ToyotaModel tm11 = new ToyotaModel();
         tm11.setId("12");
-        tm11.setType("mvp");
+        tm11.setType("mpv");
         tm11.setModel("Calya");
 
         ToyotaModel tm12 = new ToyotaModel();
         tm12.setId("13");
-        tm12.setType("mvp");
+        tm12.setType("mpv");
         tm12.setModel("All New Voxy");
 
         ToyotaModel tm13 = new ToyotaModel();
         tm13.setId("14");
-        tm13.setType("mvp");
+        tm13.setType("mpv");
         tm13.setModel("Kijang Inova");
         
         ToyotaModel tm14 = new ToyotaModel();
         tm14.setId("15");
-        tm14.setType("mvp");
+        tm14.setType("mpv");
         tm14.setModel("New Sienta");
         
         ToyotaModel tm15 = new ToyotaModel();
         tm15.setId("16");
-        tm15.setType("mvp");
+        tm15.setType("mpv");
         tm15.setModel("New Alphard");
         
         ToyotaModel tm16 = new ToyotaModel();
         tm16.setId("17");
-        tm16.setType("mvp");
+        tm16.setType("mpv");
         tm16.setModel("New Vellfire");
         
         return Arrays.asList(tm, tm1, tm2, tm3, tm4, tm5, tm6, tm7, tm8,
