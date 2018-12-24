@@ -274,4 +274,23 @@ public class Controller {
                             tm9, tm10, tm11, tm12, tm13, tm14, tm15, tm16);
     }
 
+    
+    
+    @RequestMapping("/getstarted")
+    @PostMapping
+    public ExtensionResult doGetStarted(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.doGetStarted(extensionRequest);
+    }
+    
+    @RequestMapping("/getdoctorbyhospitalid")
+    @PostMapping
+    public ExtensionResult doGetDoctorByHospital(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.doGetDokterByHospital(extensionRequest);
+    }
+    
+    @RequestMapping("/gethospital")
+    @PostMapping
+    public ExtensionResult doGetHospital(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.doGetHospital(extensionRequest);
+    }
 }

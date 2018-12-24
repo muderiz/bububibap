@@ -61,4 +61,11 @@ public interface IService {
         
         ExtensionResult doGetCuaca(String kota, ExtensionRequest extensionRequest);
         
+        ExtensionResult doGetDokterByHospital(ExtensionRequest extensionRequest);
+        
+        ExtensionResult doGetHospital(ExtensionRequest extensionRequest);
+        
+        
+        ExtensionResult doGetStarted(ExtensionRequest extensionRequest);
+        
 }

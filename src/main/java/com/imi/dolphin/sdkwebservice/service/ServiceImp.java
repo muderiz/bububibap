@@ -64,6 +64,7 @@ public class ServiceImp implements IService {
     private static final String SAMPLE_IMAGE_PATH = "https://goo.gl/SHdL8D";
     private static final String Image_cuti = "https://image.ibb.co/eAshTV/bot.jpg";
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+     private static final String CONSTANT_SPLIT_SYNTAX = "&split&";
     @Autowired
     AppProperties appProperties;
 
@@ -443,35 +444,6 @@ public class ServiceImp implements IService {
     }
 
     /*
-	 * Send Location
-	 * 
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.imi.dolphin.sdkwebservice.service.IService#doSendLocation(com.imi.dolphin
-	 * .sdkwebservice.model.ExtensionRequest)
-     */
-    @Override
-    public ExtensionResult doSendLocation(ExtensionRequest extensionRequest) {
-        Map<String, String> output = new HashMap<>();
-        Double latitude = extensionRequest.getIntent().getTicket().getLatitude();
-        Double longitude = extensionRequest.getIntent().getTicket().getLongitude();
-//        String latitude = getEasyMapValueByName(extensionRequest, "latitude");
-//        String longitude = getEasyMapValueByName(extensionRequest, "longitude");
-        QuickReplyBuilder quickReplyBuilder = new QuickReplyBuilder.Builder("Kirim lokasi kakak ya...")
-                .add("" + latitude, "" + longitude).build();
-        output.put(OUTPUT, quickReplyBuilder.string());
-
-        ExtensionResult extensionResult = new ExtensionResult();
-        extensionResult.setAgent(false);
-        extensionResult.setRepeat(false);
-        extensionResult.setSuccess(true);
-        extensionResult.setNext(true);
-        extensionResult.setValue(output);
-        return extensionResult;
-    }
-
-    /*
 	 * Generate Image
 	 * 
 	 * (non-Javadoc)
@@ -801,10 +773,12 @@ public class ServiceImp implements IService {
                 sc.close();
             }
             JSONObject obj = new JSONObject(inline);
-            
-            JSONObject main = obj.getJSONObject("main");
-            int temp = main.getInt("temp");
-            inline = temp + "";
+
+            JSONObject main = obj.getJSONObject("data");
+            String doctorId = main.getString("doctor_id");
+            String doctorName = main.getString("doctor_name");
+
+            inline = doctorId;
         } catch (MalformedURLException ex) {
             Logger.getLogger(ServiceImp.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -818,24 +792,22 @@ public class ServiceImp implements IService {
         extensionResult.setValue(output);
         return extensionResult;
     }
-    
-    
+
     @Override
     public ExtensionResult dogetHargaMobil(ExtensionRequest extensionRequest) {
         Map<String, String> output = new HashMap<>();
-        
+
         StringBuilder respBuilder = new StringBuilder();
         respBuilder.append("Ayla = 130000000\n")
                 .append("Agya = 128000000\n")
                 .append("All New Yaris = 260000000");
-        
+
 //        QuickReplyBuilder quickReplyBuilder = new QuickReplyBuilder.Builder("Daftar Harga Mobil")
 //                .add("Ayla", "130000000")
 //                .add("Agya", "128000000")
 //                .add("All New Yaris", "260000000")
 //                .add("Grand Sedona", "300000000")
 //                .build();
-
         output.put(OUTPUT, respBuilder.toString());
         ExtensionResult extensionResult = new ExtensionResult();
         extensionResult.setAgent(false);
@@ -851,5 +823,242 @@ public class ServiceImp implements IService {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /**
+     * Method Started Siloam
+     *
+     * @param extensionRequest
+     * @return
+     */
+    @Override
+    public ExtensionResult doGetStarted(ExtensionRequest extensionRequest) {
+        Map<String, String> output = new HashMap<>();
+
+        //Nearest Hospitals(NH)
+        ButtonTemplate button = new ButtonTemplate();
+        button.setPictureLink(SAMPLE_IMAGE_PATH);
+        button.setPicturePath(SAMPLE_IMAGE_PATH);
+        button.setTitle("My Nearest Hospitals");
+//        button.setSubTitle("");
+        List<EasyMap> actions = new ArrayList<>();
+        EasyMap bookActionNH = new EasyMap();
+        EasyMap bookActionNH2 = new EasyMap();
+        bookActionNH.setName("Find Hospitals");
+        bookActionNH.setValue("");
+        actions.add(bookActionNH);
+        bookActionNH2.setName("Call Us");
+        bookActionNH2.setValue("");
+        actions.add(bookActionNH2);
+        button.setButtonValues(actions);
+        ButtonBuilder buttonBuilder = new ButtonBuilder(button);
+
+        //Make an Appointment(MAP)
+        ButtonTemplate button2 = new ButtonTemplate();
+        button2.setPictureLink(SAMPLE_IMAGE_PATH);
+        button2.setPicturePath(SAMPLE_IMAGE_PATH);
+        button2.setTitle("Make an appointment");
+//        button2.setSubTitle("");
+        List<EasyMap> actions2 = new ArrayList<>();
+        EasyMap bookActionMAP = new EasyMap();
+        EasyMap bookActionMAP2 = new EasyMap();
+        EasyMap bookActionMAP3 = new EasyMap();
+        bookActionMAP.setName("Book Online");
+        bookActionMAP.setValue("");
+        actions2.add(bookActionMAP);
+        bookActionMAP2.setName("By Phone");
+        bookActionMAP2.setValue("");
+        actions2.add(bookActionMAP2);
+        bookActionMAP3.setName("Doctor Schedule");
+        bookActionMAP3.setValue("");
+        actions2.add(bookActionMAP3);
+        button2.setButtonValues(actions2);
+        ButtonBuilder buttonBuilder2 = new ButtonBuilder(button2);
+
+        //Medical Check Up(MCU)
+        ButtonTemplate button3 = new ButtonTemplate();
+        button3.setPictureLink(SAMPLE_IMAGE_PATH);
+        button3.setPicturePath(SAMPLE_IMAGE_PATH);
+        button3.setTitle("Medical Check Up");
+//        button3.setSubTitle(" ");
+        List<EasyMap> actions3 = new ArrayList<>();
+        EasyMap bookActionMCU = new EasyMap();
+        EasyMap bookActionMCU2 = new EasyMap();
+        bookActionMCU.setName("Find Package");
+        bookActionMCU.setValue("");
+        actions3.add(bookActionMCU);
+        bookActionMCU2.setName("Preperation Guidelines");
+        bookActionMCU2.setValue("");
+        actions3.add(bookActionMCU2);
+        button3.setButtonValues(actions3);
+        ButtonBuilder buttonBuilder3 = new ButtonBuilder(button3);
+
+        //Enquiry(Enq)
+        ButtonTemplate button4 = new ButtonTemplate();
+        button4.setPictureLink(SAMPLE_IMAGE_PATH);
+        button4.setPicturePath(SAMPLE_IMAGE_PATH);
+        button4.setTitle("Enquiry");
+//        button4.setSubTitle("");
+        List<EasyMap> actions4 = new ArrayList<>();
+        EasyMap bookActionEnq = new EasyMap();
+        bookActionEnq.setName("F.A.Q");
+        bookActionEnq.setValue("");
+        actions4.add(bookActionEnq);
+        button4.setButtonValues(actions4);
+        ButtonBuilder buttonBuilder4 = new ButtonBuilder(button4);
+
+        //Feedback(Feed)
+        ButtonTemplate button5 = new ButtonTemplate();
+        button5.setPictureLink(SAMPLE_IMAGE_PATH);
+        button5.setPicturePath(SAMPLE_IMAGE_PATH);
+        button5.setTitle("Feedbacks");
+//        button5.setSubTitle("");
+        List<EasyMap> actions5 = new ArrayList<>();
+        EasyMap bookActionFeed = new EasyMap();
+        EasyMap bookActionFeed2 = new EasyMap();
+        EasyMap bookActionFeed3 = new EasyMap();
+        bookActionFeed.setName("Complaint");
+        bookActionFeed.setValue("");
+        actions5.add(bookActionFeed);
+        bookActionFeed2.setName("Compliment");
+        bookActionFeed2.setValue("");
+        actions5.add(bookActionFeed2);
+        bookActionFeed3.setName("Suggestion");
+        bookActionFeed3.setValue("");
+        actions5.add(bookActionFeed3);
+        button5.setButtonValues(actions5);
+        ButtonBuilder buttonBuilder5 = new ButtonBuilder(button5);
+
+        CarouselBuilder carouselBuilder = new CarouselBuilder(buttonBuilder.build(), buttonBuilder2.build(),
+                buttonBuilder3.build(), buttonBuilder4.build(), buttonBuilder5.build());
+
+        output.put(OUTPUT, carouselBuilder.build());
+
+        ExtensionResult extensionResult = new ExtensionResult();
+        extensionResult.setAgent(false);
+        extensionResult.setRepeat(false);
+        extensionResult.setSuccess(true);
+        extensionResult.setNext(true);
+        extensionResult.setValue(output);
+        return extensionResult;
+    }
+
+    /*
+	 * Send Location
+	 * 
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.imi.dolphin.sdkwebservice.service.IService#doSendLocation(com.imi.dolphin
+	 * .sdkwebservice.model.ExtensionRequest)
+     */
+    @Override
+    public ExtensionResult doSendLocation(ExtensionRequest extensionRequest) {
+        Map<String, String> output = new HashMap<>();
+        QuickReplyBuilder quickReplyBuilder = new QuickReplyBuilder.Builder("Kirim lokasi kakak ya")
+                .add("Location", "location").build();
+        output.put(OUTPUT, quickReplyBuilder.string());
+        ExtensionResult extensionResult = new ExtensionResult();
+        extensionResult.setAgent(false);
+        extensionResult.setRepeat(false);
+        extensionResult.setSuccess(true);
+        extensionResult.setNext(true);
+        extensionResult.setValue(output);
+        return extensionResult;
+    }
+
+    @Override
+    public ExtensionResult doGetDokterByHospital(ExtensionRequest extensionRequest) {
+        Map<String, String> output = new HashMap<>();
+        ExtensionResult extensionResult = new ExtensionResult();
+        StringBuilder sb = new StringBuilder();
+        String hospitalId = getEasyMapValueByName(extensionRequest, "hospitalId");
+        try {
+            OkHttpUtil okHttpUtil = new OkHttpUtil();
+            okHttpUtil.init(true);
+            Request request = new Request.Builder().url("https://52.148.90.132:5363/mobile/mysiloam/patientcommon/doctor/search/name?hospitalId=" + hospitalId).get().build();
+            Response response = okHttpUtil.getClient().newCall(request).execute();
+            JSONObject jsonobj = new JSONObject(response.body().string());
+            JSONArray results = jsonobj.getJSONArray("data");
+            int leng = results.length();
+
+            for (int i = 0; i < leng; i++) {
+                JSONObject jObj = results.getJSONObject(i);
+                String doctorId = jObj.getString("doctor_id");
+                String doctorName = jObj.getString("doctor_name");
+
+                //Buat Button 
+                ButtonTemplate button = new ButtonTemplate();
+                button.setTitle(doctorName);
+                List<EasyMap> actions = new ArrayList<>();
+                EasyMap bookAction = new EasyMap();
+                bookAction.setName("Pilih");
+                bookAction.setValue(doctorId);
+                actions.add(bookAction);
+                button.setButtonValues(actions);
+                ButtonBuilder buttonBuilder = new ButtonBuilder(button);
+
+                String btnBuilder = buttonBuilder.build().toString();
+                sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
+            }
+
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(ServiceImp.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ServiceImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        output.put(OUTPUT, sb.toString());
+        extensionResult.setAgent(false);
+        extensionResult.setRepeat(false);
+        extensionResult.setSuccess(true);
+        extensionResult.setNext(true);
+        extensionResult.setValue(output);
+        return extensionResult;
+    }
     
+    @Override
+    public ExtensionResult doGetHospital(ExtensionRequest extensionRequest) {
+        Map<String, String> output = new HashMap<>();
+        ExtensionResult extensionResult = new ExtensionResult();
+        StringBuilder sb = new StringBuilder();
+        try {
+            OkHttpUtil okHttpUtil = new OkHttpUtil();
+            okHttpUtil.init(true);
+            Request request = new Request.Builder().url("https://52.148.90.132:5363/mobile/mysiloam/patientcommon/hospital").get().build();
+            Response response = okHttpUtil.getClient().newCall(request).execute();
+            JSONObject jsonobj = new JSONObject(response.body().string());
+            JSONArray results = jsonobj.getJSONArray("data");
+            int leng = results.length();
+
+            for (int i = 0; i < leng; i++) {
+                JSONObject jObj = results.getJSONObject(i);
+                String hospitalId = jObj.getString("hospital_id");
+                String hospitalName = jObj.getString("hospital_name");
+
+                //Buat Button 
+                ButtonTemplate button = new ButtonTemplate();
+                button.setTitle(hospitalName);
+                List<EasyMap> actions = new ArrayList<>();
+                EasyMap bookAction = new EasyMap();
+                bookAction.setName("Pilih");
+                bookAction.setValue(hospitalId);
+                actions.add(bookAction);
+                button.setButtonValues(actions);
+                ButtonBuilder buttonBuilder = new ButtonBuilder(button);
+
+                String btnBuilder = buttonBuilder.build().toString();
+                sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
+            }
+
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(ServiceImp.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ServiceImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        output.put(OUTPUT, sb.toString());
+        extensionResult.setAgent(false);
+        extensionResult.setRepeat(false);
+        extensionResult.setSuccess(true);
+        extensionResult.setNext(true);
+        extensionResult.setValue(output);
+        return extensionResult;
+    }
 }
