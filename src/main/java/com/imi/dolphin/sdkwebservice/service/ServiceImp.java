@@ -64,7 +64,7 @@ public class ServiceImp implements IService {
     private static final String SAMPLE_IMAGE_PATH = "https://goo.gl/SHdL8D";
     private static final String Image_cuti = "https://image.ibb.co/eAshTV/bot.jpg";
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-     private static final String CONSTANT_SPLIT_SYNTAX = "&split&";
+    private static final String CONSTANT_SPLIT_SYNTAX = "&split&";
     @Autowired
     AppProperties appProperties;
 
@@ -966,15 +966,54 @@ public class ServiceImp implements IService {
     }
 
     @Override
-    public ExtensionResult doGetDokterByHospital(ExtensionRequest extensionRequest) {
+    public ExtensionResult MenuDoctorSchedule(ExtensionRequest extensionRequest) {
+        Map<String, String> output = new HashMap<>();
+
+        ButtonTemplate button1 = new ButtonTemplate();
+//        button1.setPictureLink(SAMPLE_IMAGE_PATH);
+//        button1.setPicturePath(SAMPLE_IMAGE_PATH);
+        button1.setTitle("Booking");
+        List<EasyMap> actions1 = new ArrayList<>();
+        EasyMap bookActionMCU = new EasyMap();
+        bookActionMCU.setName("PILIH");
+        bookActionMCU.setValue("booking");
+        actions1.add(bookActionMCU);
+        button1.setButtonValues(actions1);
+        ButtonBuilder buttonBuilder1 = new ButtonBuilder(button1);
+
+        ButtonTemplate button2 = new ButtonTemplate();
+//        button2.setPictureLink(SAMPLE_IMAGE_PATH);
+//        button2.setPicturePath(SAMPLE_IMAGE_PATH);
+        button2.setTitle("Info Dokter");
+        List<EasyMap> actions2 = new ArrayList<>();
+        EasyMap bookActionEnq = new EasyMap();
+        bookActionEnq.setName("PILIH");
+        bookActionEnq.setValue("infodokter");
+        actions2.add(bookActionEnq);
+        button2.setButtonValues(actions2);
+        ButtonBuilder buttonBuilder2 = new ButtonBuilder(button2);
+
+        CarouselBuilder carouselBuilder = new CarouselBuilder(buttonBuilder1.build(), buttonBuilder2.build());
+
+        output.put(OUTPUT, carouselBuilder.build());
+        ExtensionResult extensionResult = new ExtensionResult();
+        extensionResult.setAgent(false);
+        extensionResult.setRepeat(false);
+        extensionResult.setSuccess(true);
+        extensionResult.setNext(true);
+        extensionResult.setValue(output);
+        return extensionResult;
+    }
+
+    @Override
+    public ExtensionResult doGetAreas(ExtensionRequest extensionRequest) {
         Map<String, String> output = new HashMap<>();
         ExtensionResult extensionResult = new ExtensionResult();
         StringBuilder sb = new StringBuilder();
-        String hospitalId = getEasyMapValueByName(extensionRequest, "hospitalId");
         try {
             OkHttpUtil okHttpUtil = new OkHttpUtil();
             okHttpUtil.init(true);
-            Request request = new Request.Builder().url("https://52.148.90.132:5363/mobile/mysiloam/patientcommon/doctor/search/name?hospitalId=" + hospitalId).get().build();
+            Request request = new Request.Builder().url("https://52.148.90.132:5363/mobile/mysiloam/patientcommon/areas").get().build();
             Response response = okHttpUtil.getClient().newCall(request).execute();
             JSONObject jsonobj = new JSONObject(response.body().string());
             JSONArray results = jsonobj.getJSONArray("data");
@@ -982,16 +1021,16 @@ public class ServiceImp implements IService {
 
             for (int i = 0; i < leng; i++) {
                 JSONObject jObj = results.getJSONObject(i);
-                String doctorId = jObj.getString("doctor_id");
-                String doctorName = jObj.getString("doctor_name");
+                String areaId = jObj.getString("area_id");
+                String areaName = jObj.getString("area_name");
 
-                //Buat Button 
+                //Create Button 
                 ButtonTemplate button = new ButtonTemplate();
-                button.setTitle(doctorName);
+                button.setTitle(areaName);
                 List<EasyMap> actions = new ArrayList<>();
                 EasyMap bookAction = new EasyMap();
                 bookAction.setName("Pilih");
-                bookAction.setValue(doctorId);
+                bookAction.setValue(areaId);
                 actions.add(bookAction);
                 button.setButtonValues(actions);
                 ButtonBuilder buttonBuilder = new ButtonBuilder(button);
@@ -1013,16 +1052,17 @@ public class ServiceImp implements IService {
         extensionResult.setValue(output);
         return extensionResult;
     }
-    
+
     @Override
-    public ExtensionResult doGetHospital(ExtensionRequest extensionRequest) {
+    public ExtensionResult doGetHospitalByArea(ExtensionRequest extensionRequest) {
         Map<String, String> output = new HashMap<>();
         ExtensionResult extensionResult = new ExtensionResult();
         StringBuilder sb = new StringBuilder();
+        String areaId = getEasyMapValueByName(extensionRequest, "areaId");
         try {
             OkHttpUtil okHttpUtil = new OkHttpUtil();
             okHttpUtil.init(true);
-            Request request = new Request.Builder().url("https://52.148.90.132:5363/mobile/mysiloam/patientcommon/hospital").get().build();
+            Request request = new Request.Builder().url("https://52.148.90.132:5363/mobile/mysiloam/patientcommon/hospital?areaId=" + areaId).get().build();
             Response response = okHttpUtil.getClient().newCall(request).execute();
             JSONObject jsonobj = new JSONObject(response.body().string());
             JSONArray results = jsonobj.getJSONArray("data");
@@ -1033,13 +1073,216 @@ public class ServiceImp implements IService {
                 String hospitalId = jObj.getString("hospital_id");
                 String hospitalName = jObj.getString("hospital_name");
 
-                //Buat Button 
+                //Create Button 
                 ButtonTemplate button = new ButtonTemplate();
                 button.setTitle(hospitalName);
                 List<EasyMap> actions = new ArrayList<>();
                 EasyMap bookAction = new EasyMap();
                 bookAction.setName("Pilih");
                 bookAction.setValue(hospitalId);
+                actions.add(bookAction);
+                button.setButtonValues(actions);
+                ButtonBuilder buttonBuilder = new ButtonBuilder(button);
+
+                String btnBuilder = buttonBuilder.build().toString();
+                sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
+            }
+
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(ServiceImp.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ServiceImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        output.put(OUTPUT, sb.toString());
+        extensionResult.setAgent(false);
+        extensionResult.setRepeat(false);
+        extensionResult.setSuccess(true);
+        extensionResult.setNext(true);
+        extensionResult.setValue(output);
+        return extensionResult;
+    }
+
+    @Override
+    public ExtensionResult doGetDokterByHospitalAndSpecialist(ExtensionRequest extensionRequest) {
+        Map<String, String> output = new HashMap<>();
+        ExtensionResult extensionResult = new ExtensionResult();
+        StringBuilder sb = new StringBuilder();
+        String hospitalId = getEasyMapValueByName(extensionRequest, "hospitalId");
+        String specialistId = getEasyMapValueByName(extensionRequest, "specialistId");
+        try {
+            OkHttpUtil okHttpUtil = new OkHttpUtil();
+            okHttpUtil.init(true);
+            Request request = new Request.Builder().url("https://52.148.90.132:5363/mobile/mysiloam/patientcommon/doctor/search/complete?hospitalId=" + hospitalId + "&specialistId=" + specialistId).get().build();
+            Response response = okHttpUtil.getClient().newCall(request).execute();
+            JSONObject jsonobj = new JSONObject(response.body().string());
+            JSONArray results = jsonobj.getJSONArray("data");
+            int leng = results.length();
+
+            for (int i = 0; i < leng; i++) {
+                JSONObject jObj = results.getJSONObject(i);
+                String doctorId = jObj.getString("doctor_id");
+                String doctorName = jObj.getString("doctor_name");
+                String doctorSpecialist = jObj.getString("doctor_specialist");
+                String doctorHospitals = jObj.getString("doctor_hospitals_unit");
+                Boolean doctorAvailable = jObj.getBoolean("is_doctor_appointment");
+                String available = "";
+                String valueavailab = "";
+
+                if (doctorAvailable == false) {
+                    available = "Not Available Today";
+                } else {
+                    available = "Available Today";
+                }
+
+                if (available.equalsIgnoreCase("Not Available Today")) {
+                    valueavailab = "Maaf Dokter Tidak Tersedia";
+                } else {
+                    valueavailab = "";
+                }
+                //Buat Button 
+                ButtonTemplate button = new ButtonTemplate();
+                button.setTitle(doctorName);
+                button.setSubTitle(doctorSpecialist + "\n" + doctorHospitals);
+                List<EasyMap> actions = new ArrayList<>();
+
+                EasyMap AvailableToday = new EasyMap();
+                EasyMap AvailableTomorrow = new EasyMap();
+
+                AvailableToday.setName(available);
+                AvailableToday.setValue(valueavailab);
+                actions.add(AvailableToday);
+
+                AvailableTomorrow.setName("Tomorrow");
+                AvailableTomorrow.setValue(doctorId);
+                actions.add(AvailableTomorrow);
+
+                button.setButtonValues(actions);
+                ButtonBuilder buttonBuilder = new ButtonBuilder(button);
+
+                String btnBuilder = buttonBuilder.build().toString();
+                sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
+            }
+
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(ServiceImp.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ServiceImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        output.put(OUTPUT, sb.toString());
+        extensionResult.setAgent(false);
+        extensionResult.setRepeat(false);
+        extensionResult.setSuccess(true);
+        extensionResult.setNext(true);
+        extensionResult.setValue(output);
+        return extensionResult;
+    }
+
+    @Override
+    public ExtensionResult doGetDoctorSchedule(ExtensionRequest extensionRequest) {
+        Map<String, String> output = new HashMap<>();
+        ExtensionResult extensionResult = new ExtensionResult();
+        StringBuilder sb = new StringBuilder();
+        String doctorId = getEasyMapValueByName(extensionRequest, "doctorId");
+        String hospitalId = getEasyMapValueByName(extensionRequest, "hospitalId");
+        try {
+            OkHttpUtil okHttpUtil = new OkHttpUtil();
+            okHttpUtil.init(true);
+            Request request = new Request.Builder().url("https://52.148.90.132:5363/mobile/mysiloam/patientcommon/doctorschedule/" + doctorId + "/" + hospitalId).get().build();
+            Response response = okHttpUtil.getClient().newCall(request).execute();
+            JSONObject jsonobj = new JSONObject(response.body().string());
+            JSONArray results = jsonobj.getJSONArray("data");
+            int leng = results.length();
+
+            for (int i = 0; i < leng; i++) {
+                JSONObject jObj = results.getJSONObject(i);
+                int daysnumber = jObj.getInt("doctor_schedule_day");
+                String days = "";
+                String fromdate = jObj.getString("doctor_schedule_from_date");
+                String dateF = fromdate.substring(0, 10);
+
+                String Name = jObj.getString("doctor_schedule_name");
+
+                if (daysnumber == 1) {
+                    days = "Senin";
+                } else if (daysnumber == 2) {
+                    days = "Selasa";
+                } else if (daysnumber == 3) {
+                    days = "Rabu";
+                } else if (daysnumber == 4) {
+                    days = "Kamis";
+                } else if (daysnumber == 5) {
+                    days = "Jumat";
+                } else if (daysnumber == 6) {
+                    days = "Sabtu";
+                } else if (daysnumber == 7) {
+                    days = "Minggu";
+                }
+
+                //Buat Button 
+                ButtonTemplate button = new ButtonTemplate();
+                button.setTitle(Name);
+                button.setSubTitle(days + ", " + dateF);
+                List<EasyMap> actions = new ArrayList<>();
+
+                EasyMap bookAction = new EasyMap();
+                EasyMap callAction = new EasyMap();
+
+                bookAction.setName("Book Online");
+                bookAction.setValue("https://www.siloamhospitals.com");
+                actions.add(bookAction);
+
+                callAction.setName("By Phone");
+                callAction.setValue("tel:1500181");
+                actions.add(callAction);
+
+                button.setButtonValues(actions);
+                ButtonBuilder buttonBuilder = new ButtonBuilder(button);
+
+                String btnBuilder = buttonBuilder.build().toString();
+                sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
+            }
+
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(ServiceImp.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ServiceImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        output.put(OUTPUT, sb.toString());
+        extensionResult.setAgent(false);
+        extensionResult.setRepeat(false);
+        extensionResult.setSuccess(true);
+        extensionResult.setNext(true);
+        extensionResult.setValue(output);
+        return extensionResult;
+    }
+
+    @Override
+    public ExtensionResult doGetDoctorByName(ExtensionRequest extensionRequest) {
+        Map<String, String> output = new HashMap<>();
+        ExtensionResult extensionResult = new ExtensionResult();
+        StringBuilder sb = new StringBuilder();
+        String nama = getEasyMapValueByName(extensionRequest, "nama");
+        try {
+            OkHttpUtil okHttpUtil = new OkHttpUtil();
+            okHttpUtil.init(true);
+            Request request = new Request.Builder().url("https://52.148.90.132:5363/mobile/mysiloam/patientcommon/doctor/search/name?search=" + nama).get().build();
+            Response response = okHttpUtil.getClient().newCall(request).execute();
+            JSONObject jsonobj = new JSONObject(response.body().string());
+            JSONArray results = jsonobj.getJSONArray("data");
+            int leng = results.length();
+
+            for (int i = 0; i < leng; i++) {
+                JSONObject jObj = results.getJSONObject(i);
+                String doctorId = jObj.getString("doctor_id");
+                String doctorName = jObj.getString("doctor_name");
+
+                //Create Button 
+                ButtonTemplate button = new ButtonTemplate();
+                button.setTitle(doctorName);
+                List<EasyMap> actions = new ArrayList<>();
+                EasyMap bookAction = new EasyMap();
+                bookAction.setName("Pilih");
+                bookAction.setValue(doctorId);
                 actions.add(bookAction);
                 button.setButtonValues(actions);
                 ButtonBuilder buttonBuilder = new ButtonBuilder(button);

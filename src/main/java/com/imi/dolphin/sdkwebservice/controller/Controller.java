@@ -282,15 +282,40 @@ public class Controller {
         return svcService.doGetStarted(extensionRequest);
     }
     
-    @RequestMapping("/getdoctorbyhospitalid")
-    @PostMapping
-    public ExtensionResult doGetDoctorByHospital(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.doGetDokterByHospital(extensionRequest);
-    }
     
+    @RequestMapping("/getareas")
+    @PostMapping
+    public ExtensionResult doGetAreas(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.doGetAreas(extensionRequest);
+    }
     @RequestMapping("/gethospital")
     @PostMapping
-    public ExtensionResult doGetHospital(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.doGetHospital(extensionRequest);
+    public ExtensionResult doGetHospitalByArea(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.doGetHospitalByArea(extensionRequest);
     }
+    @RequestMapping("/getdoctorbyhospital")
+    @PostMapping
+    public ExtensionResult doGetDokterByHospitalAndSpecialist(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.doGetDokterByHospitalAndSpecialist(extensionRequest);
+    }
+    
+    @RequestMapping("/getdoctorschedule")
+    @PostMapping
+    public ExtensionResult doGetDoctorSchedule(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.doGetDoctorSchedule(extensionRequest);
+    }
+    
+    @RequestMapping("/getdoctorbyname")
+    @PostMapping
+    public ExtensionResult doGetDoctorByName(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.doGetDoctorByName(extensionRequest);
+    }
+    
+    @RequestMapping("/menudoctorschedule")
+    @PostMapping
+    public ExtensionResult MenuDoctorSchedule(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.MenuDoctorSchedule(extensionRequest);
+    }
+    
+    
 }
