@@ -988,7 +988,7 @@ public class ServiceImp implements IService {
         List<EasyMap> actions2 = new ArrayList<>();
         EasyMap bookActionEnq = new EasyMap();
         bookActionEnq.setName("PILIH");
-        bookActionEnq.setValue("infodokter");
+        bookActionEnq.setValue("info dokter");
         actions2.add(bookActionEnq);
         button2.setButtonValues(actions2);
         ButtonBuilder buttonBuilder2 = new ButtonBuilder(button2);
