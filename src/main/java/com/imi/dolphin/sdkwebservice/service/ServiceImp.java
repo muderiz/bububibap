@@ -1197,8 +1197,10 @@ public class ServiceImp implements IService {
                 JSONObject jObj = results.getJSONObject(i);
                 int daysnumber = jObj.getInt("doctor_schedule_day");
                 String days = "";
-                String fromdate = jObj.getString("doctor_schedule_from_date");
-                String dateF = fromdate.substring(0, 10);
+                String fromtime = jObj.getString("doctor_schedule_from_time");
+                String totime = jObj.getString("doctor_schedule_to_time");
+                String dateF = fromtime.substring(11, 5);
+                String dateT = totime.substring(11, 5);
 
                 String Name = jObj.getString("doctor_schedule_name");
 
@@ -1221,7 +1223,7 @@ public class ServiceImp implements IService {
                 //Buat Button 
                 ButtonTemplate button = new ButtonTemplate();
                 button.setTitle(Name);
-                button.setSubTitle(days + ", " + dateF);
+                button.setSubTitle(days + "\n" + dateF + "-" + dateT);
                 List<EasyMap> actions = new ArrayList<>();
 
                 EasyMap bookAction = new EasyMap();
@@ -1304,4 +1306,5 @@ public class ServiceImp implements IService {
         extensionResult.setValue(output);
         return extensionResult;
     }
+
 }
