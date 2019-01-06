@@ -1199,8 +1199,8 @@ public class ServiceImp implements IService {
                 String days = "";
                 String fromtime = jObj.getString("doctor_schedule_from_time");
                 String totime = jObj.getString("doctor_schedule_to_time");
-                String dateF = fromtime.substring(11, 5);
-                String dateT = totime.substring(11, 5);
+                String dateF = fromtime.substring(11, 16);
+                String dateT = totime.substring(11, 16);
 
                 String Name = jObj.getString("doctor_schedule_name");
 
