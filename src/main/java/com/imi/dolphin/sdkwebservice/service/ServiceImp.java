@@ -1223,7 +1223,7 @@ public class ServiceImp implements IService {
                 //Buat Button 
                 ButtonTemplate button = new ButtonTemplate();
                 button.setTitle(Name);
-                button.setSubTitle(days + "\n" + dateF + "-" + dateT);
+                button.setSubTitle(days + ": \n" + dateF + "-" + dateT);
                 List<EasyMap> actions = new ArrayList<>();
 
                 EasyMap bookAction = new EasyMap();
