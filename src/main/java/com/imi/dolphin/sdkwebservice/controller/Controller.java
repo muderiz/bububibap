@@ -291,6 +291,12 @@ public class Controller {
     public ExtensionResult MenuDoctorSchedule(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.MenuDoctorSchedule(extensionRequest);
     }
+    
+    @RequestMapping("/hospitalterdekat")
+    @PostMapping
+    public ExtensionResult doGetHospitalTerdekat(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.doGetHospitalTerdekat(extensionRequest);
+    }
 
   
 }

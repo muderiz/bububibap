@@ -43,6 +43,7 @@ import com.imi.dolphin.sdkwebservice.util.OkHttpUtil;
 import static java.lang.Math.acos;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
+import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -622,7 +623,7 @@ public class ServiceImp implements IService {
     @Override
     public ExtensionResult doSendLocation(ExtensionRequest extensionRequest) {
         Map<String, String> output = new HashMap<>();
-        QuickReplyBuilder quickReplyBuilder = new QuickReplyBuilder.Builder("Kirim lokasi kakak ya")
+        QuickReplyBuilder quickReplyBuilder = new QuickReplyBuilder.Builder("Silahkan Lokasi kakak sekarang ya...s")
                 .add("Location", "location").build();
         output.put(OUTPUT, quickReplyBuilder.string());
         ExtensionResult extensionResult = new ExtensionResult();
@@ -865,6 +866,7 @@ public class ServiceImp implements IService {
 
                 EasyMap AvailableToday = new EasyMap();
                 EasyMap AvailableTomorrow = new EasyMap();
+                EasyMap SelectOtherDate = new EasyMap();
 
                 AvailableToday.setName(available);
                 AvailableToday.setValue(valueavailab);
@@ -873,6 +875,10 @@ public class ServiceImp implements IService {
                 AvailableTomorrow.setName("Tomorrow");
                 AvailableTomorrow.setValue(doctorId);
                 actions.add(AvailableTomorrow);
+
+                SelectOtherDate.setName("Select Other Date");
+                SelectOtherDate.setValue("");
+                actions.add(SelectOtherDate);
 
                 button.setButtonValues(actions);
                 ButtonBuilder buttonBuilder = new ButtonBuilder(button);
@@ -1102,14 +1108,15 @@ public class ServiceImp implements IService {
     }
 
     //-------------------------------------//
-    
-    
-    
     @Override
     public ExtensionResult doGetHospitalTerdekat(ExtensionRequest extensionRequest) {
         Map<String, String> output = new HashMap<>();
         ExtensionResult extensionResult = new ExtensionResult();
         StringBuilder sb = new StringBuilder();
+        String lokasiUser = getEasyMapValueByName(extensionRequest, "lokasi");
+        String[] alonglat = lokasiUser.split(";");
+        String lat = alonglat[0];
+        String llat = alonglat[1];
         try {
             OkHttpUtil okHttpUtil = new OkHttpUtil();
             okHttpUtil.init(true);
@@ -1118,13 +1125,29 @@ public class ServiceImp implements IService {
             JSONObject jsonobj = new JSONObject(response.body().string());
             JSONArray results = jsonobj.getJSONArray("data");
             int leng = results.length();
-
+            BigDecimal longitud;
+            BigDecimal latitud;
+            BigDecimal[][] point = null;
+            int x = 0;
+            double hasil;
             for (int i = 0; i < leng; i++) {
+                JSONObject jObj = results.getJSONObject(i);
+                longitud = jObj.getBigDecimal("longitude");
+                latitud = jObj.getBigDecimal("latitude");
+                hasil = distanceInKilometers((Double.valueOf(lat)), (Double.valueOf(llat)), longitud.doubleValue(), latitud.doubleValue());
+                if (hasil < 25) {
+                    point[x][0] = longitud;
+                    point[x][1] = latitud;
+                    x++;
+                }
+            }
+            
+            for (int i = 0; i < point.length; i++) {
                 JSONObject jObj = results.getJSONObject(i);
                 String hospitalId = jObj.getString("hospital_id");
                 String hospitalName = jObj.getString("hospital_name");
-                String longitud = jObj.getString("longitude");
-                String latitud = jObj.getString("latitude");
+                longitud = jObj.getBigDecimal("longitude");
+                latitud = jObj.getBigDecimal("latitude");
 
                 //Create Button 
                 ButtonTemplate button = new ButtonTemplate();
@@ -1155,13 +1178,12 @@ public class ServiceImp implements IService {
         return extensionResult;
     }
 
-    public double greatCircleInKilometers(double lat1, double long1, double lat2, double long2) {
+    public double distanceInKilometers(double lat1, double long1, double lat2, double long2) {
         double PI_RAD = Math.PI / 180.0;
         double phi1 = lat1 * PI_RAD;
         double phi2 = lat2 * PI_RAD;
         double lam1 = long1 * PI_RAD;
         double lam2 = long2 * PI_RAD;
-
         return 6371.01 * acos(sin(phi1) * sin(phi2) + cos(phi1) * cos(phi2) * cos(lam2 - lam1));
     }
 
