@@ -728,7 +728,7 @@ public class ServiceImp implements IService {
         Map<String, String> output = new HashMap<>();
         ExtensionResult extensionResult = new ExtensionResult();
         StringBuilder sb = new StringBuilder();
-        String areaId = getEasyMapValueByName(extensionRequest, "areaId");
+        String areaId = getEasyMapValueByName(extensionRequest, "area");
         try {
             OkHttpUtil okHttpUtil = new OkHttpUtil();
             okHttpUtil.init(true);
@@ -825,8 +825,8 @@ public class ServiceImp implements IService {
         Map<String, String> output = new HashMap<>();
         ExtensionResult extensionResult = new ExtensionResult();
         StringBuilder sb = new StringBuilder();
-        String hospitalId = getEasyMapValueByName(extensionRequest, "hospitalId");
-        String specialistId = getEasyMapValueByName(extensionRequest, "specialistId");
+        String hospitalId = getEasyMapValueByName(extensionRequest, "hospital");
+        String specialistId = getEasyMapValueByName(extensionRequest, "specialist");
         try {
             OkHttpUtil okHttpUtil = new OkHttpUtil();
             okHttpUtil.init(true);
@@ -901,8 +901,8 @@ public class ServiceImp implements IService {
         Map<String, String> output = new HashMap<>();
         ExtensionResult extensionResult = new ExtensionResult();
         StringBuilder sb = new StringBuilder();
-        String doctorId = getEasyMapValueByName(extensionRequest, "doctorId");
-        String hospitalId = getEasyMapValueByName(extensionRequest, "hospitalId");
+        String doctorId = getEasyMapValueByName(extensionRequest, "doctor");
+        String hospitalId = getEasyMapValueByName(extensionRequest, "hospital");
         try {
             OkHttpUtil okHttpUtil = new OkHttpUtil();
             okHttpUtil.init(true);
