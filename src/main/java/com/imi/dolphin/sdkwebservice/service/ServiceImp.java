@@ -40,6 +40,9 @@ import com.imi.dolphin.sdkwebservice.param.ParamSdk;
 import com.imi.dolphin.sdkwebservice.property.AppProperties;
 import com.imi.dolphin.sdkwebservice.token.Token;
 import com.imi.dolphin.sdkwebservice.util.OkHttpUtil;
+import static java.lang.Math.acos;
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -274,41 +277,6 @@ public class ServiceImp implements IService {
         return extensionResult;
     }
 
-    /*
-	 * Generate Forms
-	 *
-	 * (non-Javadoc)
-	 * 
-	 * @see com.imi.dolphin.sdkwebservice.service.IService#getForms(com.imi.dolphin.
-	 * sdkwebservice.model.ExtensionRequest)
-     */
-    @Override
-    public ExtensionResult getForms(ExtensionRequest extensionRequest) {
-        Map<String, String> output = new HashMap<>();
-        FormBuilder formBuilder = new FormBuilder("FORM ID");
-
-        ButtonTemplate button = new ButtonTemplate();
-        button.setTitle("Title is here");
-        button.setSubTitle("Subtitle is here");
-        button.setPictureLink("Picture link");
-        button.setPicturePath("Picture path");
-        List<EasyMap> actions = new ArrayList<>();
-        EasyMap bookAction = new EasyMap();
-        bookAction.setName("Label here");
-        bookAction.setValue(formBuilder.build());
-        actions.add(bookAction);
-        button.setButtonValues(actions);
-        ButtonBuilder buttonBuilder = new ButtonBuilder(button);
-
-        output.put(OUTPUT, buttonBuilder.build());
-        ExtensionResult extensionResult = new ExtensionResult();
-        extensionResult.setAgent(false);
-        extensionResult.setRepeat(false);
-        extensionResult.setSuccess(true);
-        extensionResult.setNext(true);
-        extensionResult.setValue(output);
-        return extensionResult;
-    }
 
     /*
 	 * Generate buttons output
@@ -444,34 +412,6 @@ public class ServiceImp implements IService {
     }
 
     /*
-	 * Generate Image
-	 * 
-	 * (non-Javadoc)
-	 * 
-	 * @see com.imi.dolphin.sdkwebservice.service.IService#getImage(com.imi.dolphin.
-	 * sdkwebservice.model.ExtensionRequest)
-     */
-    @Override
-    public ExtensionResult getImage(ExtensionRequest extensionRequest) {
-        Map<String, String> output = new HashMap<>();
-
-        ButtonTemplate image = new ButtonTemplate();
-        image.setPictureLink(SAMPLE_IMAGE_PATH);
-        image.setPicturePath(SAMPLE_IMAGE_PATH);
-
-        ImageBuilder imageBuilder = new ImageBuilder(image);
-        output.put(OUTPUT, imageBuilder.build());
-
-        ExtensionResult extensionResult = new ExtensionResult();
-        extensionResult.setAgent(false);
-        extensionResult.setRepeat(false);
-        extensionResult.setSuccess(true);
-        extensionResult.setNext(true);
-        extensionResult.setValue(output);
-        return extensionResult;
-    }
-
-    /*
 	 * Split bubble chat conversation
 	 * 
 	 * (non-Javadoc)
@@ -487,35 +427,6 @@ public class ServiceImp implements IService {
         Map<String, String> output = new HashMap<>();
         output.put(OUTPUT, firstLine + ParamSdk.SPLIT_CHAT + secondLine);
 
-        ExtensionResult extensionResult = new ExtensionResult();
-        extensionResult.setAgent(false);
-        extensionResult.setRepeat(false);
-        extensionResult.setSuccess(true);
-        extensionResult.setNext(true);
-        extensionResult.setValue(output);
-        return extensionResult;
-    }
-
-    /*
-	 * Send mail configuration on application.properties file
-	 * 
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.imi.dolphin.sdkwebservice.service.IService#doSendMail(com.imi.dolphin.
-	 * sdkwebservice.model.ExtensionRequest)
-     */
-    @Override
-    public ExtensionResult doSendMail(ExtensionRequest extensionRequest) {
-        String recipient = getEasyMapValueByName(extensionRequest, "recipient");
-        String subject = getEasyMapValueByName(extensionRequest, "subject");
-        String text = getEasyMapValueByName(extensionRequest, "text");
-
-        MailModel mailModel = new MailModel(recipient, subject, text);
-        String sendMailResult = svcMailService.sendMail(mailModel);
-
-        Map<String, String> output = new HashMap<>();
-        output.put(OUTPUT, sendMailResult);
         ExtensionResult extensionResult = new ExtensionResult();
         extensionResult.setAgent(false);
         extensionResult.setRepeat(false);
@@ -579,248 +490,6 @@ public class ServiceImp implements IService {
         }
 
         return data;
-    }
-
-    public String getToken() {
-        String bearer = "";
-        String username = "michael.samuel@inmotion.co.id";
-        String password = "Michael@123";
-        String baseUrl = appProperties.getBaseUrl();
-        String apiToken = appProperties.getApiToken();
-
-        String url = baseUrl + apiToken;
-
-        Token tk = new Token();
-        tk.setUsername(username);
-        tk.setPassword(password);
-
-        Gson gson = new Gson();
-
-        OkHttpUtil okHttpUtil = new OkHttpUtil();
-        okHttpUtil.init(true);
-
-        RequestBody body = RequestBody.create(JSON, gson.toJson(tk));
-        // System.out.println(gson.toJson(tk).toString());
-
-        Request request = new Request.Builder().url(url).addHeader("Content-Type", "application/json; charset=utf-8")
-                .post(body).build();
-
-        try {
-            Response response = okHttpUtil.getClient().newCall(request).execute();
-
-            JSONObject jsonObjek = new JSONObject(response.body().string());
-            bearer = jsonObjek.getString("token");
-
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-        return bearer;
-    }
-
-    @Override
-    public ExtensionResult dogetFormcuti(ExtensionRequest extensionRequest) {
-
-        Map<String, String> output = new HashMap<>();
-        String formId = appProperties.getFormIdCuti();
-        FormBuilder formBuilder = new FormBuilder(formId);
-        ButtonTemplate button = new ButtonTemplate();
-        button.setPictureLink(Image_cuti);
-        button.setPicturePath(Image_cuti);
-        button.setTitle("This is title");
-        button.setSubTitle("This is subtitle");
-        button.setTitle("Form Cuti");
-        button.setSubTitle("Form Cuti");
-        List<EasyMap> actions = new ArrayList<>();
-        EasyMap bookAction = new EasyMap();
-        bookAction.setName("Isi Form");
-        bookAction.setValue(formBuilder.build());
-        actions.add(bookAction);
-        button.setButtonValues(actions);
-        ButtonBuilder buttonBuilder = new ButtonBuilder(button);
-
-        output.put(OUTPUT, buttonBuilder.build());
-        ExtensionResult extensionResult = new ExtensionResult();
-        extensionResult.setAgent(false);
-        extensionResult.setRepeat(false);
-        extensionResult.setSuccess(true);
-        extensionResult.setNext(true);
-        extensionResult.setValue(output);
-        return extensionResult;
-    }
-
-    @Override
-    public ExtensionResult dogetajuincuti(ExtensionRequest extensionRequest) {
-        Map<String, String> output = new HashMap<>();
-        ExtensionResult extensionResult = new ExtensionResult();
-        StringBuilder respBuilder = new StringBuilder();
-        StringBuilder respBuilder2 = new StringBuilder();
-
-        String ticketNumber = extensionRequest.getIntent().getTicket().getTicketNumber();
-
-        String Bearer = "";
-        String nama = "";
-        String nik = "";
-        String lembaga = "";
-        String ijinuntuk = "";
-        String permohonanijin = "";
-        String tanggal = "";
-        String waktuijin = "";
-        String keperluan = "";
-
-        // 1.get data dari form
-        // ambil token
-        Bearer = getToken();
-        // request API dolphin
-        System.out.println("bearer = " + Bearer);
-
-        Datum data = new Datum();
-        data = getForm(Bearer, ticketNumber);
-        // 2. parsing data
-
-        nama = data.getNama();
-        nik = data.getNik();
-        lembaga = data.getLembaga();
-        ijinuntuk = data.getMengajukanPermohonanIjinUntuk();
-        permohonanijin = data.getPermohonanIjin();
-        tanggal = data.getTanggal();
-        waktuijin = data.getWaktuIjin();
-        keperluan = data.getKeperluanKeterangan();
-        String namaatasan = appProperties.getNamerecipient1();
-        String namaHrd = appProperties.getNamerecipient2();
-
-        respBuilder.append("Kepada Yth.\n");
-        respBuilder.append(namaatasan);
-        respBuilder.append("\nDengan Hormat,");
-        respBuilder.append("\n\nNama : " + nama);
-        respBuilder.append("\nNIK : " + nik);
-        respBuilder.append("\nLembaga : " + lembaga);
-        respBuilder.append("\nPermohonan ijin untuk  :" + ijinuntuk);
-        respBuilder.append("\ntanggal : " + tanggal);
-        respBuilder.append("\nwaktu ijin : " + waktuijin);
-        respBuilder.append("\nkeperluan : " + keperluan);
-        respBuilder.append("\n\nDemikian Surat cuti ini dibuat.");
-        respBuilder.append("\nterima kasih");
-
-        respBuilder2.append("Kepada Yth.\n");
-        respBuilder2.append(namaHrd);
-        respBuilder2.append("\nDengan Hormat,");
-        respBuilder2.append("\n\nNama : " + nama);
-        respBuilder2.append("\nNIK : " + nik);
-        respBuilder2.append("\nLembaga : " + lembaga);
-        respBuilder2.append("\nPermohonan ijin untuk  :" + ijinuntuk);
-        respBuilder2.append("\ntanggal : " + tanggal);
-        respBuilder2.append("\nwaktu ijin : " + waktuijin);
-        respBuilder2.append("\nkeperluan : " + keperluan);
-        respBuilder2.append("\n\nDemikian Surat cuti ini dibuat.");
-        respBuilder2.append("\nterima kasih");
-
-        String bodyAtasan = respBuilder.toString();
-        String bodyHrd = respBuilder2.toString();
-
-        // 3. kirim email
-        String recipient1 = getEasyMapValueByName(extensionRequest, "email1");
-        String recipient2 = getEasyMapValueByName(extensionRequest, "email2");
-        System.out.println("recipient 1 : " + recipient1);
-        System.out.println("recipient 2 : " + recipient2);
-
-        // String recipient1 = appProperties.getEmailrecipient1();
-        // String recipient2 = appProperties.getEmailrecipient2();
-        MailModel mailModel = new MailModel(recipient1, "Surat Ijin Cuti", bodyAtasan);
-        MailModel mailModel2 = new MailModel(recipient2, "Surat Ijin Cuti", bodyHrd);
-        String sendMailResult = svcMailService.sendMail(mailModel);
-        String sendMailResult2 = svcMailService.sendMail(mailModel2);
-        System.out.println("hasil kirim email" + sendMailResult);
-        System.out.println("hasil kirim email" + sendMailResult2);
-
-        String result = "";
-        if (sendMailResult.toLowerCase().contains("success") && sendMailResult2.toLowerCase().contains("success")) {
-            result = "Baik kak silahkan tunggu konfirmasi ya kak";
-        } else if (sendMailResult.toLowerCase().contains("fail") && sendMailResult2.toLowerCase().contains("fail")) {
-            result = "Maaf kak pengiriman email gagal. Boleh diulangi kak";
-        } else {
-            result = "Maaf kak {bot_name} belum mengerti. Bisa tolong ulangi lagi kak.";
-        }
-
-        output.put(OUTPUT, result);
-        extensionResult.setAgent(false);
-        extensionResult.setRepeat(false);
-        extensionResult.setSuccess(true);
-        extensionResult.setNext(true);
-        extensionResult.setValue(output);
-        return extensionResult;
-    }
-
-    @Override
-    public ExtensionResult doGetCuaca(String kota, ExtensionRequest extensionRequest) {
-        String uri = "https://api.openweathermap.org/data/2.5/weather?q=" + kota + "&appid=beb536b6a3f98bb2bfde28ac6d99c6fc";
-        URL url;
-        String inline = "";
-        Map<String, String> output = new HashMap<>();
-        ExtensionResult extensionResult = new ExtensionResult();
-        try {
-            url = new URL(uri);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
-            conn.connect();
-            int responsecode = conn.getResponseCode();
-            if (responsecode == 200) {
-                Scanner sc = new Scanner(url.openStream());
-                while (sc.hasNext()) {
-                    inline += sc.nextLine();
-                }
-                sc.close();
-            }
-            JSONObject obj = new JSONObject(inline);
-
-            JSONObject main = obj.getJSONObject("data");
-            String doctorId = main.getString("doctor_id");
-            String doctorName = main.getString("doctor_name");
-
-            inline = doctorId;
-        } catch (MalformedURLException ex) {
-            Logger.getLogger(ServiceImp.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(ServiceImp.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        output.put("cuaca", inline);
-        extensionResult.setAgent(false);
-        extensionResult.setRepeat(false);
-        extensionResult.setSuccess(true);
-        extensionResult.setNext(true);
-        extensionResult.setValue(output);
-        return extensionResult;
-    }
-
-    @Override
-    public ExtensionResult dogetHargaMobil(ExtensionRequest extensionRequest) {
-        Map<String, String> output = new HashMap<>();
-
-        StringBuilder respBuilder = new StringBuilder();
-        respBuilder.append("Ayla = 130000000\n")
-                .append("Agya = 128000000\n")
-                .append("All New Yaris = 260000000");
-
-//        QuickReplyBuilder quickReplyBuilder = new QuickReplyBuilder.Builder("Daftar Harga Mobil")
-//                .add("Ayla", "130000000")
-//                .add("Agya", "128000000")
-//                .add("All New Yaris", "260000000")
-//                .add("Grand Sedona", "300000000")
-//                .build();
-        output.put(OUTPUT, respBuilder.toString());
-        ExtensionResult extensionResult = new ExtensionResult();
-        extensionResult.setAgent(false);
-        extensionResult.setRepeat(false);
-        extensionResult.setSuccess(true);
-        extensionResult.setNext(true);
-        extensionResult.setValue(output);
-        return extensionResult;
-    }
-
-    @Override
-    public ExtensionResult dogetMerkMobil(ExtensionRequest extensionRequest) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     /**
@@ -1005,6 +674,7 @@ public class ServiceImp implements IService {
         return extensionResult;
     }
 
+    //Doctor Schedule Flow Search By Area,Hospital,Specialist//
     @Override
     public ExtensionResult doGetAreas(ExtensionRequest extensionRequest) {
         Map<String, String> output = new HashMap<>();
@@ -1013,7 +683,7 @@ public class ServiceImp implements IService {
         try {
             OkHttpUtil okHttpUtil = new OkHttpUtil();
             okHttpUtil.init(true);
-            Request request = new Request.Builder().url("https://52.148.90.132:5363/mobile/mysiloam/patientcommon/areas").get().build();
+            Request request = new Request.Builder().url(appProperties.getApiArea()).get().build();
             Response response = okHttpUtil.getClient().newCall(request).execute();
             JSONObject jsonobj = new JSONObject(response.body().string());
             JSONArray results = jsonobj.getJSONArray("data");
@@ -1062,7 +732,7 @@ public class ServiceImp implements IService {
         try {
             OkHttpUtil okHttpUtil = new OkHttpUtil();
             okHttpUtil.init(true);
-            Request request = new Request.Builder().url("https://52.148.90.132:5363/mobile/mysiloam/patientcommon/hospital?areaId=" + areaId).get().build();
+            Request request = new Request.Builder().url(appProperties.getApiHospital() + areaId).get().build();
             Response response = okHttpUtil.getClient().newCall(request).execute();
             JSONObject jsonobj = new JSONObject(response.body().string());
             JSONArray results = jsonobj.getJSONArray("data");
@@ -1080,6 +750,54 @@ public class ServiceImp implements IService {
                 EasyMap bookAction = new EasyMap();
                 bookAction.setName("Pilih");
                 bookAction.setValue(hospitalId);
+                actions.add(bookAction);
+                button.setButtonValues(actions);
+                ButtonBuilder buttonBuilder = new ButtonBuilder(button);
+
+                String btnBuilder = buttonBuilder.build().toString();
+                sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
+            }
+
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(ServiceImp.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ServiceImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        output.put(OUTPUT, sb.toString());
+        extensionResult.setAgent(false);
+        extensionResult.setRepeat(false);
+        extensionResult.setSuccess(true);
+        extensionResult.setNext(true);
+        extensionResult.setValue(output);
+        return extensionResult;
+    }
+
+    @Override
+    public ExtensionResult doGetSpecialist(ExtensionRequest extensionRequest) {
+        Map<String, String> output = new HashMap<>();
+        ExtensionResult extensionResult = new ExtensionResult();
+        StringBuilder sb = new StringBuilder();
+        try {
+            OkHttpUtil okHttpUtil = new OkHttpUtil();
+            okHttpUtil.init(true);
+            Request request = new Request.Builder().url(appProperties.getApiSpecialist()).get().build();
+            Response response = okHttpUtil.getClient().newCall(request).execute();
+            JSONObject jsonobj = new JSONObject(response.body().string());
+            JSONArray results = jsonobj.getJSONArray("data");
+            int leng = results.length();
+
+            for (int i = 0; i < leng; i++) {
+                JSONObject jObj = results.getJSONObject(i);
+                String specialistId = jObj.getString("specialist_id");
+                String specialistName = jObj.getString("specialist_name");
+
+                //Create Button 
+                ButtonTemplate button = new ButtonTemplate();
+                button.setTitle(specialistName);
+                List<EasyMap> actions = new ArrayList<>();
+                EasyMap bookAction = new EasyMap();
+                bookAction.setName("Pilih");
+                bookAction.setValue(specialistId);
                 actions.add(bookAction);
                 button.setButtonValues(actions);
                 ButtonBuilder buttonBuilder = new ButtonBuilder(button);
@@ -1176,6 +894,7 @@ public class ServiceImp implements IService {
         extensionResult.setValue(output);
         return extensionResult;
     }
+    //----------------------------//
 
     @Override
     public ExtensionResult doGetDoctorSchedule(ExtensionRequest extensionRequest) {
@@ -1187,7 +906,7 @@ public class ServiceImp implements IService {
         try {
             OkHttpUtil okHttpUtil = new OkHttpUtil();
             okHttpUtil.init(true);
-            Request request = new Request.Builder().url("https://52.148.90.132:5363/mobile/mysiloam/patientcommon/doctorschedule/" + doctorId + "/" + hospitalId).get().build();
+            Request request = new Request.Builder().url(appProperties.getApiDoctorschedule() + doctorId + "/" + hospitalId).get().build();
             Response response = okHttpUtil.getClient().newCall(request).execute();
             JSONObject jsonobj = new JSONObject(response.body().string());
             JSONArray results = jsonobj.getJSONArray("data");
@@ -1258,6 +977,7 @@ public class ServiceImp implements IService {
         return extensionResult;
     }
 
+    //Doctor Schedule Flow Search By Name//
     @Override
     public ExtensionResult doGetDoctorByName(ExtensionRequest extensionRequest) {
         Map<String, String> output = new HashMap<>();
@@ -1267,7 +987,7 @@ public class ServiceImp implements IService {
         try {
             OkHttpUtil okHttpUtil = new OkHttpUtil();
             okHttpUtil.init(true);
-            Request request = new Request.Builder().url("https://52.148.90.132:5363/mobile/mysiloam/patientcommon/doctor/search/name?search=" + nama).get().build();
+            Request request = new Request.Builder().url(appProperties.getApiDoctorbyname() + nama).get().build();
             Response response = okHttpUtil.getClient().newCall(request).execute();
             JSONObject jsonobj = new JSONObject(response.body().string());
             JSONArray results = jsonobj.getJSONArray("data");
@@ -1305,6 +1025,144 @@ public class ServiceImp implements IService {
         extensionResult.setNext(true);
         extensionResult.setValue(output);
         return extensionResult;
+    }
+
+    @Override
+    public ExtensionResult doGetDokterByDoctorId(ExtensionRequest extensionRequest) {
+        Map<String, String> output = new HashMap<>();
+        ExtensionResult extensionResult = new ExtensionResult();
+        StringBuilder sb = new StringBuilder();
+        String doctorId = getEasyMapValueByName(extensionRequest, "dokter");
+        try {
+            OkHttpUtil okHttpUtil = new OkHttpUtil();
+            okHttpUtil.init(true);
+            Request request = new Request.Builder().url(appProperties.getApiDoctorbydoctorid() + doctorId).get().build();
+            Response response = okHttpUtil.getClient().newCall(request).execute();
+            JSONObject jsonobj = new JSONObject(response.body().string());
+            JSONArray results = jsonobj.getJSONArray("data");
+            int leng = results.length();
+
+            for (int i = 0; i < leng; i++) {
+                JSONObject jObj = results.getJSONObject(i);
+                String hospitalId = jObj.getString("hospital_id");
+                String doctorName = jObj.getString("doctor_name");
+                String doctorSpecialist = jObj.getString("doctor_specialist");
+                String doctorHospitals = jObj.getString("doctor_hospitals_unit");
+                Boolean doctorAvailable = jObj.getBoolean("is_doctor_appointment");
+                String available = "";
+                String valueavailab = "";
+
+                if (doctorAvailable == false) {
+                    available = "Not Available Today";
+                } else {
+                    available = "Available Today";
+                }
+
+                if (available.equalsIgnoreCase("Not Available Today")) {
+                    valueavailab = "Maaf Dokter Tidak Tersedia";
+                } else {
+                    valueavailab = "Today";
+                }
+                //Buat Button 
+                ButtonTemplate button = new ButtonTemplate();
+                button.setTitle(doctorName);
+                button.setSubTitle(doctorSpecialist + "\n" + doctorHospitals);
+                List<EasyMap> actions = new ArrayList<>();
+
+                EasyMap AvailableToday = new EasyMap();
+                EasyMap AvailableTomorrow = new EasyMap();
+
+                AvailableToday.setName(available);
+                AvailableToday.setValue(valueavailab);
+                actions.add(AvailableToday);
+
+                AvailableTomorrow.setName("Tomorrow");
+                AvailableTomorrow.setValue(hospitalId);
+                actions.add(AvailableTomorrow);
+
+                button.setButtonValues(actions);
+                ButtonBuilder buttonBuilder = new ButtonBuilder(button);
+
+                String btnBuilder = buttonBuilder.build().toString();
+                sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
+            }
+
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(ServiceImp.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ServiceImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        output.put(OUTPUT, sb.toString());
+        extensionResult.setAgent(false);
+        extensionResult.setRepeat(false);
+        extensionResult.setSuccess(true);
+        extensionResult.setNext(true);
+        extensionResult.setValue(output);
+        return extensionResult;
+    }
+
+    //-------------------------------------//
+    
+    
+    
+    @Override
+    public ExtensionResult doGetHospitalTerdekat(ExtensionRequest extensionRequest) {
+        Map<String, String> output = new HashMap<>();
+        ExtensionResult extensionResult = new ExtensionResult();
+        StringBuilder sb = new StringBuilder();
+        try {
+            OkHttpUtil okHttpUtil = new OkHttpUtil();
+            okHttpUtil.init(true);
+            Request request = new Request.Builder().url(appProperties.getDummyHospital()).get().build();
+            Response response = okHttpUtil.getClient().newCall(request).execute();
+            JSONObject jsonobj = new JSONObject(response.body().string());
+            JSONArray results = jsonobj.getJSONArray("data");
+            int leng = results.length();
+
+            for (int i = 0; i < leng; i++) {
+                JSONObject jObj = results.getJSONObject(i);
+                String hospitalId = jObj.getString("hospital_id");
+                String hospitalName = jObj.getString("hospital_name");
+                String longitud = jObj.getString("longitude");
+                String latitud = jObj.getString("latitude");
+
+                //Create Button 
+                ButtonTemplate button = new ButtonTemplate();
+                button.setTitle(hospitalName);
+                List<EasyMap> actions = new ArrayList<>();
+                EasyMap bookAction = new EasyMap();
+                bookAction.setName("Pilih");
+                bookAction.setValue(hospitalId);
+                actions.add(bookAction);
+                button.setButtonValues(actions);
+                ButtonBuilder buttonBuilder = new ButtonBuilder(button);
+
+                String btnBuilder = buttonBuilder.build().toString();
+                sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
+            }
+
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(ServiceImp.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ServiceImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        output.put(OUTPUT, sb.toString());
+        extensionResult.setAgent(false);
+        extensionResult.setRepeat(false);
+        extensionResult.setSuccess(true);
+        extensionResult.setNext(true);
+        extensionResult.setValue(output);
+        return extensionResult;
+    }
+
+    public double greatCircleInKilometers(double lat1, double long1, double lat2, double long2) {
+        double PI_RAD = Math.PI / 180.0;
+        double phi1 = lat1 * PI_RAD;
+        double phi2 = lat2 * PI_RAD;
+        double lam1 = long1 * PI_RAD;
+        double lam2 = long2 * PI_RAD;
+
+        return 6371.01 * acos(sin(phi1) * sin(phi2) + cos(phi1) * cos(phi2) * cos(lam2 - lam1));
     }
 
 }

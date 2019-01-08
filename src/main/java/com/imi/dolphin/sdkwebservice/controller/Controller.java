@@ -89,12 +89,6 @@ public class Controller {
         return svcService.getQuickReplies(extensionRequest);
     }
 
-    @RequestMapping("/form")
-    @PostMapping
-    public ExtensionResult doBuildForm(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.getForms(extensionRequest);
-    }
-
     @RequestMapping("/button")
     @PostMapping
     public ExtensionResult doBuildButton(@RequestBody ExtensionRequest extensionRequest) {
@@ -119,41 +113,11 @@ public class Controller {
         return svcService.doSendLocation(extensionRequest);
     }
 
-    @RequestMapping("/image")
-    @PostMapping
-    public ExtensionResult doBuildImage(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.getImage(extensionRequest);
-    }
-
-    @RequestMapping("/sendMail")
-    @PostMapping
-    public ExtensionResult doSendMail(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.doSendMail(extensionRequest);
-    }
-
-    @RequestMapping("/formcuti")
-    @PostMapping
-    public ExtensionResult dogetFormcuti(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.dogetFormcuti(extensionRequest);
-    }
-
-    @RequestMapping("/ajuincuti")
-    @PostMapping
-    public ExtensionResult dogetajuincuti(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.dogetajuincuti(extensionRequest);
-    }
-
-    @RequestMapping("/harga")
-    @PostMapping
-    public ExtensionResult dogetHargaMobil(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.dogetHargaMobil(extensionRequest);
-    }
-
     @RequestMapping(path = "/getMerkMobil", method = RequestMethod.GET)
     public ResponseEntity<List<MerkMobil>> listMerks() {
         return new ResponseEntity<>(getMerks(), HttpStatus.OK);
     }
-    
+
     @RequestMapping(path = "/getToyota", method = RequestMethod.GET)
     public ResponseEntity<List<ToyotaModel>> listBMW() {
         return new ResponseEntity<>(getToyota(), HttpStatus.OK);
@@ -234,7 +198,7 @@ public class Controller {
         tm9.setId("10");
         tm9.setType("mpv");
         tm9.setModel("Avanza");
-        
+
         ToyotaModel tm10 = new ToyotaModel();
         tm10.setId("11");
         tm10.setType("mpv");
@@ -254,68 +218,79 @@ public class Controller {
         tm13.setId("14");
         tm13.setType("mpv");
         tm13.setModel("Kijang Inova");
-        
+
         ToyotaModel tm14 = new ToyotaModel();
         tm14.setId("15");
         tm14.setType("mpv");
         tm14.setModel("New Sienta");
-        
+
         ToyotaModel tm15 = new ToyotaModel();
         tm15.setId("16");
         tm15.setType("mpv");
         tm15.setModel("New Alphard");
-        
+
         ToyotaModel tm16 = new ToyotaModel();
         tm16.setId("17");
         tm16.setType("mpv");
         tm16.setModel("New Vellfire");
-        
+
         return Arrays.asList(tm, tm1, tm2, tm3, tm4, tm5, tm6, tm7, tm8,
-                            tm9, tm10, tm11, tm12, tm13, tm14, tm15, tm16);
+                tm9, tm10, tm11, tm12, tm13, tm14, tm15, tm16);
     }
 
-    
-    
     @RequestMapping("/getstarted")
     @PostMapping
     public ExtensionResult doGetStarted(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.doGetStarted(extensionRequest);
     }
-    
-    
+
     @RequestMapping("/getareas")
     @PostMapping
     public ExtensionResult doGetAreas(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.doGetAreas(extensionRequest);
     }
+
     @RequestMapping("/gethospital")
     @PostMapping
     public ExtensionResult doGetHospitalByArea(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.doGetHospitalByArea(extensionRequest);
     }
-    @RequestMapping("/getdoctorbyhospital")
+    
+    @RequestMapping("/getspecialist")
+    @PostMapping
+    public ExtensionResult doGetSpecialist(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.doGetSpecialist(extensionRequest);
+    }
+    
+    @RequestMapping("/getdoctorbyhosspec")
     @PostMapping
     public ExtensionResult doGetDokterByHospitalAndSpecialist(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.doGetDokterByHospitalAndSpecialist(extensionRequest);
     }
-    
+
     @RequestMapping("/getdoctorschedule")
     @PostMapping
     public ExtensionResult doGetDoctorSchedule(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.doGetDoctorSchedule(extensionRequest);
     }
-    
+
     @RequestMapping("/getdoctorbyname")
     @PostMapping
     public ExtensionResult doGetDoctorByName(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.doGetDoctorByName(extensionRequest);
     }
     
+    @RequestMapping("/getdoctorbydoctorid")
+    @PostMapping
+    public ExtensionResult doGetDokterByDoctorId(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.doGetDokterByDoctorId(extensionRequest);
+    }
+
     @RequestMapping("/menudoctorschedule")
     @PostMapping
     public ExtensionResult MenuDoctorSchedule(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.MenuDoctorSchedule(extensionRequest);
     }
-    
-    
+
+  
 }

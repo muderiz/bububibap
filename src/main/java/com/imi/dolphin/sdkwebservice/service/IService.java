@@ -34,8 +34,6 @@ public interface IService {
 
     ExtensionResult getQuickReplies(ExtensionRequest extensionRequest);
 
-    ExtensionResult getForms(ExtensionRequest extensionRequest);
-
     ExtensionResult getButtons(ExtensionRequest extensionRequest);
 
     ExtensionResult getCarousel(ExtensionRequest extensionRequest);
@@ -44,34 +42,29 @@ public interface IService {
 
     ExtensionResult doSendLocation(ExtensionRequest extensionRequest);
 
-    ExtensionResult getImage(ExtensionRequest extensionRequest);
-
     ExtensionResult getSplitConversation(ExtensionRequest extensionRequest);
-
-    ExtensionResult doSendMail(ExtensionRequest extensionRequest);
-
-    ExtensionResult dogetFormcuti(ExtensionRequest extensionRequest);
-
-    ExtensionResult dogetajuincuti(ExtensionRequest extensionRequest);
-
-    ExtensionResult dogetHargaMobil(ExtensionRequest extensionRequest);
-
-    ExtensionResult dogetMerkMobil(ExtensionRequest extensionRequest);
-
-    ExtensionResult doGetCuaca(String kota, ExtensionRequest extensionRequest);
 
     ExtensionResult doGetAreas(ExtensionRequest extensionRequest);
 
     ExtensionResult doGetHospitalByArea(ExtensionRequest extensionRequest);
+    
+    ExtensionResult doGetSpecialist(ExtensionRequest extensionRequest);
 
     ExtensionResult doGetDokterByHospitalAndSpecialist(ExtensionRequest extensionRequest);
 
     ExtensionResult doGetDoctorSchedule(ExtensionRequest extensionRequest);
 
     ExtensionResult doGetDoctorByName(ExtensionRequest extensionRequest);
-
+    
+    ExtensionResult doGetDokterByDoctorId(ExtensionRequest extensionRequest);
+    
     ExtensionResult MenuDoctorSchedule(ExtensionRequest extensionRequest);
 
     ExtensionResult doGetStarted(ExtensionRequest extensionRequest);
 
+    ExtensionResult doGetHospitalTerdekat(ExtensionRequest extensionRequest);
+    
+   
+
+    
 }
