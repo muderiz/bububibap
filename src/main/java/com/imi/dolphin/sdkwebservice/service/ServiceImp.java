@@ -1116,7 +1116,7 @@ public class ServiceImp implements IService {
         String lokasiUser = getEasyMapValueByName(extensionRequest, "lokasi");
         String[] alonglat = lokasiUser.split(";");
         String lat = alonglat[0];
-        String llat = alonglat[1];
+        String longi = alonglat[1];
         try {
             OkHttpUtil okHttpUtil = new OkHttpUtil();
             okHttpUtil.init(true);
@@ -1127,15 +1127,15 @@ public class ServiceImp implements IService {
             int leng = results.length();
             BigDecimal longitud;
             BigDecimal latitud;
-            BigDecimal[][] point = null;
+            BigDecimal[][] point = new BigDecimal[leng][leng];
             int x = 0;
             double hasil;
             for (int i = 0; i < leng; i++) {
                 JSONObject jObj = results.getJSONObject(i);
                 longitud = jObj.getBigDecimal("longitude");
                 latitud = jObj.getBigDecimal("latitude");
-                hasil = distanceInKilometers((Double.valueOf(lat)), (Double.valueOf(llat)), longitud.doubleValue(), latitud.doubleValue());
-                if (hasil < 25) {
+                hasil = distanceInKilometers((Double.valueOf(lat)), (Double.valueOf(longi)), latitud.doubleValue(), longitud.doubleValue());
+                if (hasil < 100) {
                     point[x][0] = longitud;
                     point[x][1] = latitud;
                     x++;
