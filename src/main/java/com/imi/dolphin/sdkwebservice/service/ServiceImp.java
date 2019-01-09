@@ -1108,6 +1108,8 @@ public class ServiceImp implements IService {
     }
 
     //-------------------------------------//
+    
+    // Flow Rumah Sakit Terdekat //
     @Override
     public ExtensionResult doGetHospitalTerdekat(ExtensionRequest extensionRequest) {
         Map<String, String> output = new HashMap<>();
@@ -1164,7 +1166,6 @@ public class ServiceImp implements IService {
 
                     x++;
                 }
-
             }
 
         } catch (MalformedURLException ex) {
@@ -1190,4 +1191,5 @@ public class ServiceImp implements IService {
         return 6371.01 * acos(sin(phi1) * sin(phi2) + cos(phi1) * cos(phi2) * cos(lam2 - lam1));
     }
 
+    //---------------------------------//
 }
