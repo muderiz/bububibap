@@ -95,6 +95,11 @@ public class AppProperties {
     @Value("${siloam.dummy.hospital}")
     String dummyHospital;
 
+    @Value("${google.map.query}")
+    String googleMapQuery;
+
+        
+
     public String getFormIdCuti() {
         return formIdCuti;
     }
@@ -285,6 +290,14 @@ public class AppProperties {
 
     public void setDummyHospital(String dummyHospital) {
         this.dummyHospital = dummyHospital;
+    }
+
+    public String getGoogleMapQuery() {
+        return googleMapQuery;
+    }
+
+    public void setGoogleMapQuery(String googleMapQuery) {
+        this.googleMapQuery = googleMapQuery;
     }
 
 }

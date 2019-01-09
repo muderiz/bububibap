@@ -1132,36 +1132,39 @@ public class ServiceImp implements IService {
             double hasil;
             for (int i = 0; i < leng; i++) {
                 JSONObject jObj = results.getJSONObject(i);
-                longitud = jObj.getBigDecimal("longitude");
-                latitud = jObj.getBigDecimal("latitude");
-                hasil = distanceInKilometers((Double.valueOf(lat)), (Double.valueOf(longi)), latitud.doubleValue(), longitud.doubleValue());
-                if (hasil < 100) {
-                    point[x][0] = longitud;
-                    point[x][1] = latitud;
-                    x++;
-                }
-            }
-            
-            for (int i = 0; i < point.length; i++) {
-                JSONObject jObj = results.getJSONObject(i);
-                String hospitalId = jObj.getString("hospital_id");
                 String hospitalName = jObj.getString("hospital_name");
                 longitud = jObj.getBigDecimal("longitude");
                 latitud = jObj.getBigDecimal("latitude");
+                hasil = distanceInKilometers((Double.valueOf(lat)), (Double.valueOf(longi)), latitud.doubleValue(), longitud.doubleValue());
+                if (hasil < 15) {
+                    point[x][0] = latitud;
+                    point[x][1] = longitud;
 
-                //Create Button 
-                ButtonTemplate button = new ButtonTemplate();
-                button.setTitle(hospitalName);
-                List<EasyMap> actions = new ArrayList<>();
-                EasyMap bookAction = new EasyMap();
-                bookAction.setName("Pilih");
-                bookAction.setValue(hospitalId);
-                actions.add(bookAction);
-                button.setButtonValues(actions);
-                ButtonBuilder buttonBuilder = new ButtonBuilder(button);
+                    ButtonTemplate button = new ButtonTemplate();
+                    button.setTitle(hospitalName);
+                    List<EasyMap> actions = new ArrayList<>();
 
-                String btnBuilder = buttonBuilder.build().toString();
-                sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
+                    EasyMap bookAction = new EasyMap();
+                    EasyMap callAction = new EasyMap();
+
+                    bookAction.setName("Direction");
+                    bookAction.setValue(appProperties.getGoogleMapQuery() + "" + point[x][0] + "," +  point[x][1]);
+                    actions.add(bookAction);
+                    button.setButtonValues(actions);
+
+                    callAction.setName("Call");
+                    callAction.setValue("tel:");
+                    actions.add(callAction);
+                    button.setButtonValues(actions);
+
+                    ButtonBuilder buttonBuilder = new ButtonBuilder(button);
+
+                    String btnBuilder = buttonBuilder.build().toString();
+                    sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
+
+                    x++;
+                }
+
             }
 
         } catch (MalformedURLException ex) {
