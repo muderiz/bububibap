@@ -47,6 +47,9 @@ import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.DayOfWeek;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -437,62 +440,6 @@ public class ServiceImp implements IService {
         return extensionResult;
     }
 
-    public Datum getForm(String bearer, String ticketNumber) {
-        Datum data = new Datum();
-        String baseUrl = appProperties.getBaseUrl();
-        String apiform = appProperties.getApiForm();
-        String formId = appProperties.getFormIdCuti();
-        String paramformId = "?formId=";
-        String paramFieldName = "&fieldName=";
-        String paramFieldValue = "&fieldValue=*";
-        String paramStart = "&start=0";
-        String paramCount = "&count=1";
-        String fieldName = appProperties.getTicketNumber();
-
-        //menggunakan ticket number
-        String url = baseUrl + apiform + paramformId + formId + paramFieldName + fieldName + paramFieldValue + ticketNumber + paramStart + paramCount;
-
-        // tidak pakai ticket number
-//		String url = baseUrl + apiform + paramformId + formId + paramFieldName + fieldName + paramFieldValue
-//				+ paramStart + paramCount;
-        System.out.println(url);
-
-        OkHttpUtil okHttpUtil = new OkHttpUtil();
-        okHttpUtil.init(true);
-
-        Request request = new Request.Builder().url(url).get().addHeader("Content-Type", "application/json")
-                .addHeader("Authorization", "Bearer " + bearer).build();
-
-        try {
-            Response response = okHttpUtil.getClient().newCall(request).execute();
-
-            Formcuti fct = new Formcuti();
-            String JsonString = response.body().string();
-            // System.out.println("getform, Jsonstring : "+JsonString);
-
-            Gson gson = new Gson();
-            fct = gson.fromJson(JsonString, Formcuti.class);
-            // System.out.println("From cuti data : "+fct);
-
-            String jsonfct = gson.toJson(fct.getData());
-            // System.out.println(jsonfct);
-
-            // ambil json array
-            JSONArray arrayJson = new JSONArray(jsonfct);
-            // System.out.println("Array json dari form cuti data : "+arrayJson);
-            JSONObject jsonObjek = arrayJson.getJSONObject(0);
-            // System.out.println("Object json dari form cuti data : "+jsonObjek);
-
-            data = gson.fromJson(jsonObjek.toString(), Datum.class);
-
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-        return data;
-    }
-
     /**
      * Method Started Siloam
      *
@@ -623,7 +570,7 @@ public class ServiceImp implements IService {
     @Override
     public ExtensionResult doSendLocation(ExtensionRequest extensionRequest) {
         Map<String, String> output = new HashMap<>();
-        QuickReplyBuilder quickReplyBuilder = new QuickReplyBuilder.Builder("Silahkan Lokasi kakak sekarang ya...")
+        QuickReplyBuilder quickReplyBuilder = new QuickReplyBuilder.Builder("Silahkan kirim lokasi kakak ya...")
                 .add("Location", "location").build();
         output.put(OUTPUT, quickReplyBuilder.string());
         ExtensionResult extensionResult = new ExtensionResult();
@@ -900,9 +847,8 @@ public class ServiceImp implements IService {
         extensionResult.setValue(output);
         return extensionResult;
     }
-    //----------------------------//
-
-    @Override
+    
+     @Override
     public ExtensionResult doGetDoctorSchedule(ExtensionRequest extensionRequest) {
         Map<String, String> output = new HashMap<>();
         ExtensionResult extensionResult = new ExtensionResult();
@@ -982,8 +928,11 @@ public class ServiceImp implements IService {
         extensionResult.setValue(output);
         return extensionResult;
     }
+    //----------------------------//
 
-    //Doctor Schedule Flow Search By Name//
+   
+
+    // Doctor Schedule Flow Search By Name //
     @Override
     public ExtensionResult doGetDoctorByName(ExtensionRequest extensionRequest) {
         Map<String, String> output = new HashMap<>();
@@ -1039,6 +988,7 @@ public class ServiceImp implements IService {
         ExtensionResult extensionResult = new ExtensionResult();
         StringBuilder sb = new StringBuilder();
         String doctorId = getEasyMapValueByName(extensionRequest, "dokter");
+        
         try {
             OkHttpUtil okHttpUtil = new OkHttpUtil();
             okHttpUtil.init(true);
@@ -1051,48 +1001,66 @@ public class ServiceImp implements IService {
             for (int i = 0; i < leng; i++) {
                 JSONObject jObj = results.getJSONObject(i);
                 String hospitalId = jObj.getString("hospital_id");
-                String doctorName = jObj.getString("doctor_name");
-                String doctorSpecialist = jObj.getString("doctor_specialist");
-                String doctorHospitals = jObj.getString("doctor_hospitals_unit");
-                Boolean doctorAvailable = jObj.getBoolean("is_doctor_appointment");
-                String available = "";
-                String valueavailab = "";
+                Request request2 = new Request.Builder().url(appProperties.getApiDoctorschedule() + doctorId + "/" + hospitalId).get().build();
+                Response response2 = okHttpUtil.getClient().newCall(request2).execute();
+                JSONObject jsonobj2 = new JSONObject(response2.body().string());
+                JSONArray results2 = jsonobj2.getJSONArray("data");
+                int leng2 = results2.length();
 
-                if (doctorAvailable == false) {
-                    available = "Not Available Today";
-                } else {
-                    available = "Available Today";
+                for (int j = 0; j < leng2; j++) {
+                    JSONObject jObj2 = results2.getJSONObject(j);
+                    int daysnumber = jObj2.getInt("doctor_schedule_day");
+                    String days = "";
+                    String fromtime = jObj2.getString("doctor_schedule_from_time");
+                    String totime = jObj2.getString("doctor_schedule_to_time");
+                    String dateF = fromtime.substring(11, 16);
+                    String dateT = totime.substring(11, 16);
+
+                    String Name = jObj2.getString("doctor_schedule_name");
+                    DayOfWeek day = DayOfWeek.of(daysnumber);
+                    days = day.name().toLowerCase();
+                    
+//                    if (daysnumber == 1) {
+//                        days = "Senin";
+//                    } else if (daysnumber == 2) {
+//                        days = "Selasa";
+//                    } else if (daysnumber == 3) {
+//                        days = "Rabu";
+//                    } else if (daysnumber == 4) {
+//                        days = "Kamis";
+//                    } else if (daysnumber == 5) {
+//                        days = "Jumat";
+//                    } else if (daysnumber == 6) {
+//                        days = "Sabtu";
+//                    } else if (daysnumber == 7) {
+//                        days = "Minggu";
+//                    }
+
+                    //Buat Button 
+                    ButtonTemplate button = new ButtonTemplate();
+                    button.setTitle(Name);
+                    button.setSubTitle(days + ": \n" + dateF + "-" + dateT);
+                    List<EasyMap> actions = new ArrayList<>();
+
+                    EasyMap bookAction = new EasyMap();
+                    EasyMap callAction = new EasyMap();
+
+                    bookAction.setName("Book Online");
+                    bookAction.setValue("https://www.siloamhospitals.com");
+                    actions.add(bookAction);
+
+                    callAction.setName("By Phone");
+                    callAction.setValue("tel:1500181");
+                    actions.add(callAction);
+
+                    button.setButtonValues(actions);
+                    ButtonBuilder buttonBuilder = new ButtonBuilder(button);
+
+                    String btnBuilder = buttonBuilder.build().toString();
+                    sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
                 }
 
-                if (available.equalsIgnoreCase("Not Available Today")) {
-                    valueavailab = "Maaf Dokter Tidak Tersedia";
-                } else {
-                    valueavailab = "Today";
-                }
-                //Buat Button 
-                ButtonTemplate button = new ButtonTemplate();
-                button.setTitle(doctorName);
-                button.setSubTitle(doctorSpecialist + "\n" + doctorHospitals);
-                List<EasyMap> actions = new ArrayList<>();
-
-                EasyMap AvailableToday = new EasyMap();
-                EasyMap AvailableTomorrow = new EasyMap();
-
-                AvailableToday.setName(available);
-                AvailableToday.setValue(valueavailab);
-                actions.add(AvailableToday);
-
-                AvailableTomorrow.setName("Tomorrow");
-                AvailableTomorrow.setValue(hospitalId);
-                actions.add(AvailableTomorrow);
-
-                button.setButtonValues(actions);
-                ButtonBuilder buttonBuilder = new ButtonBuilder(button);
-
-                String btnBuilder = buttonBuilder.build().toString();
-                sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
             }
-
         } catch (MalformedURLException ex) {
             Logger.getLogger(ServiceImp.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -1108,10 +1076,10 @@ public class ServiceImp implements IService {
     }
 
     //-------------------------------------//
-    
     // Flow Rumah Sakit Terdekat //
     @Override
-    public ExtensionResult doGetHospitalTerdekat(ExtensionRequest extensionRequest) {
+    public ExtensionResult doGetHospitalTerdekat(ExtensionRequest extensionRequest
+    ) {
         Map<String, String> output = new HashMap<>();
         ExtensionResult extensionResult = new ExtensionResult();
         StringBuilder sb = new StringBuilder();
@@ -1150,7 +1118,7 @@ public class ServiceImp implements IService {
                     EasyMap callAction = new EasyMap();
 
                     bookAction.setName("Direction");
-                    bookAction.setValue(appProperties.getGoogleMapQuery() + "" + point[x][0] + "," +  point[x][1]);
+                    bookAction.setValue(appProperties.getGoogleMapQuery() + "" + point[x][0] + "," + point[x][1]);
                     actions.add(bookAction);
                     button.setButtonValues(actions);
 
@@ -1167,7 +1135,6 @@ public class ServiceImp implements IService {
                     x++;
                 }
             }
-
         } catch (MalformedURLException ex) {
             Logger.getLogger(ServiceImp.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -1188,8 +1155,102 @@ public class ServiceImp implements IService {
         double phi2 = lat2 * PI_RAD;
         double lam1 = long1 * PI_RAD;
         double lam2 = long2 * PI_RAD;
-        return 6371.01 * acos(sin(phi1) * sin(phi2) + cos(phi1) * cos(phi2) * cos(lam2 - lam1));
+        return 6371.01 * Math.acos(Math.sin(phi1) * Math.sin(phi2) + Math.cos(phi1) * Math.cos(phi2) * Math.cos(lam2 - lam1));
     }
 
     //---------------------------------//
+    
+    
+    
+    public ExtensionResult doGetDoctorScheduleTest(ExtensionRequest extensionRequest) {
+        Map<String, String> output = new HashMap<>();
+        ExtensionResult extensionResult = new ExtensionResult();
+        StringBuilder sb = new StringBuilder();
+        String doctorId = getEasyMapValueByName(extensionRequest, "doctor");
+        String hospitalId = getEasyMapValueByName(extensionRequest, "hospital");
+//        Calendar calendar = Calendar.getInstance();
+//        String duys = calendar.getTime().toString();
+//   String hari = duys.substring(0,3);
+//
+//   System.out.println("The current date is : " + hari);  
+//   calendar.add(Calendar.DATE, +1);  
+//   System.out.println("15 days ago: " + calendar.getTime());  
+//   calendar.add(Calendar.MONTH, 4);  
+//   System.out.println("4 months later: " + calendar.getTime());  
+//   calendar.add(Calendar.YEAR, 2);  
+//   System.out.println("2 years later: " + calendar.getTime());
+
+        try {
+            OkHttpUtil okHttpUtil = new OkHttpUtil();
+            okHttpUtil.init(true);
+            Request request = new Request.Builder().url(appProperties.getApiDoctorschedule() + doctorId + "/" + hospitalId).get().build();
+            Response response = okHttpUtil.getClient().newCall(request).execute();
+            JSONObject jsonobj = new JSONObject(response.body().string());
+            JSONArray results = jsonobj.getJSONArray("data");
+            int leng = results.length();
+
+            for (int i = 0; i < leng; i++) {
+                JSONObject jObj = results.getJSONObject(i);
+                int daysnumber = jObj.getInt("doctor_schedule_day");
+                String days = "";
+                String fromtime = jObj.getString("doctor_schedule_from_time");
+                String totime = jObj.getString("doctor_schedule_to_time");
+                String dateF = fromtime.substring(11, 16);
+                String dateT = totime.substring(11, 16);
+
+                String Name = jObj.getString("doctor_schedule_name");
+
+                if (daysnumber == 1) {
+                    days = "Senin";
+                } else if (daysnumber == 2) {
+                    days = "Selasa";
+                } else if (daysnumber == 3) {
+                    days = "Rabu";
+                } else if (daysnumber == 4) {
+                    days = "Kamis";
+                } else if (daysnumber == 5) {
+                    days = "Jumat";
+                } else if (daysnumber == 6) {
+                    days = "Sabtu";
+                } else if (daysnumber == 7) {
+                    days = "Minggu";
+                }
+
+                //Buat Button 
+                ButtonTemplate button = new ButtonTemplate();
+                button.setTitle(Name);
+                button.setSubTitle(days + ": \n" + dateF + "-" + dateT);
+                List<EasyMap> actions = new ArrayList<>();
+
+                EasyMap bookAction = new EasyMap();
+                EasyMap callAction = new EasyMap();
+
+                bookAction.setName("Book Online");
+                bookAction.setValue("https://www.siloamhospitals.com");
+                actions.add(bookAction);
+
+                callAction.setName("By Phone");
+                callAction.setValue("tel:1500181");
+                actions.add(callAction);
+
+                button.setButtonValues(actions);
+                ButtonBuilder buttonBuilder = new ButtonBuilder(button);
+
+                String btnBuilder = buttonBuilder.build().toString();
+                sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
+            }
+
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(ServiceImp.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ServiceImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        output.put(OUTPUT, sb.toString());
+        extensionResult.setAgent(false);
+        extensionResult.setRepeat(false);
+        extensionResult.setSuccess(true);
+        extensionResult.setNext(true);
+        extensionResult.setValue(output);
+        return extensionResult;
+    }
 }

@@ -71,9 +71,6 @@ public class AppProperties {
     @Value("${fieldName.ticketNumber}")
     String ticketNumber;
 
-    @Value("${dolphin.form.id.cuti}")
-    String formIdCuti;
-
     @Value("${siloam.api.area}")
     String apiArea;
 
@@ -97,16 +94,6 @@ public class AppProperties {
 
     @Value("${google.map.query}")
     String googleMapQuery;
-
-        
-
-    public String getFormIdCuti() {
-        return formIdCuti;
-    }
-
-    public void setFormIdCuti(String formIdCuti) {
-        this.formIdCuti = formIdCuti;
-    }
 
     public String getTicketNumber() {
         return ticketNumber;
