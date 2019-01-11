@@ -297,6 +297,13 @@ public class Controller {
     public ExtensionResult doGetHospitalTerdekat(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.doGetHospitalTerdekat(extensionRequest);
     }
+    
+    @RequestMapping("/test")
+    @PostMapping
+    public ExtensionResult doGetDoctorScheduleWeek(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.doGetDoctorScheduleWeek(extensionRequest);
+    }
 
+    
   
 }
