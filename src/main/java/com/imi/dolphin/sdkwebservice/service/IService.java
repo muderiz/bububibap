@@ -49,6 +49,8 @@ public interface IService {
     ExtensionResult doGetHospitalByArea(ExtensionRequest extensionRequest);
 
     ExtensionResult doGetSpecialist(ExtensionRequest extensionRequest);
+    
+    ExtensionResult doGetSpecialistbyName(ExtensionRequest extensionRequest);
 
     ExtensionResult doGetDokterByHospitalAndSpecialist(ExtensionRequest extensionRequest);
 
@@ -56,7 +58,7 @@ public interface IService {
 
     ExtensionResult doGetDoctorByName(ExtensionRequest extensionRequest);
 
-    ExtensionResult doGetDokterByDoctorId(ExtensionRequest extensionRequest);
+    ExtensionResult doGetScheduleByDoctorId(ExtensionRequest extensionRequest);
 
     ExtensionResult MenuDoctorSchedule(ExtensionRequest extensionRequest);
 
@@ -64,7 +66,11 @@ public interface IService {
 
     ExtensionResult doGetHospitalTerdekat(ExtensionRequest extensionRequest);
 
-    ExtensionResult doGetDoctorScheduleWeek(ExtensionRequest extensionRequest);
+    
+    
+    
+    
+    
     
 
     

@@ -591,28 +591,44 @@ public class ServiceImp implements IService {
         ButtonTemplate button1 = new ButtonTemplate();
 //        button1.setPictureLink(SAMPLE_IMAGE_PATH);
 //        button1.setPicturePath(SAMPLE_IMAGE_PATH);
-        button1.setTitle("Booking");
+        button1.setTitle("Cari Dokter");
+        button1.setSubTitle("Berdasarkan AREA");
         List<EasyMap> actions1 = new ArrayList<>();
-        EasyMap bookActionMCU = new EasyMap();
-        bookActionMCU.setName("PILIH");
-        bookActionMCU.setValue("booking");
-        actions1.add(bookActionMCU);
+
+        EasyMap bookActionArea = new EasyMap();
+        bookActionArea.setName("PILIH");
+        bookActionArea.setValue("booking");
+        actions1.add(bookActionArea);
         button1.setButtonValues(actions1);
         ButtonBuilder buttonBuilder1 = new ButtonBuilder(button1);
 
         ButtonTemplate button2 = new ButtonTemplate();
 //        button2.setPictureLink(SAMPLE_IMAGE_PATH);
 //        button2.setPicturePath(SAMPLE_IMAGE_PATH);
-        button2.setTitle("Info Dokter");
+        button2.setTitle("Cari Dokter");
+        button2.setTitle("Berdasarkan Nama");
         List<EasyMap> actions2 = new ArrayList<>();
-        EasyMap bookActionEnq = new EasyMap();
-        bookActionEnq.setName("PILIH");
-        bookActionEnq.setValue("info dokter");
-        actions2.add(bookActionEnq);
+        EasyMap bookActionName = new EasyMap();
+        bookActionName.setName("PILIH");
+        bookActionName.setValue("info dokter");
+        actions2.add(bookActionName);
         button2.setButtonValues(actions2);
         ButtonBuilder buttonBuilder2 = new ButtonBuilder(button2);
 
-        CarouselBuilder carouselBuilder = new CarouselBuilder(buttonBuilder1.build(), buttonBuilder2.build());
+        ButtonTemplate button3 = new ButtonTemplate();
+//        button2.setPictureLink(SAMPLE_IMAGE_PATH);
+//        button2.setPicturePath(SAMPLE_IMAGE_PATH);
+        button3.setTitle("Cari Dokter");
+        button3.setTitle("Berdasarkan Nama");
+        List<EasyMap> actions3 = new ArrayList<>();
+        EasyMap bookActionSpec = new EasyMap();
+        bookActionSpec.setName("PILIH");
+        bookActionSpec.setValue("info dokter");
+        actions3.add(bookActionSpec);
+        button3.setButtonValues(actions3);
+        ButtonBuilder buttonBuilder3 = new ButtonBuilder(button3);
+
+        CarouselBuilder carouselBuilder = new CarouselBuilder(buttonBuilder1.build(), buttonBuilder2.build(), buttonBuilder3.build());
 
         output.put(OUTPUT, carouselBuilder.build());
         ExtensionResult extensionResult = new ExtensionResult();
@@ -624,7 +640,7 @@ public class ServiceImp implements IService {
         return extensionResult;
     }
 
-    //Doctor Schedule Flow Search By Area,Hospital,Specialist//
+    // Doctor Schedule Flow Search By Area,Hospital,Specialist //
     @Override
     public ExtensionResult doGetAreas(ExtensionRequest extensionRequest) {
         Map<String, String> output = new HashMap<>();
@@ -649,7 +665,7 @@ public class ServiceImp implements IService {
                 button.setTitle(areaName);
                 List<EasyMap> actions = new ArrayList<>();
                 EasyMap bookAction = new EasyMap();
-                bookAction.setName("Pilih");
+                bookAction.setName(areaName);
                 bookAction.setValue(areaId);
                 actions.add(bookAction);
                 button.setButtonValues(actions);
@@ -698,7 +714,7 @@ public class ServiceImp implements IService {
                 button.setTitle(hospitalName);
                 List<EasyMap> actions = new ArrayList<>();
                 EasyMap bookAction = new EasyMap();
-                bookAction.setName("Pilih");
+                bookAction.setName(hospitalName);
                 bookAction.setValue(hospitalId);
                 actions.add(bookAction);
                 button.setButtonValues(actions);
@@ -780,7 +796,7 @@ public class ServiceImp implements IService {
         try {
             OkHttpUtil okHttpUtil = new OkHttpUtil();
             okHttpUtil.init(true);
-            Request request = new Request.Builder().url("https://52.148.90.132:5363/mobile/mysiloam/patientcommon/doctor/search/complete?hospitalId=" + hospitalId + "&specialistId=" + specialistId).get().build();
+            Request request = new Request.Builder().url(appProperties.getApiDoctorbydoctorIdSpecialist() + hospitalId + "&specialistId=" + specialistId).get().build();
             Response response = okHttpUtil.getClient().newCall(request).execute();
             JSONObject jsonobj = new JSONObject(response.body().string());
             JSONArray results = jsonobj.getJSONArray("data");
@@ -807,6 +823,7 @@ public class ServiceImp implements IService {
                 } else {
                     valueavailab = "";
                 }
+
                 //Buat Button 
                 ButtonTemplate button = new ButtonTemplate();
                 button.setTitle(doctorName);
@@ -899,7 +916,6 @@ public class ServiceImp implements IService {
 
                     int daysnumber = jObj.getInt("doctor_schedule_day");
                     dayslist.add(daysnumber);
-
                     String fromtime = jObj.getString("doctor_schedule_from_time");
                     String totime = jObj.getString("doctor_schedule_to_time");
                     String dateF = fromtime.substring(11, 16);
@@ -911,10 +927,8 @@ public class ServiceImp implements IService {
                             daypoint[x] = jadwal;
                         } else {
                             daypoint[x] = daypoint[x] + "/" + jadwal;
-
                         }
                     }
-
                 }
                 if (dayslist.contains(kodeHari)) {
                     //Buat Button 
@@ -940,10 +954,8 @@ public class ServiceImp implements IService {
                     String btnBuilder = buttonBuilder.build().toString();
                     sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
                 }
-
                 x++;
                 calendar.add(Calendar.DATE, +1);
-
             }
 
         } catch (MalformedURLException ex) {
@@ -987,7 +999,7 @@ public class ServiceImp implements IService {
                 button.setTitle(doctorName);
                 List<EasyMap> actions = new ArrayList<>();
                 EasyMap bookAction = new EasyMap();
-                bookAction.setName("Pilih");
+                bookAction.setName(doctorName);
                 bookAction.setValue(doctorId);
                 actions.add(bookAction);
                 button.setButtonValues(actions);
@@ -1012,11 +1024,12 @@ public class ServiceImp implements IService {
     }
 
     @Override
-    public ExtensionResult doGetDokterByDoctorId(ExtensionRequest extensionRequest) {
+    public ExtensionResult doGetScheduleByDoctorId(ExtensionRequest extensionRequest) {
         Map<String, String> output = new HashMap<>();
         ExtensionResult extensionResult = new ExtensionResult();
         StringBuilder sb = new StringBuilder();
-        String doctorId = getEasyMapValueByName(extensionRequest, "dokter");
+        String doctorId = getEasyMapValueByName(extensionRequest, "doctor");
+        Calendar calendar = Calendar.getInstance();
 
         try {
             OkHttpUtil okHttpUtil = new OkHttpUtil();
@@ -1035,42 +1048,79 @@ public class ServiceImp implements IService {
                 JSONObject jsonobj2 = new JSONObject(response2.body().string());
                 JSONArray results2 = jsonobj2.getJSONArray("data");
                 int leng2 = results2.length();
+                List<Integer> dayslist = new ArrayList<>();
 
-                for (int j = 0; j < leng2; j++) {
-                    JSONObject jObj2 = results2.getJSONObject(j);
-                    int daysnumber = jObj2.getInt("doctor_schedule_day");
-                    String days = "";
-                    String fromtime = jObj2.getString("doctor_schedule_from_time");
-                    String totime = jObj2.getString("doctor_schedule_to_time");
-                    String dateF = fromtime.substring(11, 16);
-                    String dateT = totime.substring(11, 16);
+                for (int j = 0; j < 7; j++) {
+                    String datenow = calendar.getTime().toString();
+                    String hari = datenow.substring(0, 3);
+                    String tanggal = datenow.substring(8, 10);
+                    String bulan = datenow.substring(4, 7);
+                    String tahun = datenow.substring(23, 28);
+                    int x = 0;
+                    int kodeHari = 0;
+                    String[] daypoint = new String[leng2];
+                    for (int k = 0; k < leng2; k++) {
+                        JSONObject jObj2 = results2.getJSONObject(k);
 
-                    String Name = jObj2.getString("doctor_schedule_name");
-                    DayOfWeek day = DayOfWeek.of(daysnumber);
-                    days = day.name().toLowerCase();
+                        if (hari.equalsIgnoreCase("Mon")) {
+                            kodeHari = 1;
+                        } else if (hari.equalsIgnoreCase("Tue")) {
+                            kodeHari = 2;
+                        } else if (hari.equalsIgnoreCase("Wed")) {
+                            kodeHari = 3;
+                        } else if (hari.equalsIgnoreCase("Thu")) {
+                            kodeHari = 4;
+                        } else if (hari.equalsIgnoreCase("Fri")) {
+                            kodeHari = 5;
+                        } else if (hari.equalsIgnoreCase("Sat")) {
+                            kodeHari = 6;
+                        } else if (hari.equalsIgnoreCase("Sun")) {
+                            kodeHari = 7;
+                        }
 
-                    //Buat Button 
-                    ButtonTemplate button = new ButtonTemplate();
-                    button.setTitle(Name);
-                    button.setSubTitle(days + ": \n" + dateF + "-" + dateT);
-                    List<EasyMap> actions = new ArrayList<>();
+                        int daysnumber = jObj2.getInt("doctor_schedule_day");
+                        dayslist.add(daysnumber);
 
-                    EasyMap bookAction = new EasyMap();
-                    EasyMap callAction = new EasyMap();
+                        String fromtime = jObj2.getString("doctor_schedule_from_time");
+                        String totime = jObj2.getString("doctor_schedule_to_time");
+                        String dateF = fromtime.substring(11, 16);
+                        String dateT = totime.substring(11, 16);
+                        String jadwal = dateF + "-" + dateT;
 
-                    bookAction.setName("Book Online");
-                    bookAction.setValue("https://www.siloamhospitals.com");
-                    actions.add(bookAction);
+                        if (daysnumber == kodeHari) {
+                            if (daypoint[x] == null) {
+                                daypoint[x] = jadwal;
+                            } else {
+                                daypoint[x] = daypoint[x] + "/" + jadwal;
+                            }
+                        }
+                    }
+                    if (dayslist.contains(kodeHari)) {
+                        //Buat Button 
+                        ButtonTemplate button = new ButtonTemplate();
+                        button.setTitle(hari + ", " + tanggal + " " + bulan + "" + tahun);
+                        button.setSubTitle(daypoint[x]);
+                        List<EasyMap> actions = new ArrayList<>();
 
-                    callAction.setName("By Phone");
-                    callAction.setValue("tel:1500181");
-                    actions.add(callAction);
+                        EasyMap bookAction = new EasyMap();
+                        EasyMap callAction = new EasyMap();
 
-                    button.setButtonValues(actions);
-                    ButtonBuilder buttonBuilder = new ButtonBuilder(button);
+                        bookAction.setName("Book Online");
+                        bookAction.setValue("https://www.siloamhospitals.com");
+                        actions.add(bookAction);
 
-                    String btnBuilder = buttonBuilder.build().toString();
-                    sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
+                        callAction.setName("By Phone");
+                        callAction.setValue("tel:1500181");
+                        actions.add(callAction);
+
+                        button.setButtonValues(actions);
+                        ButtonBuilder buttonBuilder = new ButtonBuilder(button);
+
+                        String btnBuilder = buttonBuilder.build().toString();
+                        sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
+                    }
+                    x++;
+                    calendar.add(Calendar.DATE, +1);
                 }
             }
 
@@ -1170,102 +1220,42 @@ public class ServiceImp implements IService {
         double lam2 = long2 * PI_RAD;
         return 6371.01 * Math.acos(Math.sin(phi1) * Math.sin(phi2) + Math.cos(phi1) * Math.cos(phi2) * Math.cos(lam2 - lam1));
     }
-
     //---------------------------------//
+
+    // Get Specialist By Name //
     @Override
-    public ExtensionResult doGetDoctorScheduleWeek(ExtensionRequest extensionRequest) {
+    public ExtensionResult doGetSpecialistbyName(ExtensionRequest extensionRequest) {
         Map<String, String> output = new HashMap<>();
         ExtensionResult extensionResult = new ExtensionResult();
         StringBuilder sb = new StringBuilder();
-        String doctorId = getEasyMapValueByName(extensionRequest, "doctor");
-        String hospitalId = getEasyMapValueByName(extensionRequest, "hospital");
-        Calendar calendar = Calendar.getInstance();
-
+        String nama = getEasyMapValueByName(extensionRequest, "nama");
         try {
             OkHttpUtil okHttpUtil = new OkHttpUtil();
             okHttpUtil.init(true);
-            Request request = new Request.Builder().url(appProperties.getApiDoctorschedule() + doctorId + "/" + hospitalId).get().build();
+            Request request = new Request.Builder().url(appProperties.getApiSpecialistbyname() + nama).get().build();
             Response response = okHttpUtil.getClient().newCall(request).execute();
             JSONObject jsonobj = new JSONObject(response.body().string());
             JSONArray results = jsonobj.getJSONArray("data");
             int leng = results.length();
-            List<Integer> dayslist = new ArrayList<>();
 
-            for (int i = 0; i < 7; i++) {
-                String datenow = calendar.getTime().toString();
-                String hari = datenow.substring(0, 3);
-                String tanggal = datenow.substring(8, 10);
-                String bulan = datenow.substring(4, 7);
-                String tahun = datenow.substring(23, 28);
-                int x = 0;
-                int kodeHari = 0;
-                String[] daypoint = new String[leng];
-                for (int j = 0; j < leng; j++) {
-                    JSONObject jObj = results.getJSONObject(j);
+            for (int i = 0; i < leng; i++) {
+                JSONObject jObj = results.getJSONObject(i);
+                String specialistId = jObj.getString("specialist_id");
+                String specialistName = jObj.getString("specialist_name");
 
-                    if (hari.equalsIgnoreCase("Mon")) {
-                        kodeHari = 1;
-                    } else if (hari.equalsIgnoreCase("Tue")) {
-                        kodeHari = 2;
-                    } else if (hari.equalsIgnoreCase("Wed")) {
-                        kodeHari = 3;
-                    } else if (hari.equalsIgnoreCase("Thu")) {
-                        kodeHari = 4;
-                    } else if (hari.equalsIgnoreCase("Fri")) {
-                        kodeHari = 5;
-                    } else if (hari.equalsIgnoreCase("Sat")) {
-                        kodeHari = 6;
-                    } else if (hari.equalsIgnoreCase("Sun")) {
-                        kodeHari = 7;
-                    }
+                //Create Button 
+                ButtonTemplate button = new ButtonTemplate();
+                button.setTitle(specialistName);
+                List<EasyMap> actions = new ArrayList<>();
+                EasyMap bookAction = new EasyMap();
+                bookAction.setName(specialistName);
+                bookAction.setValue(specialistId);
+                actions.add(bookAction);
+                button.setButtonValues(actions);
+                ButtonBuilder buttonBuilder = new ButtonBuilder(button);
 
-                    int daysnumber = jObj.getInt("doctor_schedule_day");
-                    dayslist.add(daysnumber);
-
-                    String fromtime = jObj.getString("doctor_schedule_from_time");
-                    String totime = jObj.getString("doctor_schedule_to_time");
-                    String dateF = fromtime.substring(11, 16);
-                    String dateT = totime.substring(11, 16);
-                    String jadwal = dateF + "-" + dateT;
-
-                    if (daysnumber == kodeHari) {
-                        if (daypoint[x] == null) {
-                            daypoint[x] = jadwal;
-                        } else {
-                            daypoint[x] = daypoint[x] + "/" + jadwal;
-
-                        }
-                    }
-
-                }
-                if (dayslist.contains(kodeHari)) {
-                    //Buat Button 
-                    ButtonTemplate button = new ButtonTemplate();
-                    button.setTitle(hari + ", " + tanggal + " " + bulan + "" + tahun);
-                    button.setSubTitle(daypoint[x]);
-                    List<EasyMap> actions = new ArrayList<>();
-
-                    EasyMap bookAction = new EasyMap();
-                    EasyMap callAction = new EasyMap();
-
-                    bookAction.setName("Book Online");
-                    bookAction.setValue("https://www.siloamhospitals.com");
-                    actions.add(bookAction);
-
-                    callAction.setName("By Phone");
-                    callAction.setValue("tel:1500181");
-                    actions.add(callAction);
-
-                    button.setButtonValues(actions);
-                    ButtonBuilder buttonBuilder = new ButtonBuilder(button);
-
-                    String btnBuilder = buttonBuilder.build().toString();
-                    sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
-                }
-
-                x++;
-                calendar.add(Calendar.DATE, +1);
-
+                String btnBuilder = buttonBuilder.build().toString();
+                sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
             }
 
         } catch (MalformedURLException ex) {
@@ -1281,4 +1271,6 @@ public class ServiceImp implements IService {
         extensionResult.setValue(output);
         return extensionResult;
     }
+    //-----------------------------------//
+
 }
