@@ -1031,7 +1031,6 @@ public class ServiceImp implements IService {
         String doctorId = getEasyMapValueByName(extensionRequest, "doctor");
         Calendar calendar = Calendar.getInstance();
         if (doctorId.contains("-")) {
-
             try {
                 OkHttpUtil okHttpUtil = new OkHttpUtil();
                 okHttpUtil.init(true);
@@ -1134,8 +1133,9 @@ public class ServiceImp implements IService {
             extensionResult.setValue(output);
 
         } else {
-            output.put("doctor", null);
             output.put("name", doctorId);
+            output.put("doctor", null);
+
             extensionResult.setEntities(output);
         }
         extensionResult.setAgent(false);
