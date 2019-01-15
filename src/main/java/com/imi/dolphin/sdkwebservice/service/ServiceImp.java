@@ -979,7 +979,7 @@ public class ServiceImp implements IService {
         Map<String, String> output = new HashMap<>();
         ExtensionResult extensionResult = new ExtensionResult();
         StringBuilder sb = new StringBuilder();
-        String nama = getEasyMapValueByName(extensionRequest, "nama");
+        String nama = getEasyMapValueByName(extensionRequest, "name");
         try {
             OkHttpUtil okHttpUtil = new OkHttpUtil();
             okHttpUtil.init(true);
