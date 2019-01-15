@@ -1030,111 +1030,118 @@ public class ServiceImp implements IService {
         StringBuilder sb = new StringBuilder();
         String doctorId = getEasyMapValueByName(extensionRequest, "doctor");
         Calendar calendar = Calendar.getInstance();
+        if (doctorId.contains("-")) {
 
-        try {
-            OkHttpUtil okHttpUtil = new OkHttpUtil();
-            okHttpUtil.init(true);
-            Request request = new Request.Builder().url(appProperties.getApiDoctorbydoctorid() + doctorId).get().build();
-            Response response = okHttpUtil.getClient().newCall(request).execute();
-            JSONObject jsonobj = new JSONObject(response.body().string());
-            JSONArray results = jsonobj.getJSONArray("data");
-            int leng = results.length();
+            try {
+                OkHttpUtil okHttpUtil = new OkHttpUtil();
+                okHttpUtil.init(true);
+                Request request = new Request.Builder().url(appProperties.getApiDoctorbydoctorid() + doctorId).get().build();
+                Response response = okHttpUtil.getClient().newCall(request).execute();
+                JSONObject jsonobj = new JSONObject(response.body().string());
+                JSONArray results = jsonobj.getJSONArray("data");
+                int leng = results.length();
 
-            for (int i = 0; i < leng; i++) {
-                JSONObject jObj = results.getJSONObject(i);
-                String hospitalId = jObj.getString("hospital_id");
-                Request request2 = new Request.Builder().url(appProperties.getApiDoctorschedule() + doctorId + "/" + hospitalId).get().build();
-                Response response2 = okHttpUtil.getClient().newCall(request2).execute();
-                JSONObject jsonobj2 = new JSONObject(response2.body().string());
-                JSONArray results2 = jsonobj2.getJSONArray("data");
-                int leng2 = results2.length();
-                List<Integer> dayslist = new ArrayList<>();
+                for (int i = 0; i < leng; i++) {
+                    JSONObject jObj = results.getJSONObject(i);
+                    String hospitalId = jObj.getString("hospital_id");
+                    Request request2 = new Request.Builder().url(appProperties.getApiDoctorschedule() + doctorId + "/" + hospitalId).get().build();
+                    Response response2 = okHttpUtil.getClient().newCall(request2).execute();
+                    JSONObject jsonobj2 = new JSONObject(response2.body().string());
+                    JSONArray results2 = jsonobj2.getJSONArray("data");
+                    int leng2 = results2.length();
+                    List<Integer> dayslist = new ArrayList<>();
 
-                for (int j = 0; j < 7; j++) {
-                    String datenow = calendar.getTime().toString();
-                    String hari = datenow.substring(0, 3);
-                    String tanggal = datenow.substring(8, 10);
-                    String bulan = datenow.substring(4, 7);
-                    String tahun = datenow.substring(23, 28);
-                    int x = 0;
-                    int kodeHari = 0;
-                    String[] daypoint = new String[leng2];
-                    for (int k = 0; k < leng2; k++) {
-                        JSONObject jObj2 = results2.getJSONObject(k);
+                    for (int j = 0; j < 7; j++) {
+                        String datenow = calendar.getTime().toString();
+                        String hari = datenow.substring(0, 3);
+                        String tanggal = datenow.substring(8, 10);
+                        String bulan = datenow.substring(4, 7);
+                        String tahun = datenow.substring(23, 28);
+                        int x = 0;
+                        int kodeHari = 0;
+                        String[] daypoint = new String[leng2];
+                        for (int k = 0; k < leng2; k++) {
+                            JSONObject jObj2 = results2.getJSONObject(k);
 
-                        if (hari.equalsIgnoreCase("Mon")) {
-                            kodeHari = 1;
-                        } else if (hari.equalsIgnoreCase("Tue")) {
-                            kodeHari = 2;
-                        } else if (hari.equalsIgnoreCase("Wed")) {
-                            kodeHari = 3;
-                        } else if (hari.equalsIgnoreCase("Thu")) {
-                            kodeHari = 4;
-                        } else if (hari.equalsIgnoreCase("Fri")) {
-                            kodeHari = 5;
-                        } else if (hari.equalsIgnoreCase("Sat")) {
-                            kodeHari = 6;
-                        } else if (hari.equalsIgnoreCase("Sun")) {
-                            kodeHari = 7;
-                        }
+                            if (hari.equalsIgnoreCase("Mon")) {
+                                kodeHari = 1;
+                            } else if (hari.equalsIgnoreCase("Tue")) {
+                                kodeHari = 2;
+                            } else if (hari.equalsIgnoreCase("Wed")) {
+                                kodeHari = 3;
+                            } else if (hari.equalsIgnoreCase("Thu")) {
+                                kodeHari = 4;
+                            } else if (hari.equalsIgnoreCase("Fri")) {
+                                kodeHari = 5;
+                            } else if (hari.equalsIgnoreCase("Sat")) {
+                                kodeHari = 6;
+                            } else if (hari.equalsIgnoreCase("Sun")) {
+                                kodeHari = 7;
+                            }
 
-                        int daysnumber = jObj2.getInt("doctor_schedule_day");
-                        dayslist.add(daysnumber);
+                            int daysnumber = jObj2.getInt("doctor_schedule_day");
+                            dayslist.add(daysnumber);
 
-                        String fromtime = jObj2.getString("doctor_schedule_from_time");
-                        String totime = jObj2.getString("doctor_schedule_to_time");
-                        String dateF = fromtime.substring(11, 16);
-                        String dateT = totime.substring(11, 16);
-                        String jadwal = dateF + "-" + dateT;
+                            String fromtime = jObj2.getString("doctor_schedule_from_time");
+                            String totime = jObj2.getString("doctor_schedule_to_time");
+                            String dateF = fromtime.substring(11, 16);
+                            String dateT = totime.substring(11, 16);
+                            String jadwal = dateF + "-" + dateT;
 
-                        if (daysnumber == kodeHari) {
-                            if (daypoint[x] == null) {
-                                daypoint[x] = jadwal;
-                            } else {
-                                daypoint[x] = daypoint[x] + "/" + jadwal;
+                            if (daysnumber == kodeHari) {
+                                if (daypoint[x] == null) {
+                                    daypoint[x] = jadwal;
+                                } else {
+                                    daypoint[x] = daypoint[x] + "/" + jadwal;
+                                }
                             }
                         }
+                        if (dayslist.contains(kodeHari)) {
+                            //Buat Button 
+                            ButtonTemplate button = new ButtonTemplate();
+                            button.setTitle(hari + ", " + tanggal + " " + bulan + "" + tahun);
+                            button.setSubTitle(daypoint[x]);
+                            List<EasyMap> actions = new ArrayList<>();
+
+                            EasyMap bookAction = new EasyMap();
+                            EasyMap callAction = new EasyMap();
+
+                            bookAction.setName("Book Online");
+                            bookAction.setValue("https://www.siloamhospitals.com");
+                            actions.add(bookAction);
+
+                            callAction.setName("By Phone");
+                            callAction.setValue("tel:1500181");
+                            actions.add(callAction);
+
+                            button.setButtonValues(actions);
+                            ButtonBuilder buttonBuilder = new ButtonBuilder(button);
+
+                            String btnBuilder = buttonBuilder.build().toString();
+                            sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
+                        }
+                        x++;
+                        calendar.add(Calendar.DATE, +1);
                     }
-                    if (dayslist.contains(kodeHari)) {
-                        //Buat Button 
-                        ButtonTemplate button = new ButtonTemplate();
-                        button.setTitle(hari + ", " + tanggal + " " + bulan + "" + tahun);
-                        button.setSubTitle(daypoint[x]);
-                        List<EasyMap> actions = new ArrayList<>();
-
-                        EasyMap bookAction = new EasyMap();
-                        EasyMap callAction = new EasyMap();
-
-                        bookAction.setName("Book Online");
-                        bookAction.setValue("https://www.siloamhospitals.com");
-                        actions.add(bookAction);
-
-                        callAction.setName("By Phone");
-                        callAction.setValue("tel:1500181");
-                        actions.add(callAction);
-
-                        button.setButtonValues(actions);
-                        ButtonBuilder buttonBuilder = new ButtonBuilder(button);
-
-                        String btnBuilder = buttonBuilder.build().toString();
-                        sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
-                    }
-                    x++;
-                    calendar.add(Calendar.DATE, +1);
                 }
-            }
 
-        } catch (MalformedURLException ex) {
-            Logger.getLogger(ServiceImp.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(ServiceImp.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (MalformedURLException ex) {
+                Logger.getLogger(ServiceImp.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(ServiceImp.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            output.put(OUTPUT, sb.toString());
+            extensionResult.setValue(output);
+
+        } else {
+            output.put("doctor", null);
+            output.put("name", doctorId);
+            extensionResult.setEntities(output);
         }
-        output.put(OUTPUT, sb.toString());
         extensionResult.setAgent(false);
         extensionResult.setRepeat(false);
         extensionResult.setSuccess(true);
         extensionResult.setNext(true);
-        extensionResult.setValue(output);
         return extensionResult;
     }
 
