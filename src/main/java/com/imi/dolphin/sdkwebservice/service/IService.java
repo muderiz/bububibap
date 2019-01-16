@@ -62,11 +62,11 @@ public interface IService {
 
     ExtensionResult MenuDoctorSchedule(ExtensionRequest extensionRequest);
 
-    ExtensionResult doGetStarted(ExtensionRequest extensionRequest);
-
     ExtensionResult doGetHospitalTerdekat(ExtensionRequest extensionRequest);
 
-    ExtensionResult doGetSpecialist1(ExtensionRequest extensionRequest);
+    ExtensionResult doGetSpecialistPage1(ExtensionRequest extensionRequest);
+    
+    ExtensionResult doGetSpecialistPage2(ExtensionRequest extensionRequest);
     
     
     

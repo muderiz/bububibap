@@ -423,124 +423,6 @@ public class ServiceImp implements IService {
         return extensionResult;
     }
 
-    /**
-     * Method Started Siloam
-     *
-     * @param extensionRequest
-     * @return
-     */
-    @Override
-    public ExtensionResult doGetStarted(ExtensionRequest extensionRequest) {
-        Map<String, String> output = new HashMap<>();
-
-        //Nearest Hospitals(NH)
-        ButtonTemplate button = new ButtonTemplate();
-        button.setPictureLink(SAMPLE_IMAGE_PATH);
-        button.setPicturePath(SAMPLE_IMAGE_PATH);
-        button.setTitle("My Nearest Hospitals");
-//        button.setSubTitle("");
-        List<EasyMap> actions = new ArrayList<>();
-        EasyMap bookActionNH = new EasyMap();
-        EasyMap bookActionNH2 = new EasyMap();
-        bookActionNH.setName("Find Hospitals");
-        bookActionNH.setValue("");
-        actions.add(bookActionNH);
-        bookActionNH2.setName("Call Us");
-        bookActionNH2.setValue("");
-        actions.add(bookActionNH2);
-        button.setButtonValues(actions);
-        ButtonBuilder buttonBuilder = new ButtonBuilder(button);
-
-        //Make an Appointment(MAP)
-        ButtonTemplate button2 = new ButtonTemplate();
-        button2.setPictureLink(SAMPLE_IMAGE_PATH);
-        button2.setPicturePath(SAMPLE_IMAGE_PATH);
-        button2.setTitle("Make an appointment");
-//        button2.setSubTitle("");
-        List<EasyMap> actions2 = new ArrayList<>();
-        EasyMap bookActionMAP = new EasyMap();
-        EasyMap bookActionMAP2 = new EasyMap();
-        EasyMap bookActionMAP3 = new EasyMap();
-        bookActionMAP.setName("Book Online");
-        bookActionMAP.setValue("");
-        actions2.add(bookActionMAP);
-        bookActionMAP2.setName("By Phone");
-        bookActionMAP2.setValue("");
-        actions2.add(bookActionMAP2);
-        bookActionMAP3.setName("Doctor Schedule");
-        bookActionMAP3.setValue("");
-        actions2.add(bookActionMAP3);
-        button2.setButtonValues(actions2);
-        ButtonBuilder buttonBuilder2 = new ButtonBuilder(button2);
-
-        //Medical Check Up(MCU)
-        ButtonTemplate button3 = new ButtonTemplate();
-        button3.setPictureLink(SAMPLE_IMAGE_PATH);
-        button3.setPicturePath(SAMPLE_IMAGE_PATH);
-        button3.setTitle("Medical Check Up");
-//        button3.setSubTitle(" ");
-        List<EasyMap> actions3 = new ArrayList<>();
-        EasyMap bookActionMCU = new EasyMap();
-        EasyMap bookActionMCU2 = new EasyMap();
-        bookActionMCU.setName("Find Package");
-        bookActionMCU.setValue("");
-        actions3.add(bookActionMCU);
-        bookActionMCU2.setName("Preperation Guidelines");
-        bookActionMCU2.setValue("");
-        actions3.add(bookActionMCU2);
-        button3.setButtonValues(actions3);
-        ButtonBuilder buttonBuilder3 = new ButtonBuilder(button3);
-
-        //Enquiry(Enq)
-        ButtonTemplate button4 = new ButtonTemplate();
-        button4.setPictureLink(SAMPLE_IMAGE_PATH);
-        button4.setPicturePath(SAMPLE_IMAGE_PATH);
-        button4.setTitle("Enquiry");
-//        button4.setSubTitle("");
-        List<EasyMap> actions4 = new ArrayList<>();
-        EasyMap bookActionEnq = new EasyMap();
-        bookActionEnq.setName("F.A.Q");
-        bookActionEnq.setValue("");
-        actions4.add(bookActionEnq);
-        button4.setButtonValues(actions4);
-        ButtonBuilder buttonBuilder4 = new ButtonBuilder(button4);
-
-        //Feedback(Feed)
-        ButtonTemplate button5 = new ButtonTemplate();
-        button5.setPictureLink(SAMPLE_IMAGE_PATH);
-        button5.setPicturePath(SAMPLE_IMAGE_PATH);
-        button5.setTitle("Feedbacks");
-//        button5.setSubTitle("");
-        List<EasyMap> actions5 = new ArrayList<>();
-        EasyMap bookActionFeed = new EasyMap();
-        EasyMap bookActionFeed2 = new EasyMap();
-        EasyMap bookActionFeed3 = new EasyMap();
-        bookActionFeed.setName("Complaint");
-        bookActionFeed.setValue("");
-        actions5.add(bookActionFeed);
-        bookActionFeed2.setName("Compliment");
-        bookActionFeed2.setValue("");
-        actions5.add(bookActionFeed2);
-        bookActionFeed3.setName("Suggestion");
-        bookActionFeed3.setValue("");
-        actions5.add(bookActionFeed3);
-        button5.setButtonValues(actions5);
-        ButtonBuilder buttonBuilder5 = new ButtonBuilder(button5);
-
-        CarouselBuilder carouselBuilder = new CarouselBuilder(buttonBuilder.build(), buttonBuilder2.build(),
-                buttonBuilder3.build(), buttonBuilder4.build(), buttonBuilder5.build());
-
-        output.put(OUTPUT, carouselBuilder.build());
-
-        ExtensionResult extensionResult = new ExtensionResult();
-        extensionResult.setAgent(false);
-        extensionResult.setRepeat(false);
-        extensionResult.setSuccess(true);
-        extensionResult.setNext(true);
-        extensionResult.setValue(output);
-        return extensionResult;
-    }
-
     /*
 	 * Send Location
 	 * 
@@ -620,6 +502,89 @@ public class ServiceImp implements IService {
         extensionResult.setValue(output);
         return extensionResult;
     }
+    
+    // Flow Rumah Sakit Terdekat //
+    @Override
+    public ExtensionResult doGetHospitalTerdekat(ExtensionRequest extensionRequest
+    ) {
+        Map<String, String> output = new HashMap<>();
+        ExtensionResult extensionResult = new ExtensionResult();
+        StringBuilder sb = new StringBuilder();
+        String lokasiUser = getEasyMapValueByName(extensionRequest, "lokasi");
+        String[] alonglat = lokasiUser.split(";");
+        String lat = alonglat[0];
+        String longi = alonglat[1];
+        try {
+            OkHttpUtil okHttpUtil = new OkHttpUtil();
+            okHttpUtil.init(true);
+            Request request = new Request.Builder().url(appProperties.getDummyHospital()).get().build();
+            Response response = okHttpUtil.getClient().newCall(request).execute();
+            JSONObject jsonobj = new JSONObject(response.body().string());
+            JSONArray results = jsonobj.getJSONArray("data");
+            int leng = results.length();
+            BigDecimal longitud;
+            BigDecimal latitud;
+            BigDecimal[][] point = new BigDecimal[leng][leng];
+            int x = 0;
+            double hasil;
+            for (int i = 0; i < leng; i++) {
+                JSONObject jObj = results.getJSONObject(i);
+                String hospitalName = jObj.getString("hospital_name");
+                longitud = jObj.getBigDecimal("longitude");
+                latitud = jObj.getBigDecimal("latitude");
+                hasil = distanceInKilometers((Double.valueOf(lat)), (Double.valueOf(longi)), latitud.doubleValue(), longitud.doubleValue());
+                if (hasil < 20) {
+                    point[x][0] = latitud;
+                    point[x][1] = longitud;
+
+                    ButtonTemplate button = new ButtonTemplate();
+                    button.setTitle(hospitalName);
+                    List<EasyMap> actions = new ArrayList<>();
+
+                    EasyMap bookAction = new EasyMap();
+                    EasyMap callAction = new EasyMap();
+
+                    bookAction.setName("Direction");
+                    bookAction.setValue(appProperties.getGoogleMapQuery() + "" + point[x][0] + "," + point[x][1]);
+                    actions.add(bookAction);
+                    button.setButtonValues(actions);
+
+                    callAction.setName("Call Center");
+                    callAction.setValue("tel:");
+                    actions.add(callAction);
+                    button.setButtonValues(actions);
+
+                    ButtonBuilder buttonBuilder = new ButtonBuilder(button);
+
+                    String btnBuilder = buttonBuilder.build().toString();
+                    sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
+
+                    x++;
+                }
+            }
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(ServiceImp.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ServiceImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        output.put(OUTPUT, sb.toString());
+        extensionResult.setAgent(false);
+        extensionResult.setRepeat(false);
+        extensionResult.setSuccess(true);
+        extensionResult.setNext(true);
+        extensionResult.setValue(output);
+        return extensionResult;
+    }
+
+    public double distanceInKilometers(double lat1, double long1, double lat2, double long2) {
+        double PI_RAD = Math.PI / 180.0;
+        double phi1 = lat1 * PI_RAD;
+        double phi2 = lat2 * PI_RAD;
+        double lam1 = long1 * PI_RAD;
+        double lam2 = long2 * PI_RAD;
+        return 6371.01 * Math.acos(Math.sin(phi1) * Math.sin(phi2) + Math.cos(phi1) * Math.cos(phi2) * Math.cos(lam2 - lam1));
+    }
+    //---------------------------------//
 
     // Doctor Schedule Flow Search By Area,Hospital,Specialist //
     @Override
@@ -641,7 +606,7 @@ public class ServiceImp implements IService {
                 String areaId = jObj.getString("area_id");
                 String areaName = jObj.getString("area_name");
 
-                //Create Button 
+                //Buat Button 
                 ButtonTemplate button = new ButtonTemplate();
                 button.setTitle(areaName);
                 List<EasyMap> actions = new ArrayList<>();
@@ -690,7 +655,7 @@ public class ServiceImp implements IService {
                 String hospitalId = jObj.getString("hospital_id");
                 String hospitalName = jObj.getString("hospital_name");
 
-                //Create Button 
+                //Buat Button 
                 ButtonTemplate button = new ButtonTemplate();
                 button.setTitle(hospitalName);
                 List<EasyMap> actions = new ArrayList<>();
@@ -738,7 +703,7 @@ public class ServiceImp implements IService {
                 String specialistId = jObj.getString("specialist_id");
                 String specialistName = jObj.getString("specialist_name");
 
-                //Create Button 
+                //Buat Button 
                 ButtonTemplate button = new ButtonTemplate();
                 button.setTitle(specialistName);
                 List<EasyMap> actions = new ArrayList<>();
@@ -975,7 +940,7 @@ public class ServiceImp implements IService {
                 String doctorId = jObj.getString("doctor_id");
                 String doctorName = jObj.getString("doctor_name");
 
-                //Create Button 
+                //Buat Button 
                 ButtonTemplate button = new ButtonTemplate();
                 button.setTitle(doctorName);
                 List<EasyMap> actions = new ArrayList<>();
@@ -1127,88 +1092,7 @@ public class ServiceImp implements IService {
     }
 
     //-------------------------------------//
-    // Flow Rumah Sakit Terdekat //
-    @Override
-    public ExtensionResult doGetHospitalTerdekat(ExtensionRequest extensionRequest
-    ) {
-        Map<String, String> output = new HashMap<>();
-        ExtensionResult extensionResult = new ExtensionResult();
-        StringBuilder sb = new StringBuilder();
-        String lokasiUser = getEasyMapValueByName(extensionRequest, "lokasi");
-        String[] alonglat = lokasiUser.split(";");
-        String lat = alonglat[0];
-        String longi = alonglat[1];
-        try {
-            OkHttpUtil okHttpUtil = new OkHttpUtil();
-            okHttpUtil.init(true);
-            Request request = new Request.Builder().url(appProperties.getDummyHospital()).get().build();
-            Response response = okHttpUtil.getClient().newCall(request).execute();
-            JSONObject jsonobj = new JSONObject(response.body().string());
-            JSONArray results = jsonobj.getJSONArray("data");
-            int leng = results.length();
-            BigDecimal longitud;
-            BigDecimal latitud;
-            BigDecimal[][] point = new BigDecimal[leng][leng];
-            int x = 0;
-            double hasil;
-            for (int i = 0; i < leng; i++) {
-                JSONObject jObj = results.getJSONObject(i);
-                String hospitalName = jObj.getString("hospital_name");
-                longitud = jObj.getBigDecimal("longitude");
-                latitud = jObj.getBigDecimal("latitude");
-                hasil = distanceInKilometers((Double.valueOf(lat)), (Double.valueOf(longi)), latitud.doubleValue(), longitud.doubleValue());
-                if (hasil < 20) {
-                    point[x][0] = latitud;
-                    point[x][1] = longitud;
-
-                    ButtonTemplate button = new ButtonTemplate();
-                    button.setTitle(hospitalName);
-                    List<EasyMap> actions = new ArrayList<>();
-
-                    EasyMap bookAction = new EasyMap();
-                    EasyMap callAction = new EasyMap();
-
-                    bookAction.setName("Direction");
-                    bookAction.setValue(appProperties.getGoogleMapQuery() + "" + point[x][0] + "," + point[x][1]);
-                    actions.add(bookAction);
-                    button.setButtonValues(actions);
-
-                    callAction.setName("Call Center");
-                    callAction.setValue("tel:");
-                    actions.add(callAction);
-                    button.setButtonValues(actions);
-
-                    ButtonBuilder buttonBuilder = new ButtonBuilder(button);
-
-                    String btnBuilder = buttonBuilder.build().toString();
-                    sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
-
-                    x++;
-                }
-            }
-        } catch (MalformedURLException ex) {
-            Logger.getLogger(ServiceImp.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(ServiceImp.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        output.put(OUTPUT, sb.toString());
-        extensionResult.setAgent(false);
-        extensionResult.setRepeat(false);
-        extensionResult.setSuccess(true);
-        extensionResult.setNext(true);
-        extensionResult.setValue(output);
-        return extensionResult;
-    }
-
-    public double distanceInKilometers(double lat1, double long1, double lat2, double long2) {
-        double PI_RAD = Math.PI / 180.0;
-        double phi1 = lat1 * PI_RAD;
-        double phi2 = lat2 * PI_RAD;
-        double lam1 = long1 * PI_RAD;
-        double lam2 = long2 * PI_RAD;
-        return 6371.01 * Math.acos(Math.sin(phi1) * Math.sin(phi2) + Math.cos(phi1) * Math.cos(phi2) * Math.cos(lam2 - lam1));
-    }
-    //---------------------------------//
+    
 
     // Get Specialist By Name //
     @Override
@@ -1231,7 +1115,7 @@ public class ServiceImp implements IService {
                 String specialistId = jObj.getString("specialist_id");
                 String specialistName = jObj.getString("specialist_name");
 
-                //Create Button 
+                //Buat Button 
                 ButtonTemplate button = new ButtonTemplate();
                 button.setTitle(specialistName);
                 List<EasyMap> actions = new ArrayList<>();
@@ -1261,8 +1145,9 @@ public class ServiceImp implements IService {
     }
     //-----------------------------------//
 
+    // Method Get List Specialist //
     @Override
-    public ExtensionResult doGetSpecialist1(ExtensionRequest extensionRequest) {
+    public ExtensionResult doGetSpecialistPage1(ExtensionRequest extensionRequest) {
         Map<String, String> output = new HashMap<>();
         ExtensionResult extensionResult = new ExtensionResult();
         StringBuilder sb = new StringBuilder();
@@ -1280,7 +1165,7 @@ public class ServiceImp implements IService {
                 String specialistId = jObj.getString("specialization_id");
                 String specialistName = jObj.getString("name_id");
 
-                //Create Button 
+                //Buat Button 
                 ButtonTemplate button = new ButtonTemplate();
                 button.setTitle(specialistName);
                 List<EasyMap> actions = new ArrayList<>();
@@ -1295,18 +1180,18 @@ public class ServiceImp implements IService {
                 sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
             }
             ButtonTemplate button = new ButtonTemplate();
-            button.setTitle("Selanjutnya");
+            button.setTitle("Lainnya");
             List<EasyMap> actions = new ArrayList<>();
             EasyMap bookAction = new EasyMap();
-            bookAction.setName("Pilih");
-            bookAction.setValue("");
+            bookAction.setName("Lainnya");
+            bookAction.setValue("Lainnya");
             actions.add(bookAction);
             button.setButtonValues(actions);
             ButtonBuilder buttonBuilder = new ButtonBuilder(button);
 
             String btnBuilder = buttonBuilder.build().toString();
             sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
-            
+
         } catch (MalformedURLException ex) {
             Logger.getLogger(ServiceImp.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -1321,4 +1206,182 @@ public class ServiceImp implements IService {
         return extensionResult;
     }
 
+    @Override
+    public ExtensionResult doGetSpecialistPage2(ExtensionRequest extensionRequest) {
+        Map<String, String> output = new HashMap<>();
+        ExtensionResult extensionResult = new ExtensionResult();
+        StringBuilder sb = new StringBuilder();
+        try {
+            OkHttpUtil okHttpUtil = new OkHttpUtil();
+            okHttpUtil.init(true);
+            Request request = new Request.Builder().url(appProperties.getApiSpecialist()).get().build();
+            Response response = okHttpUtil.getClient().newCall(request).execute();
+            JSONObject jsonobj = new JSONObject(response.body().string());
+            JSONArray results = jsonobj.getJSONArray("data");
+            int leng = 18;
+
+            for (int i = 9; i < leng; i++) {
+                JSONObject jObj = results.getJSONObject(i);
+                String specialistId = jObj.getString("specialization_id");
+                String specialistName = jObj.getString("name_id");
+
+                //Buat Button 
+                ButtonTemplate button = new ButtonTemplate();
+                button.setTitle(specialistName);
+                List<EasyMap> actions = new ArrayList<>();
+                EasyMap bookAction = new EasyMap();
+                bookAction.setName(specialistName);
+                bookAction.setValue(specialistId);
+                actions.add(bookAction);
+                button.setButtonValues(actions);
+                ButtonBuilder buttonBuilder = new ButtonBuilder(button);
+
+                String btnBuilder = buttonBuilder.build().toString();
+                sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
+            }
+            ButtonTemplate button = new ButtonTemplate();
+            button.setTitle("Lainnya");
+            List<EasyMap> actions = new ArrayList<>();
+            EasyMap bookAction = new EasyMap();
+            bookAction.setName("Lainnya");
+            bookAction.setValue("Lainnya");
+            actions.add(bookAction);
+            button.setButtonValues(actions);
+            ButtonBuilder buttonBuilder = new ButtonBuilder(button);
+
+            String btnBuilder = buttonBuilder.build().toString();
+            sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
+
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(ServiceImp.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ServiceImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        output.put(OUTPUT, sb.toString());
+        extensionResult.setAgent(false);
+        extensionResult.setRepeat(false);
+        extensionResult.setSuccess(true);
+        extensionResult.setNext(true);
+        extensionResult.setValue(output);
+        return extensionResult;
+    }
+    
+    public ExtensionResult doGetSpecialistPage3(ExtensionRequest extensionRequest) {
+        Map<String, String> output = new HashMap<>();
+        ExtensionResult extensionResult = new ExtensionResult();
+        StringBuilder sb = new StringBuilder();
+        try {
+            OkHttpUtil okHttpUtil = new OkHttpUtil();
+            okHttpUtil.init(true);
+            Request request = new Request.Builder().url(appProperties.getApiSpecialist()).get().build();
+            Response response = okHttpUtil.getClient().newCall(request).execute();
+            JSONObject jsonobj = new JSONObject(response.body().string());
+            JSONArray results = jsonobj.getJSONArray("data");
+            int leng = 27;
+
+            for (int i = 18; i < leng; i++) {
+                JSONObject jObj = results.getJSONObject(i);
+                String specialistId = jObj.getString("specialization_id");
+                String specialistName = jObj.getString("name_id");
+
+                //Buat Button 
+                ButtonTemplate button = new ButtonTemplate();
+                button.setTitle(specialistName);
+                List<EasyMap> actions = new ArrayList<>();
+                EasyMap bookAction = new EasyMap();
+                bookAction.setName(specialistName);
+                bookAction.setValue(specialistId);
+                actions.add(bookAction);
+                button.setButtonValues(actions);
+                ButtonBuilder buttonBuilder = new ButtonBuilder(button);
+
+                String btnBuilder = buttonBuilder.build().toString();
+                sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
+            }
+            ButtonTemplate button = new ButtonTemplate();
+            button.setTitle("Lainnya");
+            List<EasyMap> actions = new ArrayList<>();
+            EasyMap bookAction = new EasyMap();
+            bookAction.setName("Lainnya");
+            bookAction.setValue("Lainnya");
+            actions.add(bookAction);
+            button.setButtonValues(actions);
+            ButtonBuilder buttonBuilder = new ButtonBuilder(button);
+
+            String btnBuilder = buttonBuilder.build().toString();
+            sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
+
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(ServiceImp.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ServiceImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        output.put(OUTPUT, sb.toString());
+        extensionResult.setAgent(false);
+        extensionResult.setRepeat(false);
+        extensionResult.setSuccess(true);
+        extensionResult.setNext(true);
+        extensionResult.setValue(output);
+        return extensionResult;
+    }
+    
+    public ExtensionResult doGetSpecialistPage4(ExtensionRequest extensionRequest) {
+        Map<String, String> output = new HashMap<>();
+        ExtensionResult extensionResult = new ExtensionResult();
+        StringBuilder sb = new StringBuilder();
+        try {
+            OkHttpUtil okHttpUtil = new OkHttpUtil();
+            okHttpUtil.init(true);
+            Request request = new Request.Builder().url(appProperties.getApiSpecialist()).get().build();
+            Response response = okHttpUtil.getClient().newCall(request).execute();
+            JSONObject jsonobj = new JSONObject(response.body().string());
+            JSONArray results = jsonobj.getJSONArray("data");
+            int leng = 37;
+
+            for (int i = 27; i < leng; i++) {
+                JSONObject jObj = results.getJSONObject(i);
+                String specialistId = jObj.getString("specialization_id");
+                String specialistName = jObj.getString("name_id");
+
+                //Buat Button 
+                ButtonTemplate button = new ButtonTemplate();
+                button.setTitle(specialistName);
+                List<EasyMap> actions = new ArrayList<>();
+                EasyMap bookAction = new EasyMap();
+                bookAction.setName(specialistName);
+                bookAction.setValue(specialistId);
+                actions.add(bookAction);
+                button.setButtonValues(actions);
+                ButtonBuilder buttonBuilder = new ButtonBuilder(button);
+
+                String btnBuilder = buttonBuilder.build().toString();
+                sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
+            }
+            ButtonTemplate button = new ButtonTemplate();
+            button.setTitle("Lainnya");
+            List<EasyMap> actions = new ArrayList<>();
+            EasyMap bookAction = new EasyMap();
+            bookAction.setName("Lainnya");
+            bookAction.setValue("Lainnya");
+            actions.add(bookAction);
+            button.setButtonValues(actions);
+            ButtonBuilder buttonBuilder = new ButtonBuilder(button);
+
+            String btnBuilder = buttonBuilder.build().toString();
+            sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
+
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(ServiceImp.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ServiceImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        output.put(OUTPUT, sb.toString());
+        extensionResult.setAgent(false);
+        extensionResult.setRepeat(false);
+        extensionResult.setSuccess(true);
+        extensionResult.setNext(true);
+        extensionResult.setValue(output);
+        return extensionResult;
+    }
+    //-------------------------------------------------------------------//
 }
