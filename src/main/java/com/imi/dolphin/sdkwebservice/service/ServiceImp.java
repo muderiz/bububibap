@@ -23,42 +23,24 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.google.gson.Gson;
 import com.imi.dolphin.sdkwebservice.builder.ButtonBuilder;
 import com.imi.dolphin.sdkwebservice.builder.CarouselBuilder;
-import com.imi.dolphin.sdkwebservice.builder.FormBuilder;
-import com.imi.dolphin.sdkwebservice.builder.ImageBuilder;
 import com.imi.dolphin.sdkwebservice.builder.QuickReplyBuilder;
-import com.imi.dolphin.sdkwebservice.form.Datum;
-import com.imi.dolphin.sdkwebservice.form.Formcuti;
 import com.imi.dolphin.sdkwebservice.model.ButtonTemplate;
 import com.imi.dolphin.sdkwebservice.model.EasyMap;
 import com.imi.dolphin.sdkwebservice.model.ExtensionRequest;
 import com.imi.dolphin.sdkwebservice.model.ExtensionResult;
-import com.imi.dolphin.sdkwebservice.model.MailModel;
 import com.imi.dolphin.sdkwebservice.param.ParamSdk;
 import com.imi.dolphin.sdkwebservice.property.AppProperties;
-import com.imi.dolphin.sdkwebservice.token.Token;
 import com.imi.dolphin.sdkwebservice.util.OkHttpUtil;
-import static java.lang.Math.acos;
-import static java.lang.Math.cos;
-import static java.lang.Math.sin;
 import java.math.BigDecimal;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.time.DayOfWeek;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import okhttp3.MediaType;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**
@@ -71,7 +53,6 @@ public class ServiceImp implements IService {
 
     public static final String OUTPUT = "output";
     private static final String SAMPLE_IMAGE_PATH = "https://goo.gl/SHdL8D";
-    private static final String Image_cuti = "https://image.ibb.co/eAshTV/bot.jpg";
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     private static final String CONSTANT_SPLIT_SYNTAX = "&split&";
     @Autowired
@@ -940,11 +921,11 @@ public class ServiceImp implements IService {
                     EasyMap bookAction = new EasyMap();
                     EasyMap callAction = new EasyMap();
 
-                    bookAction.setName("Book Online");
+                    bookAction.setName("Reservasi Online");
                     bookAction.setValue("https://www.siloamhospitals.com");
                     actions.add(bookAction);
 
-                    callAction.setName("By Phone");
+                    callAction.setName("Call Center");
                     callAction.setValue("tel:1500181");
                     actions.add(callAction);
 
@@ -1105,11 +1086,11 @@ public class ServiceImp implements IService {
                             EasyMap bookAction = new EasyMap();
                             EasyMap callAction = new EasyMap();
 
-                            bookAction.setName("Book Online");
+                            bookAction.setName("Reservasi Online");
                             bookAction.setValue("https://www.siloamhospitals.com");
                             actions.add(bookAction);
 
-                            callAction.setName("By Phone");
+                            callAction.setName("Call Center");
                             callAction.setValue("tel:1500181");
                             actions.add(callAction);
 
@@ -1192,7 +1173,7 @@ public class ServiceImp implements IService {
                     actions.add(bookAction);
                     button.setButtonValues(actions);
 
-                    callAction.setName("Call");
+                    callAction.setName("Call Center");
                     callAction.setValue("tel:");
                     actions.add(callAction);
                     button.setButtonValues(actions);
@@ -1279,5 +1260,65 @@ public class ServiceImp implements IService {
         return extensionResult;
     }
     //-----------------------------------//
+
+    @Override
+    public ExtensionResult doGetSpecialist1(ExtensionRequest extensionRequest) {
+        Map<String, String> output = new HashMap<>();
+        ExtensionResult extensionResult = new ExtensionResult();
+        StringBuilder sb = new StringBuilder();
+        try {
+            OkHttpUtil okHttpUtil = new OkHttpUtil();
+            okHttpUtil.init(true);
+            Request request = new Request.Builder().url(appProperties.getApiSpecialist()).get().build();
+            Response response = okHttpUtil.getClient().newCall(request).execute();
+            JSONObject jsonobj = new JSONObject(response.body().string());
+            JSONArray results = jsonobj.getJSONArray("data");
+            int leng = 9;
+
+            for (int i = 0; i < leng; i++) {
+                JSONObject jObj = results.getJSONObject(i);
+                String specialistId = jObj.getString("specialization_id");
+                String specialistName = jObj.getString("name_id");
+
+                //Create Button 
+                ButtonTemplate button = new ButtonTemplate();
+                button.setTitle(specialistName);
+                List<EasyMap> actions = new ArrayList<>();
+                EasyMap bookAction = new EasyMap();
+                bookAction.setName(specialistName);
+                bookAction.setValue(specialistId);
+                actions.add(bookAction);
+                button.setButtonValues(actions);
+                ButtonBuilder buttonBuilder = new ButtonBuilder(button);
+
+                String btnBuilder = buttonBuilder.build().toString();
+                sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
+            }
+            ButtonTemplate button = new ButtonTemplate();
+            button.setTitle("Selanjutnya");
+            List<EasyMap> actions = new ArrayList<>();
+            EasyMap bookAction = new EasyMap();
+            bookAction.setName("Pilih");
+            bookAction.setValue("");
+            actions.add(bookAction);
+            button.setButtonValues(actions);
+            ButtonBuilder buttonBuilder = new ButtonBuilder(button);
+
+            String btnBuilder = buttonBuilder.build().toString();
+            sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
+            
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(ServiceImp.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ServiceImp.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        output.put(OUTPUT, sb.toString());
+        extensionResult.setAgent(false);
+        extensionResult.setRepeat(false);
+        extensionResult.setSuccess(true);
+        extensionResult.setNext(true);
+        extensionResult.setValue(output);
+        return extensionResult;
+    }
 
 }

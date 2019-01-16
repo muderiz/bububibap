@@ -304,6 +304,16 @@ public class Controller {
         return svcService.doGetSpecialistbyName(extensionRequest);
     }
     
+    @RequestMapping("/getspecialist1")
+    @PostMapping
+    public ExtensionResult doGetSpecialist1(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.doGetSpecialist1(extensionRequest);
+    }
+    
     
   
+    
+    
+    
+    
 }
