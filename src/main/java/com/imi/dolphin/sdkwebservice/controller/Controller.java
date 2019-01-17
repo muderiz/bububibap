@@ -97,7 +97,7 @@ public class Controller {
 
     @RequestMapping("/carousel")
     @PostMapping
-    public ExtensionResult doBuildCarousel(@RequestBody ExtensionRequest extensionRequest) {
+     public ExtensionResult doBuildCarousel(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.getCarousel(extensionRequest);
     }
 
