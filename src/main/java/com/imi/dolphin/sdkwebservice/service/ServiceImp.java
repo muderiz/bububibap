@@ -435,7 +435,7 @@ public class ServiceImp implements IService {
     @Override
     public ExtensionResult doSendLocation(ExtensionRequest extensionRequest) {
         Map<String, String> output = new HashMap<>();
-        QuickReplyBuilder quickReplyBuilder = new QuickReplyBuilder.Builder("")
+        QuickReplyBuilder quickReplyBuilder = new QuickReplyBuilder.Builder(OUTPUT)
                 .add("Location", "location").build();
         output.put(OUTPUT, quickReplyBuilder.string());
         ExtensionResult extensionResult = new ExtensionResult();
