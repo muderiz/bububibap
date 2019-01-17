@@ -784,12 +784,12 @@ public class ServiceImp implements IService {
                 AvailableToday.setValue(valueavailab);
                 actions.add(AvailableToday);
 
-                AvailableTomorrow.setName("Tomorrow");
+                AvailableTomorrow.setName("Lihat Jadwal");
                 AvailableTomorrow.setValue(doctorId);
                 actions.add(AvailableTomorrow);
 
-                SelectOtherDate.setName("Select Other Date");
-                SelectOtherDate.setValue("");
+                SelectOtherDate.setName("------");
+                SelectOtherDate.setValue("-------");
                 actions.add(SelectOtherDate);
 
                 button.setButtonValues(actions);
