@@ -435,7 +435,7 @@ public class ServiceImp implements IService {
     @Override
     public ExtensionResult doSendLocation(ExtensionRequest extensionRequest) {
         Map<String, String> output = new HashMap<>();
-        QuickReplyBuilder quickReplyBuilder = new QuickReplyBuilder.Builder("Silahkan kirim lokasi kakak ya...")
+        QuickReplyBuilder quickReplyBuilder = new QuickReplyBuilder.Builder("")
                 .add("Location", "location").build();
         output.put(OUTPUT, quickReplyBuilder.string());
         ExtensionResult extensionResult = new ExtensionResult();
@@ -454,7 +454,7 @@ public class ServiceImp implements IService {
         ButtonTemplate button1 = new ButtonTemplate();
 //        button1.setPictureLink(SAMPLE_IMAGE_PATH);
 //        button1.setPicturePath(SAMPLE_IMAGE_PATH);
-        button1.setTitle("Cari Dokter");
+        button1.setTitle("Silahkan Pilih Dokter");
         button1.setSubTitle("Berdasarkan AREA");
         List<EasyMap> actions1 = new ArrayList<>();
 
@@ -468,7 +468,7 @@ public class ServiceImp implements IService {
         ButtonTemplate button2 = new ButtonTemplate();
 //        button2.setPictureLink(SAMPLE_IMAGE_PATH);
 //        button2.setPicturePath(SAMPLE_IMAGE_PATH);
-        button2.setTitle("Cari Dokter");
+        button2.setTitle("Silahkan Pilih Dokter");
         button2.setTitle("Berdasarkan Nama");
         List<EasyMap> actions2 = new ArrayList<>();
         EasyMap bookActionName = new EasyMap();
@@ -481,7 +481,7 @@ public class ServiceImp implements IService {
         ButtonTemplate button3 = new ButtonTemplate();
 //        button2.setPictureLink(SAMPLE_IMAGE_PATH);
 //        button2.setPicturePath(SAMPLE_IMAGE_PATH);
-        button3.setTitle("Cari Dokter");
+        button3.setTitle("Silahkan Pilih Dokter");
         button3.setTitle("Berdasarkan Nama");
         List<EasyMap> actions3 = new ArrayList<>();
         EasyMap bookActionSpec = new EasyMap();
