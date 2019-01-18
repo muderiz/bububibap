@@ -778,7 +778,6 @@ public class ServiceImp implements IService {
 
                 EasyMap AvailableToday = new EasyMap();
                 EasyMap AvailableTomorrow = new EasyMap();
-                EasyMap SelectOtherDate = new EasyMap();
 
                 AvailableToday.setName(available);
                 AvailableToday.setValue(valueavailab);
@@ -787,10 +786,6 @@ public class ServiceImp implements IService {
                 AvailableTomorrow.setName("Lihat Jadwal");
                 AvailableTomorrow.setValue(doctorId);
                 actions.add(AvailableTomorrow);
-
-                SelectOtherDate.setName("------");
-                SelectOtherDate.setValue("-------");
-                actions.add(SelectOtherDate);
 
                 button.setButtonValues(actions);
                 ButtonBuilder buttonBuilder = new ButtonBuilder(button);
@@ -1094,13 +1089,13 @@ public class ServiceImp implements IService {
     //-------------------------------------//
     
 
-    // Get Specialist By Name //
+    // Get Docter by Specialist Name //
     @Override
     public ExtensionResult doGetSpecialistbyName(ExtensionRequest extensionRequest) {
         Map<String, String> output = new HashMap<>();
         ExtensionResult extensionResult = new ExtensionResult();
         StringBuilder sb = new StringBuilder();
-        String nama = getEasyMapValueByName(extensionRequest, "nama");
+        String nama = getEasyMapValueByName(extensionRequest, "name");
         try {
             OkHttpUtil okHttpUtil = new OkHttpUtil();
             okHttpUtil.init(true);
