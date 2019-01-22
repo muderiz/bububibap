@@ -502,7 +502,7 @@ public class ServiceImp implements IService {
         extensionResult.setValue(output);
         return extensionResult;
     }
-    
+
     // Flow Rumah Sakit Terdekat //
     @Override
     public ExtensionResult doGetHospitalTerdekat(ExtensionRequest extensionRequest
@@ -832,28 +832,35 @@ public class ServiceImp implements IService {
                 String hari = datenow.substring(0, 3);
                 String tanggal = datenow.substring(8, 10);
                 String bulan = datenow.substring(4, 7);
-                String tahun = datenow.substring(23, 28);
+                String tahun = datenow.substring(24, 28);
                 int x = 0;
                 int kodeHari = 0;
+                String kodeBulan = Bulan(bulan);
+                String date = tahun + "-" + kodeBulan + "-" + tanggal;
+
+                Request request2 = new Request.Builder().url(appProperties.getApiDoctorappointment() + hospitalId + "/doctorId/" + doctorId + "/date/" + date).get().build();
+                Response response2 = okHttpUtil.getClient().newCall(request2).execute();
+                JSONObject jsonobj2 = new JSONObject(response2.body().string());
+                JSONArray results2 = jsonobj2.getJSONArray("data");
+                int leng2 = results2.length();
+                String available = "";
                 String[] daypoint = new String[leng];
                 for (int j = 0; j < leng; j++) {
                     JSONObject jObj = results.getJSONObject(j);
-
-                    if (hari.equalsIgnoreCase("Mon")) {
-                        kodeHari = 1;
-                    } else if (hari.equalsIgnoreCase("Tue")) {
-                        kodeHari = 2;
-                    } else if (hari.equalsIgnoreCase("Wed")) {
-                        kodeHari = 3;
-                    } else if (hari.equalsIgnoreCase("Thu")) {
-                        kodeHari = 4;
-                    } else if (hari.equalsIgnoreCase("Fri")) {
-                        kodeHari = 5;
-                    } else if (hari.equalsIgnoreCase("Sat")) {
-                        kodeHari = 6;
-                    } else if (hari.equalsIgnoreCase("Sun")) {
-                        kodeHari = 7;
+                    for (int k = 0; k < leng2; k++) {
+                        JSONObject jObj2 = results2.getJSONObject(k);
+                        Boolean isFull = jObj2.getBoolean("is_full");
+                        
+                        if (isFull.equals(false)) {
+                            available = "Available";
+                        } else {
+                            available = "Not Available";
+                        }
+                        
+                        break;
                     }
+
+                    kodeHari = Hari(hari);
 
                     int daysnumber = jObj.getInt("doctor_schedule_day");
                     dayslist.add(daysnumber);
@@ -875,7 +882,7 @@ public class ServiceImp implements IService {
                     //Buat Button 
                     ButtonTemplate button = new ButtonTemplate();
                     button.setTitle(hari + ", " + tanggal + " " + bulan + "" + tahun);
-                    button.setSubTitle(daypoint[x]);
+                    button.setSubTitle(daypoint[x]+"/n"+available);
                     List<EasyMap> actions = new ArrayList<>();
 
                     EasyMap bookAction = new EasyMap();
@@ -912,8 +919,61 @@ public class ServiceImp implements IService {
         extensionResult.setValue(output);
         return extensionResult;
     }
-    //----------------------------//
 
+    private int Hari(String day) {
+        int kodeHari = 0;
+
+        if (day.equalsIgnoreCase("Mon")) {
+            kodeHari = 1;
+        } else if (day.equalsIgnoreCase("Tue")) {
+            kodeHari = 2;
+        } else if (day.equalsIgnoreCase("Wed")) {
+            kodeHari = 3;
+        } else if (day.equalsIgnoreCase("Thu")) {
+            kodeHari = 4;
+        } else if (day.equalsIgnoreCase("Fri")) {
+            kodeHari = 5;
+        } else if (day.equalsIgnoreCase("Sat")) {
+            kodeHari = 6;
+        } else if (day.equalsIgnoreCase("Sun")) {
+            kodeHari = 7;
+        }
+        return kodeHari;
+    }
+
+    private String Bulan(String month) {
+        String kodeBulan = "";
+
+        if (month.equalsIgnoreCase("Jan")) {
+            kodeBulan = "01";
+        } else if (month.equalsIgnoreCase("Feb")) {
+            kodeBulan = "02";
+        } else if (month.equalsIgnoreCase("Mar")) {
+            kodeBulan = "03";
+        } else if (month.equalsIgnoreCase("Apr")) {
+            kodeBulan = "04";
+        } else if (month.equalsIgnoreCase("May")) {
+            kodeBulan = "05";
+        } else if (month.equalsIgnoreCase("Jun")) {
+            kodeBulan = "06";
+        } else if (month.equalsIgnoreCase("Jul")) {
+            kodeBulan = "07";
+        } else if (month.equalsIgnoreCase("Aug")) {
+            kodeBulan = "08";
+        } else if (month.equalsIgnoreCase("Sep")) {
+            kodeBulan = "09";
+        } else if (month.equalsIgnoreCase("Oct")) {
+            kodeBulan = "10";
+        } else if (month.equalsIgnoreCase("Nov")) {
+            kodeBulan = "11";
+        } else if (month.equalsIgnoreCase("Dec")) {
+            kodeBulan = "12";
+        }
+
+        return kodeBulan;
+    }
+
+    //----------------------------//
     // Doctor Schedule Flow Search By Name //
     @Override
     public ExtensionResult doGetDoctorByName(ExtensionRequest extensionRequest) {
@@ -1087,8 +1147,6 @@ public class ServiceImp implements IService {
     }
 
     //-------------------------------------//
-    
-
     // Get Docter by Specialist Name //
     @Override
     public ExtensionResult doGetSpecialistbyName(ExtensionRequest extensionRequest) {
@@ -1138,7 +1196,7 @@ public class ServiceImp implements IService {
         extensionResult.setValue(output);
         return extensionResult;
     }
-    //-----------------------------------//
+    //-------------------------------------------------------------------//
 
     // Method Get List Specialist //
     @Override
@@ -1260,7 +1318,8 @@ public class ServiceImp implements IService {
         extensionResult.setValue(output);
         return extensionResult;
     }
-    
+
+    @Override
     public ExtensionResult doGetSpecialistPage3(ExtensionRequest extensionRequest) {
         Map<String, String> output = new HashMap<>();
         ExtensionResult extensionResult = new ExtensionResult();
@@ -1319,7 +1378,8 @@ public class ServiceImp implements IService {
         extensionResult.setValue(output);
         return extensionResult;
     }
-    
+
+    @Override
     public ExtensionResult doGetSpecialistPage4(ExtensionRequest extensionRequest) {
         Map<String, String> output = new HashMap<>();
         ExtensionResult extensionResult = new ExtensionResult();

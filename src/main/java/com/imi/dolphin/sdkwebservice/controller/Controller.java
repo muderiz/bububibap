@@ -12,7 +12,6 @@
  */
 package com.imi.dolphin.sdkwebservice.controller;
 
-import com.imi.dolphin.sdkwebservice.model.ToyotaModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,15 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.imi.dolphin.sdkwebservice.model.ExtensionRequest;
 import com.imi.dolphin.sdkwebservice.model.ExtensionResult;
-import com.imi.dolphin.sdkwebservice.model.MerkMobil;
 import com.imi.dolphin.sdkwebservice.property.AppProperties;
 import com.imi.dolphin.sdkwebservice.service.IMailService;
 import com.imi.dolphin.sdkwebservice.service.IService;
-import java.util.Arrays;
-import java.util.List;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  *
@@ -131,7 +124,7 @@ public class Controller {
         return svcService.doGetSpecialist(extensionRequest);
     }
     
-    @RequestMapping("/getdoctorbyhosspec")
+    @RequestMapping("/getdoctor/hosspec")
     @PostMapping
     public ExtensionResult doGetDokterByHospitalAndSpecialist(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.doGetDokterByHospitalAndSpecialist(extensionRequest);
@@ -143,13 +136,13 @@ public class Controller {
         return svcService.doGetDoctorSchedule(extensionRequest);
     }
 
-    @RequestMapping("/getdoctorbyname")
+    @RequestMapping("/getdoctor/name")
     @PostMapping
     public ExtensionResult doGetDoctorByName(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.doGetDoctorByName(extensionRequest);
     }
     
-    @RequestMapping("/getschedulebydoctorid")
+    @RequestMapping("/getschedule/doctorid")
     @PostMapping
     public ExtensionResult doGetScheduleByDoctorId(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.doGetScheduleByDoctorId(extensionRequest);
@@ -167,22 +160,34 @@ public class Controller {
         return svcService.doGetHospitalTerdekat(extensionRequest);
     }
     
-    @RequestMapping("/getspecialistbyname")
+    @RequestMapping("/getspecialist/name")
     @PostMapping
     public ExtensionResult doGetSpecialistbyName(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.doGetSpecialistbyName(extensionRequest);
     }
     
-    @RequestMapping("/getspecialistpage1")
+    @RequestMapping("/getspecialist/page1")
     @PostMapping
     public ExtensionResult doGetSpecialistPage1(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.doGetSpecialistPage1(extensionRequest);
     }
     
-    @RequestMapping("/getspecialistpage2")
+    @RequestMapping("/getspecialist/page2")
     @PostMapping
     public ExtensionResult doGetSpecialistPage2(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.doGetSpecialistPage2(extensionRequest);
+    }
+    
+    @RequestMapping("/getspecialist/page3")
+    @PostMapping
+    public ExtensionResult doGetSpecialistPage3(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.doGetSpecialistPage3(extensionRequest);
+    }
+    
+    @RequestMapping("/getspecialist/page4")
+    @PostMapping
+    public ExtensionResult doGetSpecialistPage4(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.doGetSpecialistPage4(extensionRequest);
     }
     
     

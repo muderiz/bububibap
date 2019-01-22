@@ -94,6 +94,9 @@ public class AppProperties {
 
     @Value("${siloam.api.doctorschedule}")
     String apiDoctorschedule;
+    
+    @Value("${siloam.api.doctorappointment}")
+    String apiDoctorappointment;
 
     @Value("${siloam.dummy.hospital}")
     String dummyHospital;
@@ -285,6 +288,14 @@ public class AppProperties {
         this.apiDoctorschedule = apiDoctorschedule;
     }
 
+    public String getApiDoctorappointment() {
+        return apiDoctorappointment;
+    }
+
+    public void setApiDoctorappointment(String apiDoctorappointment) {
+        this.apiDoctorappointment = apiDoctorappointment;
+    }
+
     public String getDummyHospital() {
         return dummyHospital;
     }
@@ -309,4 +320,5 @@ public class AppProperties {
         this.apiDoctorbydoctorIdSpecialist = apiDoctorbydoctorIdSpecialist;
     }
 
+    
 }
