@@ -837,31 +837,18 @@ public class ServiceImp implements IService {
                 int kodeHari = 0;
                 String kodeBulan = Bulan(bulan);
                 String date = tahun + "-" + kodeBulan + "-" + tanggal;
-
-                Request request2 = new Request.Builder().url(appProperties.getApiDoctorappointment() + hospitalId + "/doctorId/" + doctorId + "/date/" + date).get().build();
-                Response response2 = okHttpUtil.getClient().newCall(request2).execute();
-                JSONObject jsonobj2 = new JSONObject(response2.body().string());
-                JSONArray results2 = jsonobj2.getJSONArray("data");
-                int leng2 = results2.length();
                 String available = "";
+
                 String[] daypoint = new String[leng];
                 for (int j = 0; j < leng; j++) {
+                    Request request2 = new Request.Builder().url(appProperties.getApiDoctorappointment() + hospitalId + "/doctorId/" + doctorId + "/date/" + date).get().build();
+                    Response response2 = okHttpUtil.getClient().newCall(request2).execute();
+                    JSONObject jsonobj2 = new JSONObject(response2.body().string());
+                    JSONArray results2 = jsonobj2.getJSONArray("data");
+                    int leng2 = results2.length();
+
                     JSONObject jObj = results.getJSONObject(j);
-                    for (int k = 0; k < leng2; k++) {
-                        JSONObject jObj2 = results2.getJSONObject(k);
-                        Boolean isFull = jObj2.getBoolean("is_full");
-                        
-                        if (isFull.equals(false)) {
-                            available = "Available";
-                        } else {
-                            available = "Not Available";
-                        }
-                        
-                        break;
-                    }
-
                     kodeHari = Hari(hari);
-
                     int daysnumber = jObj.getInt("doctor_schedule_day");
                     dayslist.add(daysnumber);
                     String fromtime = jObj.getString("doctor_schedule_from_time");
@@ -870,6 +857,18 @@ public class ServiceImp implements IService {
                     String dateT = totime.substring(11, 16);
                     String jadwal = dateF + "-" + dateT;
 
+                    for (int k = 0; k < leng2; k++) {
+                        JSONObject jObj2 = results2.getJSONObject(k);
+                        Boolean isFull = jObj2.getBoolean("is_full");
+
+                        if (isFull.equals(false)) {
+                            available = "Available";
+                            break;
+                        } else {
+                            available = "Not Available";
+                        }
+
+                    }
                     if (daysnumber == kodeHari) {
                         if (daypoint[x] == null) {
                             daypoint[x] = jadwal;
@@ -877,12 +876,13 @@ public class ServiceImp implements IService {
                             daypoint[x] = daypoint[x] + "/" + jadwal;
                         }
                     }
+
                 }
                 if (dayslist.contains(kodeHari)) {
                     //Buat Button 
                     ButtonTemplate button = new ButtonTemplate();
                     button.setTitle(hari + ", " + tanggal + " " + bulan + "" + tahun);
-                    button.setSubTitle(daypoint[x]+"/n"+available);
+                    button.setSubTitle(daypoint[x] + "/n" + available);
                     List<EasyMap> actions = new ArrayList<>();
 
                     EasyMap bookAction = new EasyMap();
