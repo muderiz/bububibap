@@ -124,7 +124,7 @@ public class Controller {
         return svcService.doGetSpecialist(extensionRequest);
     }
     
-    @RequestMapping("/getdoctor/hosspec")
+    @RequestMapping("/getdoctorbyhosspec")
     @PostMapping
     public ExtensionResult doGetDokterByHospitalAndSpecialist(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.doGetDokterByHospitalAndSpecialist(extensionRequest);
@@ -136,7 +136,7 @@ public class Controller {
         return svcService.doGetDoctorSchedule(extensionRequest);
     }
 
-    @RequestMapping("/getdoctor/name")
+    @RequestMapping("/getdoctorname")
     @PostMapping
     public ExtensionResult doGetDoctorByName(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.doGetDoctorByName(extensionRequest);
