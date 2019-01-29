@@ -48,7 +48,9 @@ public interface IService {
 
     ExtensionResult doGetHospitalByArea(ExtensionRequest extensionRequest);
 
-    ExtensionResult doGetDokterByHospitalAndSpecialist(ExtensionRequest extensionRequest);
+    ExtensionResult doGetDoctorByHospitalAndSpecialist(ExtensionRequest extensionRequest);
+    
+    ExtensionResult doGetDoctorBySpecialist(ExtensionRequest extensionRequest);
 
     ExtensionResult doGetDoctorSchedule(ExtensionRequest extensionRequest);
 

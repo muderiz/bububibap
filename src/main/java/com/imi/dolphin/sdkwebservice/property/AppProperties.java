@@ -89,8 +89,11 @@ public class AppProperties {
     @Value("${siloam.api.doctorbydoctorid}")
     String apiDoctorbydoctorid;
 
-    @Value("${siloam.api.doctorbydoctorid&spesialis}")
-    String apiDoctorbydoctorIdSpecialist;
+    @Value("${siloam.api.doctorbyhospitalid&spesialis}")
+    String apiDoctorbyhospitalIdSpecialist;
+    
+    @Value("${siloam.api.doctorbyspesialis}")
+    String apiDoctorbySpecialist;
 
     @Value("${siloam.api.doctorschedule}")
     String apiDoctorschedule;
@@ -312,13 +315,23 @@ public class AppProperties {
         this.googleMapQuery = googleMapQuery;
     }
 
-    public String getApiDoctorbydoctorIdSpecialist() {
-        return apiDoctorbydoctorIdSpecialist;
+    public String getApiDoctorbyhospitalIdSpecialist() {
+        return apiDoctorbyhospitalIdSpecialist;
     }
 
-    public void setApiDoctorbydoctorIdSpecialist(String apiDoctorbydoctorIdSpecialist) {
-        this.apiDoctorbydoctorIdSpecialist = apiDoctorbydoctorIdSpecialist;
+    public void setApiDoctorbyhospitalIdSpecialist(String apiDoctorbyhospitalIdSpecialist) {
+        this.apiDoctorbyhospitalIdSpecialist = apiDoctorbyhospitalIdSpecialist;
     }
+
+    public String getApiDoctorbySpecialist() {
+        return apiDoctorbySpecialist;
+    }
+
+    public void setApiDoctorbySpecialist(String apiDoctorbySpecialist) {
+        this.apiDoctorbySpecialist = apiDoctorbySpecialist;
+    }
+
+    
 
     
 }
