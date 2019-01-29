@@ -65,8 +65,6 @@ public interface IService {
     
     ExtensionResult doGetSpecialistbyName(ExtensionRequest extensionRequest);
     
-    ExtensionResult doGetSpecialistPage1(ExtensionRequest extensionRequest);
-    
     ExtensionResult doGetSpecialistPage2(ExtensionRequest extensionRequest);
    
     ExtensionResult doGetSpecialistPage3(ExtensionRequest extensionRequest);

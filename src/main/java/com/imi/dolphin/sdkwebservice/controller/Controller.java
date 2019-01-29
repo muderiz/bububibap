@@ -166,12 +166,6 @@ public class Controller {
         return svcService.doGetSpecialistbyName(extensionRequest);
     }
     
-    @RequestMapping("/getspecialist/page1")
-    @PostMapping
-    public ExtensionResult doGetSpecialistPage1(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.doGetSpecialistPage1(extensionRequest);
-    }
-    
     @RequestMapping("/getspecialist/page2")
     @PostMapping
     public ExtensionResult doGetSpecialistPage2(@RequestBody ExtensionRequest extensionRequest) {
