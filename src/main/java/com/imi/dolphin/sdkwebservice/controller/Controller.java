@@ -148,7 +148,7 @@ public class Controller {
         return svcService.doGetDoctorByName(extensionRequest);
     }
     
-    @RequestMapping("/getschedule/doctorid")
+    @RequestMapping("/getscheduledoctorid")
     @PostMapping
     public ExtensionResult doGetScheduleByDoctorId(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.doGetScheduleByDoctorId(extensionRequest);
@@ -166,28 +166,34 @@ public class Controller {
         return svcService.doGetHospitalTerdekat(extensionRequest);
     }
     
-    @RequestMapping("/getspecialist/name")
+    @RequestMapping("/getspecialistname")
     @PostMapping
     public ExtensionResult doGetSpecialistbyName(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.doGetSpecialistbyName(extensionRequest);
     }
     
-    @RequestMapping("/getspecialist/page2")
+    @RequestMapping("/getspecialistpage2")
     @PostMapping
     public ExtensionResult doGetSpecialistPage2(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.doGetSpecialistPage2(extensionRequest);
     }
     
-    @RequestMapping("/getspecialist/page3")
+    @RequestMapping("/getspecialistpage3")
     @PostMapping
     public ExtensionResult doGetSpecialistPage3(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.doGetSpecialistPage3(extensionRequest);
     }
     
-    @RequestMapping("/getspecialist/page4")
+    @RequestMapping("/getspecialistpage4")
     @PostMapping
     public ExtensionResult doGetSpecialistPage4(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.doGetSpecialistPage4(extensionRequest);
+    }
+    
+    @RequestMapping("/setcounterspecialist")
+    @PostMapping
+    public ExtensionResult SetCounterSpecialist(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.SetCounterSpecialist(extensionRequest);
     }
     
     

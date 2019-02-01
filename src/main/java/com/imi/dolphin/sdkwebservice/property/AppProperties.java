@@ -76,6 +76,9 @@ public class AppProperties {
 
     @Value("${siloam.api.hospital}")
     String apiHospital;
+    
+    @Value("${siloam.api.hospitalbyarea}")
+    String apiHospitalByArea;
 
     @Value("${siloam.api.specialist}")
     String apiSpecialist;
@@ -249,6 +252,14 @@ public class AppProperties {
 
     public void setApiHospital(String apiHospital) {
         this.apiHospital = apiHospital;
+    }
+
+    public String getApiHospitalByArea() {
+        return apiHospitalByArea;
+    }
+
+    public void setApiHospitalByArea(String apiHospitalByArea) {
+        this.apiHospitalByArea = apiHospitalByArea;
     }
 
     public String getApiSpecialist() {
