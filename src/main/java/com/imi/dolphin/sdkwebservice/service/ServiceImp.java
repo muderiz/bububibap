@@ -963,8 +963,8 @@ public class ServiceImp implements IService {
                 String available = "";
 
                 String[] daypoint = new String[leng];
+                String scheduleTime = appProperties.getApiDoctorappointment() + hospitalId + "/doctorId/" + doctorId + "/date/" + date;
                 for (int k = 0; k < leng2; k++) {
-                    String scheduleTime = appProperties.getApiDoctorappointment() + hospitalId + "/doctorId/" + doctorId + "/date/" + date;
                     if (GeneralExecuteAPI(scheduleTime).getInt("code") == 200) {
                         JSONArray results3 = GeneralExecuteAPI(scheduleTime).getJSONArray("data");
                         int leng3 = results3.length();
@@ -979,7 +979,7 @@ public class ServiceImp implements IService {
                                 available = "Not Available";
                             }
                         }
-                        
+
                         JSONObject jObj2 = results2.getJSONObject(k);
                         kodeHari = Hari(hari);
                         int daysnumber = jObj2.getInt("doctor_schedule_day");
