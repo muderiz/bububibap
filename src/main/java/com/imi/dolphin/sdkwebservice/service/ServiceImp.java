@@ -676,12 +676,13 @@ public class ServiceImp implements IService {
     }
 
     @Override
-    public ExtensionResult doGetSpecialist(ExtensionRequest extensionRequest) {
+    public ExtensionResult doGetSpecialistbyHospital(ExtensionRequest extensionRequest) {
         Map<String, String> output = new HashMap<>();
         ExtensionResult extensionResult = new ExtensionResult();
         StringBuilder sb = new StringBuilder();
-
-        String apiSpecialist = appProperties.getApiSpecialist();
+        String hospitalId = getEasyMapValueByName(extensionRequest, "hospital");
+        
+        String apiSpecialist = appProperties.getApiSpecialistbyHospital() + hospitalId;
         JSONArray results = GeneralExecuteAPI(apiSpecialist).getJSONArray("data");
         int leng = results.length();
         for (int i = 0; i < leng; i++) {
@@ -1126,7 +1127,7 @@ public class ServiceImp implements IService {
         String specialist = getEasyMapValueByName(extensionRequest, "specialist");
 
         if (specialist.contains("Lainnya")) {
-            String getSpecialistPage1 = appProperties.getApiSpecialist();
+            String getSpecialistPage1 = appProperties.getApiSpecialistbyname();
             JSONArray results = GeneralExecuteAPI(getSpecialistPage1).getJSONArray("data");
             int leng = 18;
             for (int i = 9; i < leng; i++) {
@@ -1194,7 +1195,7 @@ public class ServiceImp implements IService {
 
         String specialist2 = getEasyMapValueByName(extensionRequest, "specialist2");
         if (specialist2.contains("Lainnya")) {
-            String getSpecialistPage2 = appProperties.getApiSpecialist();
+            String getSpecialistPage2 = appProperties.getApiSpecialistbyname();
             JSONArray results = GeneralExecuteAPI(getSpecialistPage2).getJSONArray("data");
             int leng = 27;
             for (int i = 18; i < leng; i++) {
@@ -1263,7 +1264,7 @@ public class ServiceImp implements IService {
 
         String specialist3 = getEasyMapValueByName(extensionRequest, "specialist3");
         if (specialist3.contains("Lainnya")) {
-            String getSpecialistPage3 = appProperties.getApiSpecialist();
+            String getSpecialistPage3 = appProperties.getApiSpecialistbyname();
             JSONArray results = GeneralExecuteAPI(getSpecialistPage3).getJSONArray("data");
             int leng = results.length();
             for (int i = 27; i < leng; i++) {

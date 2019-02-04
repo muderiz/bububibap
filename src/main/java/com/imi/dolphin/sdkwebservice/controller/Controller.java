@@ -120,8 +120,8 @@ public class Controller {
     
     @RequestMapping("/getspecialist")
     @PostMapping
-    public ExtensionResult doGetSpecialist(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.doGetSpecialist(extensionRequest);
+    public ExtensionResult doGetSpecialistbyHospital(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.doGetSpecialistbyHospital(extensionRequest);
     }
     
     @RequestMapping("/getdoctorbyhosspec")

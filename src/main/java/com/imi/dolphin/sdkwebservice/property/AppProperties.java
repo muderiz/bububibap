@@ -80,8 +80,8 @@ public class AppProperties {
     @Value("${siloam.api.hospitalbyarea}")
     String apiHospitalByArea;
 
-    @Value("${siloam.api.specialist}")
-    String apiSpecialist;
+    @Value("${siloam.api.specialistbyhospital}")
+    String apiSpecialistbyHospital;
 
     @Value("${siloam.api.specialistbyname}")
     String apiSpecialistbyname;
@@ -262,12 +262,12 @@ public class AppProperties {
         this.apiHospitalByArea = apiHospitalByArea;
     }
 
-    public String getApiSpecialist() {
-        return apiSpecialist;
+    public String getApiSpecialistbyHospital() {
+        return apiSpecialistbyHospital;
     }
 
-    public void setApiSpecialist(String apiSpecialist) {
-        this.apiSpecialist = apiSpecialist;
+    public void setApiSpecialistbyHospital(String apiSpecialistbyHospital) {
+        this.apiSpecialistbyHospital = apiSpecialistbyHospital;
     }
 
     public String getApiSpecialistbyname() {

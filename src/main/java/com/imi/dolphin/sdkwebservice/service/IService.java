@@ -63,7 +63,7 @@ public interface IService {
     ExtensionResult doGetHospitalTerdekat(ExtensionRequest extensionRequest);
 
     // get Specialist
-    ExtensionResult doGetSpecialist(ExtensionRequest extensionRequest);
+    ExtensionResult doGetSpecialistbyHospital(ExtensionRequest extensionRequest);
 
     ExtensionResult doGetSpecialistbyName(ExtensionRequest extensionRequest);
 
