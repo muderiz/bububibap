@@ -75,6 +75,9 @@ public interface IService {
 
     //
     ExtensionResult SetCounterSpecialist(ExtensionRequest extensionRequest);
+    ExtensionResult SetKonfirmasiLainnya(ExtensionRequest extensionRequest);
+    
+    
 
     
     

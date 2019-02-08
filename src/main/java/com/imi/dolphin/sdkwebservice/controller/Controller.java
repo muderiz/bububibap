@@ -90,7 +90,7 @@ public class Controller {
 
     @RequestMapping("/carousel")
     @PostMapping
-     public ExtensionResult doBuildCarousel(@RequestBody ExtensionRequest extensionRequest) {
+    public ExtensionResult doBuildCarousel(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.getCarousel(extensionRequest);
     }
 
@@ -100,12 +100,27 @@ public class Controller {
         return svcService.doTransferToAgent(extensionRequest);
     }
 
+    @RequestMapping("/menudoctorschedule")
+    @PostMapping
+    public ExtensionResult MenuDoctorSchedule(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.MenuDoctorSchedule(extensionRequest);
+    }
+
+    // Get Nearest Hospital //
     @RequestMapping("/sendlocation")
     @PostMapping
     public ExtensionResult doBuildSendLocation(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.doSendLocation(extensionRequest);
     }
 
+    @RequestMapping("/nearesthospital")
+    @PostMapping
+    public ExtensionResult doGetHospitalTerdekat(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.doGetHospitalTerdekat(extensionRequest);
+    }
+    // ----------------------- //
+
+    // Get Doctor by Area //
     @RequestMapping("/getareas")
     @PostMapping
     public ExtensionResult doGetAreas(@RequestBody ExtensionRequest extensionRequest) {
@@ -117,23 +132,17 @@ public class Controller {
     public ExtensionResult doGetHospitalByArea(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.doGetHospitalByArea(extensionRequest);
     }
-    
+
     @RequestMapping("/getspecialist")
     @PostMapping
     public ExtensionResult doGetSpecialistbyHospital(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.doGetSpecialistbyHospital(extensionRequest);
     }
-    
-    @RequestMapping("/getdoctorbyhosspec")
+
+    @RequestMapping("/getdoctor/hospital/specialist")
     @PostMapping
     public ExtensionResult doGetDokterByHospitalAndSpecialist(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.doGetDoctorByHospitalAndSpecialist(extensionRequest);
-    }
-    
-    @RequestMapping("/getdoctorbyspec")
-    @PostMapping
-    public ExtensionResult doGetDoctorBySpecialist(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.doGetDoctorBySpecialist(extensionRequest);
     }
 
     @RequestMapping("/getdoctorschedule")
@@ -141,65 +150,64 @@ public class Controller {
     public ExtensionResult doGetDoctorSchedule(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.doGetDoctorSchedule(extensionRequest);
     }
+    // --------------------- //
 
-    @RequestMapping("/getdoctorname")
+    // Get Doctor by Name //
+    @RequestMapping("/getdoctor/name")
     @PostMapping
     public ExtensionResult doGetDoctorByName(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.doGetDoctorByName(extensionRequest);
     }
-    
-    @RequestMapping("/getscheduledoctorid")
+
+    @RequestMapping("/getschedule/doctorid")
     @PostMapping
     public ExtensionResult doGetScheduleByDoctorId(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.doGetScheduleByDoctorId(extensionRequest);
     }
 
-    @RequestMapping("/menudoctorschedule")
-    @PostMapping
-    public ExtensionResult MenuDoctorSchedule(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.MenuDoctorSchedule(extensionRequest);
-    }
-    
-    @RequestMapping("/hospitalterdekat")
-    @PostMapping
-    public ExtensionResult doGetHospitalTerdekat(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.doGetHospitalTerdekat(extensionRequest);
-    }
-    
-    @RequestMapping("/getspecialistname")
+    // ------------------- //
+    // Get Doctor by Specialist //
+    @RequestMapping("/getspecialist/name")
     @PostMapping
     public ExtensionResult doGetSpecialistbyName(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.doGetSpecialistbyName(extensionRequest);
     }
-    
-    @RequestMapping("/getspecialistpage2")
-    @PostMapping
-    public ExtensionResult doGetSpecialistPage2(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.doGetSpecialistPage2(extensionRequest);
-    }
-    
-    @RequestMapping("/getspecialistpage3")
-    @PostMapping
-    public ExtensionResult doGetSpecialistPage3(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.doGetSpecialistPage3(extensionRequest);
-    }
-    
-    @RequestMapping("/getspecialistpage4")
-    @PostMapping
-    public ExtensionResult doGetSpecialistPage4(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.doGetSpecialistPage4(extensionRequest);
-    }
-    
+
     @RequestMapping("/setcounterspecialist")
     @PostMapping
     public ExtensionResult SetCounterSpecialist(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.SetCounterSpecialist(extensionRequest);
     }
-    
-    
-  
-    
-    
-    
-    
+
+    @RequestMapping("/setkonfirmasi")
+    @PostMapping
+    public ExtensionResult SetKonfirmasiLainnya(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.SetKonfirmasiLainnya(extensionRequest);
+    }
+
+    @RequestMapping("/getdoctor/specialist")
+    @PostMapping
+    public ExtensionResult doGetDoctorBySpecialist(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.doGetDoctorBySpecialist(extensionRequest);
+    }
+    // ---------------------- //
+
+    @RequestMapping("/getspecialistpage2")
+    @PostMapping
+    public ExtensionResult doGetSpecialistPage2(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.doGetSpecialistPage2(extensionRequest);
+    }
+
+    @RequestMapping("/getspecialistpage3")
+    @PostMapping
+    public ExtensionResult doGetSpecialistPage3(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.doGetSpecialistPage3(extensionRequest);
+    }
+
+    @RequestMapping("/getspecialistpage4")
+    @PostMapping
+    public ExtensionResult doGetSpecialistPage4(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.doGetSpecialistPage4(extensionRequest);
+    }
+
 }
