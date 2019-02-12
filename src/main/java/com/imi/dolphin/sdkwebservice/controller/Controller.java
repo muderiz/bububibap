@@ -109,7 +109,7 @@ public class Controller {
     // Get Nearest Hospital //
     @RequestMapping("/sendlocation")
     @PostMapping
-    public ExtensionResult doBuildSendLocation(@RequestBody ExtensionRequest extensionRequest) {
+    public ExtensionResult doSendLocation(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.doSendLocation(extensionRequest);
     }
 

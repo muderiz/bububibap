@@ -1052,10 +1052,8 @@ public class ServiceImp implements IService {
         extensionResult.setNext(true);
         return extensionResult;
     }
-    
-    
+
     //-------------------------------------//
-    
     // Get Docter by Specialist Name //
     @Override
     public ExtensionResult doGetSpecialistbyName(ExtensionRequest extensionRequest) {
@@ -1175,7 +1173,7 @@ public class ServiceImp implements IService {
         extensionResult.setEntities(clearEntities);
         return extensionResult;
     }
-    
+
     @Override
     public ExtensionResult SetKonfirmasiLainnya(ExtensionRequest extensionRequest) {
         ExtensionResult extensionResult = new ExtensionResult();
@@ -1206,48 +1204,38 @@ public class ServiceImp implements IService {
         ExtensionResult extensionResult = new ExtensionResult();
         StringBuilder sb = new StringBuilder();
 
-        String konfirmasi = getEasyMapValueByName(extensionRequest, "konfirmasi");
+        Map<String, String> output = new HashMap<>();
+        String specialistId = getEasyMapValueByName(extensionRequest, "specialist");
+        String apiGetDokter = appProperties.getApiDoctorbySpecialist() + specialistId;
+        JSONArray results = GeneralExecuteAPI(apiGetDokter).getJSONArray("data");
+        int leng = results.length();
+        for (int i = 0; i < leng; i++) {
+            JSONObject jObj = results.getJSONObject(i);
+            String doctorId = jObj.getString("doctor_id");
+            String doctorName = jObj.getString("doctor_name");
+            String doctorSpecialist = jObj.getString("doctor_specialist");
+            String doctorHospitals = jObj.getString("doctor_hospitals_unit");
 
-        if (konfirmasi.equalsIgnoreCase("yes")) {
-            Map<String, String> clearEntities = new HashMap<>();
-            clearEntities.put("specialist", null);
-            clearEntities.put("konfirmasi", "");
-            extensionResult.setEntities(clearEntities);
-        } else {
-            Map<String, String> output = new HashMap<>();
-            String specialistId = getEasyMapValueByName(extensionRequest, "specialist");
-            String apiGetDokter = appProperties.getApiDoctorbySpecialist() + specialistId;
-            JSONArray results = GeneralExecuteAPI(apiGetDokter).getJSONArray("data");
-            int leng = results.length();
-            for (int i = 0; i < leng; i++) {
-                JSONObject jObj = results.getJSONObject(i);
-                String doctorId = jObj.getString("doctor_id");
-                String doctorName = jObj.getString("doctor_name");
-                String doctorSpecialist = jObj.getString("doctor_specialist");
-                String doctorHospitals = jObj.getString("doctor_hospitals_unit");
+            //Buat Button
+            ButtonTemplate button = new ButtonTemplate();
+            button.setTitle(doctorName);
+            button.setSubTitle(doctorSpecialist + "\n" + doctorHospitals);
+            List<EasyMap> actions = new ArrayList<>();
 
-                //Buat Button
-                ButtonTemplate button = new ButtonTemplate();
-                button.setTitle(doctorName);
-                button.setSubTitle(doctorSpecialist + "\n" + doctorHospitals);
-                List<EasyMap> actions = new ArrayList<>();
+            EasyMap LihatJadwal = new EasyMap();
 
-                EasyMap LihatJadwal = new EasyMap();
+            LihatJadwal.setName("Lihat Jadwal");
+            LihatJadwal.setValue(doctorId);
+            actions.add(LihatJadwal);
 
-                LihatJadwal.setName("Lihat Jadwal");
-                LihatJadwal.setValue(doctorId);
-                actions.add(LihatJadwal);
+            button.setButtonValues(actions);
+            ButtonBuilder buttonBuilder = new ButtonBuilder(button);
 
-                button.setButtonValues(actions);
-                ButtonBuilder buttonBuilder = new ButtonBuilder(button);
-
-                String btnBuilder = buttonBuilder.build().toString();
-                sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
-            }
-            output.put(OUTPUT, sb.toString());
-            extensionResult.setValue(output);
-
+            String btnBuilder = buttonBuilder.build().toString();
+            sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
         }
+        output.put(OUTPUT, sb.toString());
+        extensionResult.setValue(output);
 
         extensionResult.setAgent(false);
         extensionResult.setRepeat(false);
@@ -1259,11 +1247,8 @@ public class ServiceImp implements IService {
     //-------------------------------------------------------------------//
 
     // Method Get List Specialist //
-    
-
     @Override
-    public ExtensionResult doGetSpecialistList1(ExtensionRequest extensionRequest
-    ) {
+    public ExtensionResult doGetSpecialistList1(ExtensionRequest extensionRequest) {
         Map<String, String> output = new HashMap<>();
         ExtensionResult extensionResult = new ExtensionResult();
         StringBuilder sb = new StringBuilder();
