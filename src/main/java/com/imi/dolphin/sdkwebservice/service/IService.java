@@ -67,14 +67,12 @@ public interface IService {
 
     ExtensionResult doGetSpecialistbyName(ExtensionRequest extensionRequest);
 
-    ExtensionResult doGetSpecialistPage2(ExtensionRequest extensionRequest);
+    ExtensionResult doGetSpecialistList1(ExtensionRequest extensionRequest);
 
-    ExtensionResult doGetSpecialistPage3(ExtensionRequest extensionRequest);
-
-    ExtensionResult doGetSpecialistPage4(ExtensionRequest extensionRequest);
 
     //
     ExtensionResult SetCounterSpecialist(ExtensionRequest extensionRequest);
+    
     ExtensionResult SetKonfirmasiLainnya(ExtensionRequest extensionRequest);
     
     

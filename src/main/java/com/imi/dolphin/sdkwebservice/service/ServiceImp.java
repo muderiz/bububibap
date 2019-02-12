@@ -613,6 +613,7 @@ public class ServiceImp implements IService {
         int leng = results.length();
         for (int i = 0; i < leng; i++) {
             JSONObject jObj = results.getJSONObject(i);
+
             String areaId = jObj.getString("area_id");
             String areaName = jObj.getString("area_name");
 
@@ -1008,7 +1009,6 @@ public class ServiceImp implements IService {
                                 daypoint[x] = daypoint[x] + "/" + jadwal;
                             }
                         }
-
                     }
                 }
                 if (dayslist.contains(kodeHari)) {
@@ -1052,8 +1052,10 @@ public class ServiceImp implements IService {
         extensionResult.setNext(true);
         return extensionResult;
     }
-
+    
+    
     //-------------------------------------//
+    
     // Get Docter by Specialist Name //
     @Override
     public ExtensionResult doGetSpecialistbyName(ExtensionRequest extensionRequest) {
@@ -1063,43 +1065,50 @@ public class ServiceImp implements IService {
         String nama = getEasyMapValueByName(extensionRequest, "name");
         String counter = getEasyMapValueByName(extensionRequest, "counter");
 
-//        String getSpecialistByName = appProperties.getApiSpecialistbyname() + nama;
-        String getSpecialistByName = appProperties.getApiSpecialistbyname();
+        String getSpecialistByName = appProperties.getApiSpecialistbyname() + nama;
+//        String getSpecialistByName = appProperties.getApiSpecialistbyname();
         JSONArray results = GeneralExecuteAPI(getSpecialistByName).getJSONArray("data");
-        int count = Integer.parseInt(counter);
-        switch (count) {
-            case 1:
-                int leng = 9;
-                sb = carospec(sb, leng, results);
-                break;
-            case 2:
-                int leng2 = 18;
-                sb = carospec(sb, leng2, results);
-                break;
-            case 3:
-                int leng3 = 27;
-                sb = carospec(sb, leng3, results);
-                break;
-            case 4:
-                int leng4 = results.length();
-                sb = carospec(sb, leng4, results);
-                break;
+        int leng = results.length();
+        if (leng > 9) {
+            int count = Integer.parseInt(counter);
+            switch (count) {
+                case 1:
+                    int leng1 = 9;
+                    sb = carospec(sb, leng1, results);
+                    break;
+                case 2:
+                    int leng2 = 18;
+                    sb = carospec(sb, leng2, results);
+                    break;
+                case 3:
+                    int leng3 = 27;
+                    sb = carospec(sb, leng3, results);
+                    break;
+                case 4:
+                    int leng4 = results.length();
+                    sb = carospec(sb, leng4, results);
+                    break;
+            }
         }
+        for (int i = 0; i < leng; i++) {
+            JSONObject jObj = results.getJSONObject(i);
+            String specialistId = jObj.getString("specialization_id");
+            String specialistName = jObj.getString("name_id");
 
-        ButtonTemplate button = new ButtonTemplate();
-        button.setTitle("Lainnya");
-        List<EasyMap> actions = new ArrayList<>();
+            //Buat Button
+            ButtonTemplate button = new ButtonTemplate();
+            button.setTitle(specialistName);
+            List<EasyMap> actions = new ArrayList<>();
+            EasyMap bookAction = new EasyMap();
+            bookAction.setName("Pilih");
+            bookAction.setValue(specialistId);
+            actions.add(bookAction);
+            button.setButtonValues(actions);
+            ButtonBuilder buttonBuilder = new ButtonBuilder(button);
 
-        EasyMap bookAction = new EasyMap();
-        bookAction.setName("Lainnya");
-        bookAction.setValue("lainnya");
-        actions.add(bookAction);
-
-        button.setButtonValues(actions);
-        ButtonBuilder buttonBuilder = new ButtonBuilder(button);
-
-        String btnBuilder = buttonBuilder.build().toString();
-        sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
+            String btnBuilder = buttonBuilder.build().toString();
+            sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
+        }
 
         output.put(OUTPUT, sb.toString());
         extensionResult.setAgent(false);
@@ -1133,6 +1142,22 @@ public class ServiceImp implements IService {
             String btnBuilder = buttonBuilder.build().toString();
             sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
         }
+        if (leng < 27) {
+            ButtonTemplate button = new ButtonTemplate();
+            button.setTitle("Lainnya");
+            List<EasyMap> actions = new ArrayList<>();
+
+            EasyMap bookAction = new EasyMap();
+            bookAction.setName("Lainnya");
+            bookAction.setValue("lainnya");
+            actions.add(bookAction);
+
+            button.setButtonValues(actions);
+            ButtonBuilder buttonBuilder = new ButtonBuilder(button);
+
+            String btnBuilder = buttonBuilder.build();
+            sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
+        }
         return sb;
     }
 
@@ -1150,33 +1175,28 @@ public class ServiceImp implements IService {
         extensionResult.setEntities(clearEntities);
         return extensionResult;
     }
-    //-------------------------------------------------------------------//
-
-    // Method Get List Specialist //
+    
     @Override
     public ExtensionResult SetKonfirmasiLainnya(ExtensionRequest extensionRequest) {
         ExtensionResult extensionResult = new ExtensionResult();
+        extensionResult.setAgent(false);
+        extensionResult.setRepeat(false);
+        extensionResult.setSuccess(true);
+        extensionResult.setNext(true);
 
         Map<String, String> clearEntities = new HashMap<>();
         String counter = getEasyMapValueByName(extensionRequest, "counter");
         String specialist = getEasyMapValueByName(extensionRequest, "specialist");
-
         int code = Integer.parseInt(counter);
-
-        if (specialist.contains("lainnya")) {
-            code++;
-            clearEntities.put("counter", code + "");
+        if (specialist.equalsIgnoreCase("lainnya") || specialist.equalsIgnoreCase("lainya")) {
+            code = code + 1;
+            clearEntities.put("counter", "" + code);
             clearEntities.put("specialist", null);
-            clearEntities.put("konfirmasi", null);
             extensionResult.setEntities(clearEntities);
         } else {
             clearEntities.put("konfirmasi", "yes");
             extensionResult.setEntities(clearEntities);
         }
-        extensionResult.setAgent(false);
-        extensionResult.setRepeat(false);
-        extensionResult.setSuccess(true);
-        extensionResult.setNext(true);
         return extensionResult;
     }
 
@@ -1188,8 +1208,9 @@ public class ServiceImp implements IService {
 
         String konfirmasi = getEasyMapValueByName(extensionRequest, "konfirmasi");
 
-        if (konfirmasi.equals("no")) {
+        if (konfirmasi.equalsIgnoreCase("yes")) {
             Map<String, String> clearEntities = new HashMap<>();
+            clearEntities.put("specialist", null);
             clearEntities.put("konfirmasi", "");
             extensionResult.setEntities(clearEntities);
         } else {
@@ -1235,9 +1256,13 @@ public class ServiceImp implements IService {
 
         return extensionResult;
     }
+    //-------------------------------------------------------------------//
+
+    // Method Get List Specialist //
+    
 
     @Override
-    public ExtensionResult doGetSpecialistPage2(ExtensionRequest extensionRequest
+    public ExtensionResult doGetSpecialistList1(ExtensionRequest extensionRequest
     ) {
         Map<String, String> output = new HashMap<>();
         ExtensionResult extensionResult = new ExtensionResult();
@@ -1298,131 +1323,6 @@ public class ServiceImp implements IService {
             Map<String, String> clearEntities = new HashMap<>();
             clearEntities.put("specialist2", "Lainnya");
             clearEntities.put("specialist3", "Lainnya");
-            clearEntities.put("specialist4", "Lainnya");
-
-            extensionResult.setEntities(clearEntities);
-        }
-
-        return extensionResult;
-    }
-
-    @Override
-    public ExtensionResult doGetSpecialistPage3(ExtensionRequest extensionRequest
-    ) {
-        Map<String, String> output = new HashMap<>();
-        ExtensionResult extensionResult = new ExtensionResult();
-        StringBuilder sb = new StringBuilder();
-
-        String specialist2 = getEasyMapValueByName(extensionRequest, "specialist2");
-        if (specialist2.contains("Lainnya")) {
-            String getSpecialistPage2 = appProperties.getApiSpecialistbyname();
-            JSONArray results = GeneralExecuteAPI(getSpecialistPage2).getJSONArray("data");
-            int leng = 27;
-            for (int i = 18; i < leng; i++) {
-                JSONObject jObj = results.getJSONObject(i);
-                String specialistId = jObj.getString("specialization_id");
-                String specialistName = jObj.getString("name_id");
-
-                //Buat Button
-                ButtonTemplate button = new ButtonTemplate();
-                button.setTitle(specialistName);
-                List<EasyMap> actions = new ArrayList<>();
-
-                EasyMap bookAction = new EasyMap();
-                bookAction.setName(specialistName);
-                bookAction.setValue(specialistId);
-                actions.add(bookAction);
-
-                button.setButtonValues(actions);
-                ButtonBuilder buttonBuilder = new ButtonBuilder(button);
-
-                String btnBuilder = buttonBuilder.build().toString();
-                sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
-            }
-            ButtonTemplate button = new ButtonTemplate();
-            button.setTitle("Lainnya");
-            List<EasyMap> actions = new ArrayList<>();
-
-            EasyMap bookAction = new EasyMap();
-            bookAction.setName("Lainnya");
-            bookAction.setValue("Lainnya");
-            actions.add(bookAction);
-
-            button.setButtonValues(actions);
-            ButtonBuilder buttonBuilder = new ButtonBuilder(button);
-
-            String btnBuilder = buttonBuilder.build().toString();
-            sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
-
-            output.put(OUTPUT, sb.toString());
-            extensionResult.setAgent(false);
-            extensionResult.setRepeat(false);
-            extensionResult.setSuccess(true);
-            extensionResult.setNext(true);
-            extensionResult.setValue(output);
-        } else {
-            extensionResult.setAgent(false);
-            extensionResult.setRepeat(false);
-            extensionResult.setSuccess(true);
-            extensionResult.setNext(true);
-
-            Map<String, String> clearEntities = new HashMap<>();
-            clearEntities.put("specialist3", "Lainnya");
-            clearEntities.put("specialist4", "Lainnya");
-
-            extensionResult.setEntities(clearEntities);
-        }
-
-        return extensionResult;
-    }
-
-    @Override
-    public ExtensionResult doGetSpecialistPage4(ExtensionRequest extensionRequest
-    ) {
-        Map<String, String> output = new HashMap<>();
-        ExtensionResult extensionResult = new ExtensionResult();
-        StringBuilder sb = new StringBuilder();
-
-        String specialist3 = getEasyMapValueByName(extensionRequest, "specialist3");
-        if (specialist3.contains("Lainnya")) {
-            String getSpecialistPage3 = appProperties.getApiSpecialistbyname();
-            JSONArray results = GeneralExecuteAPI(getSpecialistPage3).getJSONArray("data");
-            int leng = results.length();
-            for (int i = 27; i < leng; i++) {
-                JSONObject jObj = results.getJSONObject(i);
-                String specialistId = jObj.getString("specialization_id");
-                String specialistName = jObj.getString("name_id");
-
-                //Buat Button
-                ButtonTemplate button = new ButtonTemplate();
-                button.setTitle(specialistName);
-                List<EasyMap> actions = new ArrayList<>();
-
-                EasyMap bookAction = new EasyMap();
-                bookAction.setName(specialistName);
-                bookAction.setValue(specialistId);
-                actions.add(bookAction);
-
-                button.setButtonValues(actions);
-                ButtonBuilder buttonBuilder = new ButtonBuilder(button);
-
-                String btnBuilder = buttonBuilder.build().toString();
-                sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
-            }
-
-            output.put(OUTPUT, sb.toString());
-            extensionResult.setAgent(false);
-            extensionResult.setRepeat(false);
-            extensionResult.setSuccess(true);
-            extensionResult.setNext(true);
-            extensionResult.setValue(output);
-        } else {
-            extensionResult.setAgent(false);
-            extensionResult.setRepeat(false);
-            extensionResult.setSuccess(true);
-            extensionResult.setNext(true);
-
-            Map<String, String> clearEntities = new HashMap<>();
             clearEntities.put("specialist4", "Lainnya");
 
             extensionResult.setEntities(clearEntities);
