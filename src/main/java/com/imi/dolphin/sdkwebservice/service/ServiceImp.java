@@ -1224,8 +1224,8 @@ public class ServiceImp implements IService {
         if (specialist.equalsIgnoreCase("lainnya") || specialist.equalsIgnoreCase("Lainnya")) {
             code = code + 1;
             clearEntities.put("counter", "" + code);
-            clearEntities.put("specialist", "");
-            clearEntities.put("konfirmasi", "");
+            clearEntities.put("specialist", null);
+            clearEntities.put("konfirmasi", null);
             extensionResult.setEntities(clearEntities);
         } else {
             clearEntities.put("konfirmasi", "yes");
