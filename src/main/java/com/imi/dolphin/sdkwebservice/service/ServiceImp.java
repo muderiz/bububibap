@@ -221,7 +221,6 @@ public class ServiceImp implements IService {
             okHttpUtil.init(true);
             Request request = new Request.Builder().url("https://jsonplaceholder.typicode.com/comments").get().build();
             Response response = okHttpUtil.getClient().newCall(request).execute();
-
             JSONArray jsonArray = new JSONArray(response.body().string());
 
             JSONObject jsonObject = jsonArray.getJSONObject(0);
@@ -834,15 +833,10 @@ public class ServiceImp implements IService {
                 List<EasyMap> actions = new ArrayList<>();
 
                 EasyMap bookAction = new EasyMap();
-                EasyMap callAction = new EasyMap();
 
-                bookAction.setName("Reservasi Online");
-                bookAction.setValue("https://www.siloamhospitals.com");
+                bookAction.setName("Pilih");
+                bookAction.setValue(date);
                 actions.add(bookAction);
-
-                callAction.setName("Call Center");
-                callAction.setValue("tel:1500181");
-                actions.add(callAction);
 
                 button.setButtonValues(actions);
                 ButtonBuilder buttonBuilder = new ButtonBuilder(button);
@@ -896,8 +890,49 @@ public class ServiceImp implements IService {
         }
         return kodeBulan;
     }
-    //----------------------------//
+    
 
+    public ExtensionResult doGetJamPraktekDokter(ExtensionRequest extensionRequest) {
+        Map<String, String> output = new HashMap<>();
+        ExtensionResult extensionResult = new ExtensionResult();
+        StringBuilder sb = new StringBuilder();
+        String hospital = getEasyMapValueByName(extensionRequest, "hospital");
+        String doctor = getEasyMapValueByName(extensionRequest, "doctor");
+        String date = getEasyMapValueByName(extensionRequest, "hari");
+
+        String getDoctorByName = appProperties.getApiDoctorappointment() + hospital + "/doctor/" + doctor + "/date/" + date;
+        JSONArray results = GeneralExecuteAPI(getDoctorByName).getJSONArray("data");
+        int leng = results.length();
+        for (int i = 0; i < leng; i++) {
+            JSONObject jObj = results.getJSONObject(i);
+            String schedulId = jObj.getString("schedule_id");
+            String fromtime = jObj.getString("from_time");
+            String totime = jObj.getString("to_time");
+
+            //Buat Button
+            ButtonTemplate button = new ButtonTemplate();
+            button.setTitle(fromtime);
+            List<EasyMap> actions = new ArrayList<>();
+            EasyMap bookAction = new EasyMap();
+            bookAction.setName("Pilih");
+            bookAction.setValue(fromtime);
+            actions.add(bookAction);
+            button.setButtonValues(actions);
+            ButtonBuilder buttonBuilder = new ButtonBuilder(button);
+
+            String btnBuilder = buttonBuilder.build().toString();
+            sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
+        }
+        output.put(OUTPUT, sb.toString());
+        extensionResult.setAgent(false);
+        extensionResult.setRepeat(false);
+        extensionResult.setSuccess(true);
+        extensionResult.setNext(true);
+        extensionResult.setValue(output);
+        return extensionResult;
+    }
+
+    //----------------------------//
     // Doctor Schedule Flow Search By Name //
     @Override
     public ExtensionResult doGetDoctorByName(ExtensionRequest extensionRequest) {
@@ -1045,6 +1080,7 @@ public class ServiceImp implements IService {
         output.put(OUTPUT, sb.toString());
         output.put("extra", proctime.toString());
         extensionResult.setValue(output);
+        
 
         extensionResult.setAgent(false);
         extensionResult.setRepeat(false);
@@ -1060,11 +1096,11 @@ public class ServiceImp implements IService {
         Map<String, String> output = new HashMap<>();
         ExtensionResult extensionResult = new ExtensionResult();
         StringBuilder sb = new StringBuilder();
-        String nama = getEasyMapValueByName(extensionRequest, "name");
+//        String nama = getEasyMapValueByName(extensionRequest, "name");
         String counter = getEasyMapValueByName(extensionRequest, "counter");
 
-        String getSpecialistByName = appProperties.getApiSpecialistbyname() + nama;
-//        String getSpecialistByName = appProperties.getApiSpecialistbyname();
+//        String getSpecialistByName = appProperties.getApiSpecialistbyname() + nama;
+        String getSpecialistByName = appProperties.getApiSpecialistbyname();
         JSONArray results = GeneralExecuteAPI(getSpecialistByName).getJSONArray("data");
         int leng = results.length();
         if (leng > 9) {
