@@ -1221,16 +1221,15 @@ public class ServiceImp implements IService {
         String counter = getEasyMapValueByName(extensionRequest, "counter");
         String specialist = getEasyMapValueByName(extensionRequest, "specialist");
         int code = Integer.parseInt(counter);
-        if (specialist.equalsIgnoreCase("lainnya") || specialist.equalsIgnoreCase("Lainnya")) {
+        if (specialist.equalsIgnoreCase("lainnya")) {
             code = code + 1;
             clearEntities.put("counter", "" + code);
-            clearEntities.put("specialist", null);
-            clearEntities.put("konfirmasi", null);
-            extensionResult.setEntities(clearEntities);
+            clearEntities.put("specialist", "");
         } else {
             clearEntities.put("konfirmasi", "yes");
-            extensionResult.setEntities(clearEntities);
         }
+        extensionResult.setEntities(clearEntities);
+
         return extensionResult;
     }
 
