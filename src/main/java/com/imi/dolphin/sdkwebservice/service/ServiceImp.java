@@ -1224,7 +1224,7 @@ public class ServiceImp implements IService {
         if (specialist.equalsIgnoreCase("lainnya")) {
             code = code + 1;
             clearEntities.put("counter", "" + code);
-            clearEntities.put("specialist", "");
+            clearEntities.put("konfirmasi", "no");
         } else {
             clearEntities.put("konfirmasi", "yes");
         }
@@ -1235,47 +1235,53 @@ public class ServiceImp implements IService {
 
     @Override
     public ExtensionResult doGetDoctorBySpecialist(ExtensionRequest extensionRequest) {
-
         ExtensionResult extensionResult = new ExtensionResult();
-        StringBuilder sb = new StringBuilder();
-
-        Map<String, String> output = new HashMap<>();
-        String specialistId = getEasyMapValueByName(extensionRequest, "specialist");
-        String apiGetDokter = appProperties.getApiDoctorbySpecialist() + specialistId;
-        JSONArray results = GeneralExecuteAPI(apiGetDokter).getJSONArray("data");
-        int leng = results.length();
-        for (int i = 0; i < leng; i++) {
-            JSONObject jObj = results.getJSONObject(i);
-            String doctorId = jObj.getString("doctor_id");
-            String doctorName = jObj.getString("doctor_name");
-            String doctorSpecialist = jObj.getString("doctor_specialist");
-            String doctorHospitals = jObj.getString("doctor_hospitals_unit");
-
-            //Buat Button
-            ButtonTemplate button = new ButtonTemplate();
-            button.setTitle(doctorName);
-            button.setSubTitle(doctorSpecialist + "\n" + doctorHospitals);
-            List<EasyMap> actions = new ArrayList<>();
-
-            EasyMap LihatJadwal = new EasyMap();
-
-            LihatJadwal.setName("Lihat Jadwal");
-            LihatJadwal.setValue(doctorId);
-            actions.add(LihatJadwal);
-
-            button.setButtonValues(actions);
-            ButtonBuilder buttonBuilder = new ButtonBuilder(button);
-
-            String btnBuilder = buttonBuilder.build().toString();
-            sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
-        }
-        output.put(OUTPUT, sb.toString());
-        extensionResult.setValue(output);
-
         extensionResult.setAgent(false);
         extensionResult.setRepeat(false);
         extensionResult.setSuccess(true);
         extensionResult.setNext(true);
+
+        StringBuilder sb = new StringBuilder();
+        String konfirmasi = getEasyMapValueByName(extensionRequest, "konfirmasi");
+        if (konfirmasi.equalsIgnoreCase("no")) {
+            Map<String, String> clearEntities = new HashMap<>();
+            clearEntities.put("specialist", "");
+            clearEntities.put("konfirmasi", "");
+            extensionResult.setEntities(clearEntities);
+        } else {
+            Map<String, String> output = new HashMap<>();
+            String specialistId = getEasyMapValueByName(extensionRequest, "specialist");
+            String apiGetDokter = appProperties.getApiDoctorbySpecialist() + specialistId;
+            JSONArray results = GeneralExecuteAPI(apiGetDokter).getJSONArray("data");
+            int leng = results.length();
+            for (int i = 0; i < leng; i++) {
+                JSONObject jObj = results.getJSONObject(i);
+                String doctorId = jObj.getString("doctor_id");
+                String doctorName = jObj.getString("doctor_name");
+                String doctorSpecialist = jObj.getString("doctor_specialist");
+                String doctorHospitals = jObj.getString("doctor_hospitals_unit");
+
+                //Buat Button
+                ButtonTemplate button = new ButtonTemplate();
+                button.setTitle(doctorName);
+                button.setSubTitle(doctorSpecialist + "\n" + doctorHospitals);
+                List<EasyMap> actions = new ArrayList<>();
+
+                EasyMap LihatJadwal = new EasyMap();
+
+                LihatJadwal.setName("Lihat Jadwal");
+                LihatJadwal.setValue(doctorId);
+                actions.add(LihatJadwal);
+
+                button.setButtonValues(actions);
+                ButtonBuilder buttonBuilder = new ButtonBuilder(button);
+
+                String btnBuilder = buttonBuilder.build().toString();
+                sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
+            }
+            output.put(OUTPUT, sb.toString());
+            extensionResult.setValue(output);
+        }
 
         return extensionResult;
     }
