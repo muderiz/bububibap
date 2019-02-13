@@ -890,7 +890,6 @@ public class ServiceImp implements IService {
         }
         return kodeBulan;
     }
-    
 
     public ExtensionResult doGetJamPraktekDokter(ExtensionRequest extensionRequest) {
         Map<String, String> output = new HashMap<>();
@@ -1080,7 +1079,6 @@ public class ServiceImp implements IService {
         output.put(OUTPUT, sb.toString());
         output.put("extra", proctime.toString());
         extensionResult.setValue(output);
-        
 
         extensionResult.setAgent(false);
         extensionResult.setRepeat(false);
@@ -1123,25 +1121,26 @@ public class ServiceImp implements IService {
                     sb = carospec(sb, leng4, results);
                     break;
             }
-        }
-        for (int i = 0; i < leng; i++) {
-            JSONObject jObj = results.getJSONObject(i);
-            String specialistId = jObj.getString("specialization_id");
-            String specialistName = jObj.getString("name_id");
+        } else {
+            for (int i = 0; i < leng; i++) {
+                JSONObject jObj = results.getJSONObject(i);
+                String specialistId = jObj.getString("specialization_id");
+                String specialistName = jObj.getString("name_id");
 
-            //Buat Button
-            ButtonTemplate button = new ButtonTemplate();
-            button.setTitle(specialistName);
-            List<EasyMap> actions = new ArrayList<>();
-            EasyMap bookAction = new EasyMap();
-            bookAction.setName("Pilih");
-            bookAction.setValue(specialistId);
-            actions.add(bookAction);
-            button.setButtonValues(actions);
-            ButtonBuilder buttonBuilder = new ButtonBuilder(button);
+                //Buat Button
+                ButtonTemplate button = new ButtonTemplate();
+                button.setTitle(specialistName);
+                List<EasyMap> actions = new ArrayList<>();
+                EasyMap bookAction = new EasyMap();
+                bookAction.setName("Pilih");
+                bookAction.setValue(specialistId);
+                actions.add(bookAction);
+                button.setButtonValues(actions);
+                ButtonBuilder buttonBuilder = new ButtonBuilder(button);
 
-            String btnBuilder = buttonBuilder.build().toString();
-            sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
+                String btnBuilder = buttonBuilder.build().toString();
+                sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
+            }
         }
 
         output.put(OUTPUT, sb.toString());
