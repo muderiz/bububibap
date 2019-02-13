@@ -1225,9 +1225,8 @@ public class ServiceImp implements IService {
         int code = Integer.parseInt(counter);
         if (specialist.equalsIgnoreCase("lainnya")) {
             code = code + 1;
-            clearEntities.replace("counter", "" + code);
-            clearEntities.replace("name", name);
-            clearEntities.replace("specialist", null);
+            clearEntities.put("counter", "" + code);
+            clearEntities.putIfAbsent("specialist", null);
             extensionResult.setEntities(clearEntities);
         } else {
             clearEntities.put("konfirmasi", "yes");
