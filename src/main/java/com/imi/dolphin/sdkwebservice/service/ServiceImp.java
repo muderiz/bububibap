@@ -1221,10 +1221,11 @@ public class ServiceImp implements IService {
         String counter = getEasyMapValueByName(extensionRequest, "counter");
         String specialist = getEasyMapValueByName(extensionRequest, "specialist");
         int code = Integer.parseInt(counter);
-        if (specialist.equalsIgnoreCase("lainnya") || specialist.equalsIgnoreCase("lainya")) {
+        if (specialist.equalsIgnoreCase("lainnya") || specialist.equalsIgnoreCase("Lainnya")) {
             code = code + 1;
             clearEntities.put("counter", "" + code);
-            clearEntities.put("specialist", null);
+            clearEntities.put("specialist", "");
+            clearEntities.put("konfirmasi", "");
             extensionResult.setEntities(clearEntities);
         } else {
             clearEntities.put("konfirmasi", "yes");
