@@ -1223,7 +1223,7 @@ public class ServiceImp implements IService {
         if (specialist.equalsIgnoreCase("lainnya")) {
             int code = Integer.parseInt(counter) + 1;
             clearEntities.put("counter", "" + code);
-            clearEntities.replace("specialist", specialist, null);
+            clearEntities.put("specialist", null);
             clearEntities.put("konfirmasi", null);
             extensionResult.setEntities(clearEntities);
         } else {
