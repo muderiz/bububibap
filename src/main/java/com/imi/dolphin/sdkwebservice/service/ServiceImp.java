@@ -1220,13 +1220,11 @@ public class ServiceImp implements IService {
         Map<String, String> clearEntities = new HashMap<>();
         String counter = getEasyMapValueByName(extensionRequest, "counter");
         String specialist = getEasyMapValueByName(extensionRequest, "specialist");
-        String name = getEasyMapValueByName(extensionRequest, "name");
-        
-        int code = Integer.parseInt(counter);
         if (specialist.equalsIgnoreCase("lainnya")) {
-            code = code + 1;
+            int code = Integer.parseInt(counter) + 1;
             clearEntities.put("counter", "" + code);
-            clearEntities.putIfAbsent("specialist", null);
+            clearEntities.replace("specialist", specialist, null);
+            clearEntities.put("konfirmasi", null);
             extensionResult.setEntities(clearEntities);
         } else {
             clearEntities.put("konfirmasi", "yes");
