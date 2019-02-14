@@ -109,6 +109,21 @@ public class AppProperties {
 
     @Value("${google.map.query}")
     String googleMapQuery;
+    
+    @Value("${userId}")
+    String userId;
+    
+    @Value("${bookingTypeId}")
+    String bookingTypeId;
+    
+    @Value("${create.patient}")
+    String createPatient;
+    
+    @Value("${create.appointment}")
+    String createAppointment;
+    
+    
+    
 
     public String getTicketNumber() {
         return ticketNumber;
@@ -340,6 +355,38 @@ public class AppProperties {
 
     public void setApiDoctorbySpecialist(String apiDoctorbySpecialist) {
         this.apiDoctorbySpecialist = apiDoctorbySpecialist;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getBookingTypeId() {
+        return bookingTypeId;
+    }
+
+    public void setBookingTypeId(String bookingTypeId) {
+        this.bookingTypeId = bookingTypeId;
+    }
+
+    public String getCreatePatient() {
+        return createPatient;
+    }
+
+    public void setCreatePatient(String createPatient) {
+        this.createPatient = createPatient;
+    }
+
+    public String getCreateAppointment() {
+        return createAppointment;
+    }
+
+    public void setCreateAppointment(String createAppointment) {
+        this.createAppointment = createAppointment;
     }
 
     

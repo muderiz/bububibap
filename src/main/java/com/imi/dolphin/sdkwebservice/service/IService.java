@@ -75,6 +75,8 @@ public interface IService {
     
     ExtensionResult SetKonfirmasiLainnya(ExtensionRequest extensionRequest);
     
+    ExtensionResult doPostCreatePatient(ExtensionRequest extensionRequest);
+    
     
 
     

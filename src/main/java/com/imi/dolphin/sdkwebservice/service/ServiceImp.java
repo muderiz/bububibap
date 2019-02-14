@@ -27,6 +27,7 @@ import com.imi.dolphin.sdkwebservice.builder.ButtonBuilder;
 import com.imi.dolphin.sdkwebservice.builder.CarouselBuilder;
 import com.imi.dolphin.sdkwebservice.builder.QuickReplyBuilder;
 import com.imi.dolphin.sdkwebservice.model.ButtonTemplate;
+import com.imi.dolphin.sdkwebservice.model.CreatePatient;
 import com.imi.dolphin.sdkwebservice.model.EasyMap;
 import com.imi.dolphin.sdkwebservice.model.ExtensionRequest;
 import com.imi.dolphin.sdkwebservice.model.ExtensionResult;
@@ -43,7 +44,9 @@ import jdk.nashorn.internal.ir.CaseNode;
 
 import okhttp3.MediaType;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
+import okio.ByteString;
 
 /**
  *
@@ -54,6 +57,11 @@ import okhttp3.Response;
 public class ServiceImp implements IService {
 
     public static final String OUTPUT = "output";
+    public static final String ID = "id";
+    public static final String NAME = "name";
+    public static final String CONTACT_NAME = "contact_name";
+    public static final String CONTACT_PHONE_NAME = "contact_phone_number";
+
     private static final String SAMPLE_IMAGE_PATH = "https://goo.gl/SHdL8D";
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     private static final String CONSTANT_SPLIT_SYNTAX = "&split&";
@@ -760,6 +768,41 @@ public class ServiceImp implements IService {
         return extensionResult;
     }
 
+    private int Hari(String day) {
+
+        int kodeHari = 0;
+        try {
+            Date date = new SimpleDateFormat("EEE").parse(day);//put your day name here
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(date);
+            int month = cal.get(Calendar.DAY_OF_WEEK);
+            month--;
+            kodeHari = month;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return kodeHari;
+    }
+
+    private String Bulan(String monthName) {
+        String kodeBulan = "";
+        try {
+            Date date = new SimpleDateFormat("MMM").parse(monthName);//put your month name here
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(date);
+            int monthNum = cal.get(Calendar.MONTH);
+            monthNum++;
+            if (monthNum < 10) {
+                kodeBulan = "0" + monthNum;
+            } else {
+                kodeBulan = monthNum + "";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return kodeBulan;
+    }
+
     @Override
     public ExtensionResult doGetDoctorSchedule(ExtensionRequest extensionRequest) {
         Map<String, String> output = new HashMap<>();
@@ -856,41 +899,6 @@ public class ServiceImp implements IService {
         return extensionResult;
     }
 
-    private int Hari(String day) {
-
-        int kodeHari = 0;
-        try {
-            Date date = new SimpleDateFormat("EEE").parse(day);//put your day name here
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(date);
-            int month = cal.get(Calendar.DAY_OF_WEEK);
-            month--;
-            kodeHari = month;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return kodeHari;
-    }
-
-    private String Bulan(String monthName) {
-        String kodeBulan = "";
-        try {
-            Date date = new SimpleDateFormat("MMM").parse(monthName);//put your month name here
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(date);
-            int monthNum = cal.get(Calendar.MONTH);
-            monthNum++;
-            if (monthNum < 10) {
-                kodeBulan = "0" + monthNum;
-            } else {
-                kodeBulan = monthNum + "";
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return kodeBulan;
-    }
-
     public ExtensionResult doGetJamPraktekDokter(ExtensionRequest extensionRequest) {
         Map<String, String> output = new HashMap<>();
         ExtensionResult extensionResult = new ExtensionResult();
@@ -931,10 +939,58 @@ public class ServiceImp implements IService {
         return extensionResult;
     }
 
+    @Override
+    public ExtensionResult doPostCreatePatient(ExtensionRequest extensionRequest) {
+        StringBuilder sb = new StringBuilder();
+        CreatePatient createPatient = new CreatePatient();
+        ExtensionResult extensionResult = new ExtensionResult();
+
+        String namapasien = getEasyMapValueByName(extensionRequest, "namapasien");
+        String tanggallahir = getEasyMapValueByName(extensionRequest, "tanggallahir");
+        String phonenumber = getEasyMapValueByName(extensionRequest, "phonenummber");
+        String hospital = getEasyMapValueByName(extensionRequest, "hospital");
+
+        createPatient.setName(namapasien);
+        createPatient.setDate_of_birth(tanggallahir);
+        createPatient.setPhone_number(phonenumber);
+        createPatient.setHospital_id(hospital);
+        createPatient.setUser_id(appProperties.getUserId());
+        String A = createPatient.build();
+        try {
+            OkHttpUtil okHttpUtil = new OkHttpUtil();
+            okHttpUtil.init(true);
+
+            String url = appProperties.getCreatePatient();
+            RequestBody body = RequestBody.create(JSON, A);
+            Request request = new Request.Builder().url(url).post(body).addHeader("Content-Type", "application/json").build();
+            Response response = okHttpUtil.getClient().newCall(request).execute();
+            JSONObject jsonobj = new JSONObject(response.body().string());
+            JSONArray results = jsonobj.getJSONArray("data");
+            JSONObject jObj = results.getJSONObject(0);
+            String contactid = jObj.getString("contact_id");
+            sb.append(contactid);
+
+        } catch (Exception e) {
+
+        }
+
+        extensionResult.setAgent(false);
+        extensionResult.setRepeat(false);
+        extensionResult.setSuccess(true);
+        extensionResult.setNext(true);
+
+        Map<String, String> clearEntities = new HashMap<>();
+        clearEntities.put("contactId", sb.toString());
+        extensionResult.setEntities(clearEntities);
+
+        return extensionResult;
+    }
+
     //----------------------------//
     // Doctor Schedule Flow Search By Name //
     @Override
-    public ExtensionResult doGetDoctorByName(ExtensionRequest extensionRequest) {
+    public ExtensionResult doGetDoctorByName(ExtensionRequest extensionRequest
+    ) {
         Map<String, String> output = new HashMap<>();
         ExtensionResult extensionResult = new ExtensionResult();
         StringBuilder sb = new StringBuilder();
@@ -972,14 +1028,14 @@ public class ServiceImp implements IService {
     }
 
     @Override
-    public ExtensionResult doGetScheduleByDoctorId(ExtensionRequest extensionRequest) {
+    public ExtensionResult doGetScheduleByDoctorId(ExtensionRequest extensionRequest
+    ) {
         StringBuilder proctime = new StringBuilder();
         Date dnow = new Date();
         SimpleDateFormat ft = new SimpleDateFormat("hh:mm:ss SSS");
         proctime.append(ft.format(dnow) + " # ");
 
         Map<String, String> output = new HashMap<>();
-        Map<String, String> extra = new HashMap<>();
         ExtensionResult extensionResult = new ExtensionResult();
         StringBuilder sb = new StringBuilder();
 
@@ -1090,7 +1146,8 @@ public class ServiceImp implements IService {
     //-------------------------------------//
     // Get Docter by Specialist Name //
     @Override
-    public ExtensionResult doGetSpecialistbyName(ExtensionRequest extensionRequest) {
+    public ExtensionResult doGetSpecialistbyName(ExtensionRequest extensionRequest
+    ) {
         Map<String, String> output = new HashMap<>();
         ExtensionResult extensionResult = new ExtensionResult();
         StringBuilder sb = new StringBuilder();

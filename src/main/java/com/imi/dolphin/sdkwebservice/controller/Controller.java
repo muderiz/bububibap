@@ -192,11 +192,16 @@ public class Controller {
     }
     // ---------------------- //
 
-    
     @RequestMapping("/getspecialistpage2")
     @PostMapping
     public ExtensionResult doGetSpecialistPage2(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.doGetSpecialistList1(extensionRequest);
+    }
+
+    @RequestMapping("/createpatient")
+    @PostMapping
+    public ExtensionResult doPostCreatePatient(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.doPostCreatePatient(extensionRequest);
     }
 
 }
