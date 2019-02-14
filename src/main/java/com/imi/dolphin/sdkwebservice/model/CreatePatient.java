@@ -19,56 +19,39 @@ public class CreatePatient {
 
     private static final String PEMBUKA = "{";
     private static final String PENUTUP = "}";
+    private static final String BATAS = "\"";
+    private static final String KOMA = "\",";
 
     public String build() {
         String result = PEMBUKA
-                + "\"name\":" + "\"" + name + "\","
-                + "\"date_of_birth\":" + "\"" + date_of_birth + "\","
-                + "\"phone_number\":" + "\"" + phone_number + "\","
-                + "\"hospital_id\":" + "\"" + hospital_id + "\","
-                + "\"user_id\":" + "\"" + user_id + "\"" + PENUTUP;
-        
-        return result;
-    }
+                + "\"name\":" + BATAS + name + KOMA
+                + "\"date_of_birth\":" + BATAS + date_of_birth + KOMA
+                + "\"phone_number\":" + BATAS + phone_number + KOMA
+                + "\"hospital_id\":" + BATAS + hospital_id + KOMA
+                + "\"user_id\":" + BATAS + user_id + KOMA + PENUTUP;
 
-    public String getName() {
-        return name;
+        return result;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public String getDate_of_birth() {
-        return date_of_birth;
-    }
-
     public void setDate_of_birth(String date_of_birth) {
         this.date_of_birth = date_of_birth;
-    }
-
-    public String getPhone_number() {
-        return phone_number;
     }
 
     public void setPhone_number(String phone_number) {
         this.phone_number = phone_number;
     }
 
-    public String getHospital_id() {
-        return hospital_id;
-    }
-
     public void setHospital_id(String hospital_id) {
         this.hospital_id = hospital_id;
-    }
-
-    public String getUser_id() {
-        return user_id;
     }
 
     public void setUser_id(String user_id) {
         this.user_id = user_id;
     }
+
 
 }

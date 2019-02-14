@@ -34,7 +34,6 @@ public class ExtensionResult implements Serializable {
     private boolean agent;
     private Map<String, String> entities;
     private Map<String, EasyMap> parameters;
-    //---------------Create Patient-------------------//
    
     //-------------Create Appointment-----------------//
     private String booking_id;
