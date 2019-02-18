@@ -1544,7 +1544,8 @@ public class ServiceImp implements IService {
 
         Map<String, String> output = new HashMap<>();
         String specialistId = getEasyMapValueByName(extensionRequest, "pilihan");
-        String apiGetDokter = appProperties.getApiDoctorbySpecialist() + specialistId;
+//        String apiGetDokter = appProperties.getApiDoctorbySpecialist() + specialistId;
+        String apiGetDokter = "https://api.myjson.com/bins/ied16";
         JSONArray results = GeneralExecuteAPI(apiGetDokter).getJSONArray("data");
         int leng = results.length();
         for (int i = 0; i < leng; i++) {
@@ -1563,7 +1564,7 @@ public class ServiceImp implements IService {
             EasyMap LihatJadwal = new EasyMap();
 
             LihatJadwal.setName("Lihat Jadwal");
-            LihatJadwal.setValue(doctorId);
+            LihatJadwal.setValue("booking dokter id " + doctorId);
             actions.add(LihatJadwal);
 
             button.setButtonValues(actions);
