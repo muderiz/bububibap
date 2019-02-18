@@ -203,5 +203,23 @@ public class Controller {
     public ExtensionResult doPostCreatePatient(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.doPostCreatePatient(extensionRequest);
     }
+    
+    @RequestMapping("/createappointment")
+    @PostMapping
+    public ExtensionResult doPostCreateAppointment(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.doPostCreateAppointment(extensionRequest);
+    }
+    
+    @RequestMapping("/kategorijam")
+    @PostMapping
+    public ExtensionResult CarouselJam(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.CarouselJam(extensionRequest);
+    }
+    
+    @RequestMapping("/jampraktek")
+    @PostMapping
+    public ExtensionResult doGetJamPraktekDokter(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.doGetJamPraktekDokter(extensionRequest);
+    }
 
 }

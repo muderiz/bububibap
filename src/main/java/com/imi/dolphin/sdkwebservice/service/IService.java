@@ -77,6 +77,12 @@ public interface IService {
     
     ExtensionResult doPostCreatePatient(ExtensionRequest extensionRequest);
     
+    ExtensionResult doPostCreateAppointment(ExtensionRequest extensionRequest);
+    
+    ExtensionResult CarouselJam(ExtensionRequest extensionRequest);
+    
+    ExtensionResult doGetJamPraktekDokter(ExtensionRequest extensionRequest);
+    
     
 
     
