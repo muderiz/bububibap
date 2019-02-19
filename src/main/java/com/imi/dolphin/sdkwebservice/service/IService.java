@@ -48,7 +48,9 @@ public interface IService {
 
     ExtensionResult doGetHospitalByArea(ExtensionRequest extensionRequest);
 
-    ExtensionResult doGetDoctorByHospitalAndSpecialist(ExtensionRequest extensionRequest);
+    ExtensionResult SetKonfirmasiSpesialisbyHospital(ExtensionRequest extensionRequest);
+
+    ExtensionResult SiloamGetDoctorByHospitalAndSpecialist(ExtensionRequest extensionRequest);
 
     ExtensionResult doGetDoctorBySpecialist(ExtensionRequest extensionRequest);
 
@@ -62,14 +64,14 @@ public interface IService {
 
     ExtensionResult doGetHospitalTerdekat(ExtensionRequest extensionRequest);
 
-    ExtensionResult doGetSpecialistbyHospital(ExtensionRequest extensionRequest);
-
     // get Dokter by Spesialis
+    ExtensionResult SiloamGetSpecialistByHospital(ExtensionRequest extensionRequest);
+
     ExtensionResult SiloamGetSpecialistbyName(ExtensionRequest extensionRequest);
 
     ExtensionResult SetCounterSpecialist(ExtensionRequest extensionRequest);
 
-    ExtensionResult SetKonfirmasiLainnya(ExtensionRequest extensionRequest);
+    ExtensionResult SetKonfirmasiSpesialis(ExtensionRequest extensionRequest);
 
     ExtensionResult doGetSpecialistList1(ExtensionRequest extensionRequest);
 

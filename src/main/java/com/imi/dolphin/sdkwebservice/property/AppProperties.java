@@ -71,21 +71,29 @@ public class AppProperties {
     @Value("${fieldName.ticketNumber}")
     String ticketNumber;
 
+    //API Get Area & Hospital//
     @Value("${siloam.api.area}")
     String apiArea;
 
     @Value("${siloam.api.hospital}")
     String apiHospital;
-    
+
     @Value("${siloam.api.hospitalbyarea}")
     String apiHospitalByArea;
+    //------------------//
 
+    //API Get Specialization//
     @Value("${siloam.api.specialistbyhospital}")
     String apiSpecialistbyHospital;
 
     @Value("${siloam.api.specialistbyname}")
     String apiSpecialistbyname;
 
+    @Value("${siloam.api.specialist}")
+    String apiSpecialist;
+    //------------------//
+
+    //Get Dokter 
     @Value("${siloam.api.doctorbyname}")
     String apiDoctorbyname;
 
@@ -94,13 +102,13 @@ public class AppProperties {
 
     @Value("${siloam.api.doctorbyhospitalid&spesialis}")
     String apiDoctorbyhospitalIdSpecialist;
-    
+
     @Value("${siloam.api.doctorbyspesialis}")
     String apiDoctorbySpecialist;
 
     @Value("${siloam.api.doctorschedule}")
     String apiDoctorschedule;
-    
+
     @Value("${siloam.api.doctorappointment}")
     String apiDoctorappointment;
 
@@ -112,21 +120,18 @@ public class AppProperties {
 
     @Value("${google.map.query}")
     String googleMapQuery;
-    
+
     @Value("${userId}")
     String userId;
-    
+
     @Value("${bookingTypeId}")
     String bookingTypeId;
-    
+
     @Value("${create.patient}")
     String createPatient;
-    
+
     @Value("${create.appointment}")
     String createAppointment;
-    
-    
-    
 
     public String getTicketNumber() {
         return ticketNumber;
@@ -280,6 +285,14 @@ public class AppProperties {
         this.apiHospitalByArea = apiHospitalByArea;
     }
 
+    public String getApiSpecialist() {
+        return apiSpecialist;
+    }
+
+    public void setApiSpecialist(String apiSpecialist) {
+        this.apiSpecialist = apiSpecialist;
+    }
+
     public String getApiSpecialistbyHospital() {
         return apiSpecialistbyHospital;
     }
@@ -344,8 +357,6 @@ public class AppProperties {
         this.dummyDoctor = dummyDoctor;
     }
 
-    
-    
     public String getGoogleMapQuery() {
         return googleMapQuery;
     }
@@ -402,7 +413,4 @@ public class AppProperties {
         this.createAppointment = createAppointment;
     }
 
-    
-
-    
 }

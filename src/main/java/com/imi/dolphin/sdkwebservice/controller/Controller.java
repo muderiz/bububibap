@@ -133,24 +133,31 @@ public class Controller {
         return svcService.doGetHospitalByArea(extensionRequest);
     }
 
-    @RequestMapping("/getspecialist")
+    @RequestMapping("/getspecialist/hospital")
     @PostMapping
-    public ExtensionResult doGetSpecialistbyHospital(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.doGetSpecialistbyHospital(extensionRequest);
+    public ExtensionResult SiloamGetSpecialistByHospital(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.SiloamGetSpecialistByHospital(extensionRequest);
+    }
+
+    @RequestMapping("/setkonfirmasispecbyarea")
+    @PostMapping
+    public ExtensionResult SetKonfirmasiSpesialisbyHospital(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.SetKonfirmasiSpesialisbyHospital(extensionRequest);
     }
 
     @RequestMapping("/getdoctor/hospital/specialist")
     @PostMapping
-    public ExtensionResult doGetDokterByHospitalAndSpecialist(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.doGetDoctorByHospitalAndSpecialist(extensionRequest);
+    public ExtensionResult SiloamGetDoctorByHospitalAndSpecialist(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.SiloamGetDoctorByHospitalAndSpecialist(extensionRequest);
     }
 
+    //----------------//
+    //p//
     @RequestMapping("/getdoctorschedule")
     @PostMapping
     public ExtensionResult doGetDoctorSchedule(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.doGetDoctorSchedule(extensionRequest);
     }
-    // --------------------- //
 
     // Get Doctor by Name //
     @RequestMapping("/getdoctor/name")
@@ -159,6 +166,8 @@ public class Controller {
         return svcService.doGetDoctorByName(extensionRequest);
     }
 
+    //---------------------//
+    // Get Schdule by DoctorId //
     @RequestMapping("/getschedule/doctorid")
     @PostMapping
     public ExtensionResult doGetScheduleByDoctorId(@RequestBody ExtensionRequest extensionRequest) {
@@ -181,8 +190,8 @@ public class Controller {
 
     @RequestMapping("/setkonfirmasi")
     @PostMapping
-    public ExtensionResult SetKonfirmasiLainnya(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.SetKonfirmasiLainnya(extensionRequest);
+    public ExtensionResult SetKonfirmasiSpesialis(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.SetKonfirmasiSpesialis(extensionRequest);
     }
 
     @RequestMapping("/getdoctor/specialist")
@@ -192,10 +201,23 @@ public class Controller {
     }
     // ---------------------- //
 
-    @RequestMapping("/getspecialistpage2")
+    @RequestMapping("/getspecialistpage1")
     @PostMapping
-    public ExtensionResult doGetSpecialistPage2(@RequestBody ExtensionRequest extensionRequest) {
+    public ExtensionResult doGetSpecialistPage1(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.doGetSpecialistList1(extensionRequest);
+    }
+
+    // Booking Doctor //
+    @RequestMapping("/kategorijam")
+    @PostMapping
+    public ExtensionResult CarouselJam(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.CarouselJam(extensionRequest);
+    }
+
+    @RequestMapping("/jampraktek")
+    @PostMapping
+    public ExtensionResult doGetJamPraktekDokter(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.doGetJamPraktekDokter(extensionRequest);
     }
 
     @RequestMapping("/createpatient")
@@ -203,23 +225,11 @@ public class Controller {
     public ExtensionResult doPostCreatePatient(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.doPostCreatePatient(extensionRequest);
     }
-    
+
     @RequestMapping("/createappointment")
     @PostMapping
     public ExtensionResult doPostCreateAppointment(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.doPostCreateAppointment(extensionRequest);
     }
-    
-    @RequestMapping("/kategorijam")
-    @PostMapping
-    public ExtensionResult CarouselJam(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.CarouselJam(extensionRequest);
-    }
-    
-    @RequestMapping("/jampraktek")
-    @PostMapping
-    public ExtensionResult doGetJamPraktekDokter(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.doGetJamPraktekDokter(extensionRequest);
-    }
-
+    //------------------------//
 }
