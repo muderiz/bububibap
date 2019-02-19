@@ -169,8 +169,8 @@ public class Controller {
     // Get Doctor by Specialist //
     @RequestMapping("/getspecialist/name")
     @PostMapping
-    public ExtensionResult doGetSpecialistbyName(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.doGetSpecialistbyName(extensionRequest);
+    public ExtensionResult SiloamGetSpecialistbyName(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.SiloamGetSpecialistbyName(extensionRequest);
     }
 
     @RequestMapping("/setcounterspecialist")

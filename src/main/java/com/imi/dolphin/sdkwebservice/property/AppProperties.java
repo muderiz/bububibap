@@ -107,6 +107,9 @@ public class AppProperties {
     @Value("${siloam.dummy.hospital}")
     String dummyHospital;
 
+    @Value("${dummy.get.doctor}")
+    String dummyDoctor;
+
     @Value("${google.map.query}")
     String googleMapQuery;
     
@@ -333,6 +336,16 @@ public class AppProperties {
         this.dummyHospital = dummyHospital;
     }
 
+    public String getDummyDoctor() {
+        return dummyDoctor;
+    }
+
+    public void setDummyDoctor(String dummyDoctor) {
+        this.dummyDoctor = dummyDoctor;
+    }
+
+    
+    
     public String getGoogleMapQuery() {
         return googleMapQuery;
     }

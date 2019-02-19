@@ -1391,10 +1391,8 @@ public class ServiceImp implements IService {
     }
 
     //-------------------------------------//
-    // Get Docter by Specialist Name //
-    @Override
-    public ExtensionResult doGetSpecialistbyName(ExtensionRequest extensionRequest
-    ) {
+    // Get Dokter by Spesialis //
+    public ExtensionResult doGetSpecialistbyName(ExtensionRequest extensionRequest) {
         Map<String, String> output = new HashMap<>();
         ExtensionResult extensionResult = new ExtensionResult();
         StringBuilder sb = new StringBuilder();
@@ -1456,45 +1454,93 @@ public class ServiceImp implements IService {
         return extensionResult;
     }
 
-    private StringBuilder carospec(StringBuilder sb, int leng, JSONArray results) {
+    @Override
+    public ExtensionResult SiloamGetSpecialistbyName(ExtensionRequest extensionRequest) {
+        Map<String, String> output = new HashMap<>();
+        StringBuilder sb = new StringBuilder();
+        ExtensionResult extensionResult = new ExtensionResult();
+        String namaspesialis = getEasyMapValueByName(extensionRequest, "namaspesialis");
+        String counter = getEasyMapValueByName(extensionRequest, "counter");
+        int code = Integer.parseInt(counter);
+        try {
+            OkHttpUtil okHttpUtil = new OkHttpUtil();
+            okHttpUtil.init(true);
+            Request request = new Request.Builder().url(appProperties.getApiSpecialistbyname() + namaspesialis).get().build();
+            Response response = okHttpUtil.getClient().newCall(request).execute();
+            JSONObject jsonobj = new JSONObject(response.body().string());
+            JSONArray data = jsonobj.getJSONArray("data");
+            int leng;
+            leng = leng(code, data);
+            sb = carospec(sb, leng, data);
+        } catch (Exception e) {
 
+        }
+
+        output.put(OUTPUT, sb.toString());
+        extensionResult.setAgent(false);
+        extensionResult.setRepeat(false);
+        extensionResult.setSuccess(true);
+        extensionResult.setNext(true);
+        extensionResult.setValue(output);
+        return extensionResult;
+    }
+
+    public int leng(int code, JSONArray data) {
+        int leng;
+        switch (code) {
+            case 1:
+                leng = 9;
+                break;
+            case 2:
+                leng = 18;
+                break;
+            case 3:
+                leng = 27;
+                break;
+            case 4:
+                leng = 36;
+                break;
+            case 5:
+                leng = 45;
+                break;
+            default:
+                leng = data.length();
+                break;
+        }
+        return leng;
+    }
+
+    private StringBuilder carospec(StringBuilder sb, int leng, JSONArray data) {
         for (int i = leng - 9; i < leng; i++) {
-            JSONObject jObj = results.getJSONObject(i);
-            String specialistId = jObj.getString("specialization_id");
-            String specialistName = jObj.getString("name_id");
-
-            //Buat Button
+            JSONObject jObj = data.getJSONObject(i);
+            String id_spesialis = jObj.getString("specialization_id");
+            String name = jObj.getString("name_id");
+            //Buat Button 
             ButtonTemplate button = new ButtonTemplate();
-            button.setTitle(specialistName);
+            button.setTitle(name);
             List<EasyMap> actions = new ArrayList<>();
-
             EasyMap bookAction = new EasyMap();
-            bookAction.setName(specialistName);
-            bookAction.setValue(specialistId);
+            bookAction.setName("Pilih");
+            bookAction.setValue("" + id_spesialis);
             actions.add(bookAction);
-
             button.setButtonValues(actions);
             ButtonBuilder buttonBuilder = new ButtonBuilder(button);
 
             String btnBuilder = buttonBuilder.build().toString();
             sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
         }
-        if (leng < 27) {
-            ButtonTemplate button = new ButtonTemplate();
-            button.setTitle("Lainnya");
-            List<EasyMap> actions = new ArrayList<>();
+        ButtonTemplate button = new ButtonTemplate();
+        button.setTitle("lainnya");
+        List<EasyMap> actions = new ArrayList<>();
+        EasyMap bookAction = new EasyMap();
+        bookAction.setName("Pilih");
+        bookAction.setValue("lainnya");
+        actions.add(bookAction);
+        button.setButtonValues(actions);
+        ButtonBuilder buttonBuilder = new ButtonBuilder(button);
 
-            EasyMap bookAction = new EasyMap();
-            bookAction.setName("Lainnya");
-            bookAction.setValue("lainnya");
-            actions.add(bookAction);
-
-            button.setButtonValues(actions);
-            ButtonBuilder buttonBuilder = new ButtonBuilder(button);
-
-            String btnBuilder = buttonBuilder.build();
-            sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
-        }
+        String btnBuilder = buttonBuilder.build().toString();
+        sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
         return sb;
     }
 
@@ -1522,14 +1568,40 @@ public class ServiceImp implements IService {
         extensionResult.setNext(true);
 
         Map<String, String> clearEntities = new HashMap<>();
+        String konfirmasi = getEasyMapValueByName(extensionRequest, "spesialisid");
         String counter = getEasyMapValueByName(extensionRequest, "counter");
-        String specialist = getEasyMapValueByName(extensionRequest, "specialist");
-        if (specialist.equalsIgnoreCase("lainnya")) {
-            int code = Integer.parseInt(counter) + 1;
-            clearEntities.put("specialist", null);
+        int code = Integer.parseInt(counter);
+        if (konfirmasi.equalsIgnoreCase("lainnya")) {
+            code++;
             clearEntities.put("counter", "" + code);
-            clearEntities.put("konfirmasi", "");
+            clearEntities.put("pilihan", "");
             extensionResult.setEntities(clearEntities);
+
+            //-----------------------------------------------------------------------------
+            Map<String, String> output = new HashMap<>();
+            StringBuilder sb = new StringBuilder();
+            String namaspesialis = getEasyMapValueByName(extensionRequest, "namaspesialis");
+
+            if ("spesialis".equalsIgnoreCase(namaspesialis)) {
+                try {
+                    OkHttpUtil okHttpUtil = new OkHttpUtil();
+                    okHttpUtil.init(true);
+                    Request request = new Request.Builder().url(appProperties.getApiSpecialistbyname() + namaspesialis).get().build();
+                    Response response = okHttpUtil.getClient().newCall(request).execute();
+                    JSONObject jsonobj = new JSONObject(response.body().string());
+                    JSONArray data = jsonobj.getJSONArray("data");
+                    int leng;
+                    leng = leng(code, data);
+                    sb = carospec(sb, leng, data);
+                } catch (Exception e) {
+
+                }
+            } else {
+
+            }
+            output.put(OUTPUT, sb.toString());
+            //-----------------------------------------------------------------------------
+            extensionResult.setValue(output);
         } else {
             clearEntities.put("konfirmasi", "yes");
             extensionResult.setEntities(clearEntities);
@@ -1543,9 +1615,9 @@ public class ServiceImp implements IService {
         StringBuilder sb = new StringBuilder();
 
         Map<String, String> output = new HashMap<>();
-        String specialistId = getEasyMapValueByName(extensionRequest, "pilihan");
+//        String specialistId = getEasyMapValueByName(extensionRequest, "pilihan");
 //        String apiGetDokter = appProperties.getApiDoctorbySpecialist() + specialistId;
-        String apiGetDokter = "https://api.myjson.com/bins/ied16";
+        String apiGetDokter = appProperties.getDummyDoctor();
         JSONArray results = GeneralExecuteAPI(apiGetDokter).getJSONArray("data");
         int leng = results.length();
         for (int i = 0; i < leng; i++) {

@@ -62,35 +62,24 @@ public interface IService {
 
     ExtensionResult doGetHospitalTerdekat(ExtensionRequest extensionRequest);
 
-    // get Specialist
     ExtensionResult doGetSpecialistbyHospital(ExtensionRequest extensionRequest);
 
-    ExtensionResult doGetSpecialistbyName(ExtensionRequest extensionRequest);
+    // get Dokter by Spesialis
+    ExtensionResult SiloamGetSpecialistbyName(ExtensionRequest extensionRequest);
+
+    ExtensionResult SetCounterSpecialist(ExtensionRequest extensionRequest);
+
+    ExtensionResult SetKonfirmasiLainnya(ExtensionRequest extensionRequest);
 
     ExtensionResult doGetSpecialistList1(ExtensionRequest extensionRequest);
 
-
     //
-    ExtensionResult SetCounterSpecialist(ExtensionRequest extensionRequest);
-    
-    ExtensionResult SetKonfirmasiLainnya(ExtensionRequest extensionRequest);
-    
     ExtensionResult doPostCreatePatient(ExtensionRequest extensionRequest);
-    
+
     ExtensionResult doPostCreateAppointment(ExtensionRequest extensionRequest);
-    
+
     ExtensionResult CarouselJam(ExtensionRequest extensionRequest);
-    
+
     ExtensionResult doGetJamPraktekDokter(ExtensionRequest extensionRequest);
-    
-    
 
-    
-    
-    
-    
-    
-    
-
-    
 }
