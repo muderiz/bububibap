@@ -67,8 +67,8 @@ public class CreateAppointment {
                 + "\"address_line_1\":" + BATAS + address_line_1 + KOMA
                 + "\"address_line_2\":" + BATAS + address_line_2 + KOMA
                 + "\"email\":" + BATAS + email + KOMA
-                + "\"sex\":" + PEMBUKA + "\"id\":" + "1" + "," + "\"name\":" + "" + PENUTUP + ","
-                + "\"city\":" + PEMBUKA + "\"id\":" + "1" + "," + "\"name\":" + "" + PENUTUP + ","
+                + "\"sex\":" + PEMBUKA + "\"id\":" + "1" + "," + "\"name\":" + sexname + PENUTUP + ","
+                + "\"city\":" + PEMBUKA + "\"id\":" + "1" + "," + "\"name\":" + cityname + PENUTUP + ","
                 + "\"district\":" + PEMBUKA + "\"id\":" + "1" + "," + "\"name\":" + "" + PENUTUP + ","
                 + "\"subdistrict\":" + PEMBUKA + "\"id\":" + "1" + "," + "\"name\":" + "" + PENUTUP + ","
                 + "\"nationality\":" + PEMBUKA + "\"id\":" + "1" + "," + "\"name\":" + "" + PENUTUP + ","

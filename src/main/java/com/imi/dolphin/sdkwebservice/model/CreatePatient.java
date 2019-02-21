@@ -28,7 +28,7 @@ public class CreatePatient {
                 + "\"date_of_birth\":" + BATAS + date_of_birth + KOMA
                 + "\"phone_number\":" + BATAS + phone_number + KOMA
                 + "\"hospital_id\":" + BATAS + hospital_id + KOMA
-                + "\"user_id\":" + BATAS + user_id + KOMA + PENUTUP;
+                + "\"user_id\":" + BATAS + user_id + BATAS + PENUTUP;
 
         return result;
     }
