@@ -660,9 +660,8 @@ public class ServiceImp implements IService {
             //Buat Button
             ButtonTemplate button = new ButtonTemplate();
             button.setTitle(areaName);
-            button.setSubTitle("");
-            button.setPictureLink(null);
-            button.setPicturePath(null);
+            button.setSubTitle("1");
+            button.setSubTitle("2");
             List<EasyMap> actions = new ArrayList<>();
             EasyMap bookAction = new EasyMap();
             bookAction.setName(areaName);
@@ -703,6 +702,9 @@ public class ServiceImp implements IService {
             //Buat Button
             ButtonTemplate button = new ButtonTemplate();
             button.setTitle(hospitalName);
+            button.setSubTitle(null);
+            button.setPictureLink(null);
+            button.setPicturePath(null);
             List<EasyMap> actions = new ArrayList<>();
             EasyMap bookAction = new EasyMap();
             bookAction.setName(hospitalName);
@@ -999,7 +1001,7 @@ public class ServiceImp implements IService {
                 //Buat Button
                 ButtonTemplate button = new ButtonTemplate();
                 button.setTitle(hari + ", " + tanggal + " " + bulan + " " + tahun);
-                button.setSubTitle(daypoint[x] + "/n" + available);
+                button.setSubTitle(daypoint[x] + "\n" + available);
                 List<EasyMap> actions = new ArrayList<>();
 
                 EasyMap bookAction = new EasyMap();
@@ -1650,7 +1652,7 @@ public class ServiceImp implements IService {
                     //Buat Button
                     ButtonTemplate button = new ButtonTemplate();
                     button.setTitle(hari + ", " + tanggal + " " + bulan + " " + tahun);
-                    button.setSubTitle(daypoint[x] + "/n" + available);
+                    button.setSubTitle(daypoint[x] + " | " + available);
                     List<EasyMap> actions = new ArrayList<>();
 
                     EasyMap bookAction = new EasyMap();
@@ -1747,6 +1749,9 @@ public class ServiceImp implements IService {
             //Buat Button 
             ButtonTemplate button = new ButtonTemplate();
             button.setTitle(name);
+            button.setSubTitle(null);
+            button.setPictureLink(null);
+            button.setPicturePath(null);
             List<EasyMap> actions = new ArrayList<>();
             EasyMap bookAction = new EasyMap();
             bookAction.setName("Pilih");
