@@ -1738,8 +1738,6 @@ public class ServiceImp implements IService {
             ButtonTemplate button = new ButtonTemplate();
             button.setTitle(name);
             button.setSubTitle(null);
-            button.setPictureLink(null);
-            button.setPicturePath(null);
             List<EasyMap> actions = new ArrayList<>();
             EasyMap bookAction = new EasyMap();
             bookAction.setName("Pilih");
@@ -1753,6 +1751,7 @@ public class ServiceImp implements IService {
         }
         ButtonTemplate button = new ButtonTemplate();
         button.setTitle("lainnya");
+        button.setSubTitle(null);
         List<EasyMap> actions = new ArrayList<>();
         EasyMap bookAction = new EasyMap();
         bookAction.setName("Pilih");
