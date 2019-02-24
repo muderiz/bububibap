@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 
 import com.imi.dolphin.sdkwebservice.builder.ButtonBuilder;
 import com.imi.dolphin.sdkwebservice.builder.CarouselBuilder;
+import com.imi.dolphin.sdkwebservice.builder.FormBuilder;
 import com.imi.dolphin.sdkwebservice.builder.QuickReplyBuilder;
 import com.imi.dolphin.sdkwebservice.model.ButtonTemplate;
 import com.imi.dolphin.sdkwebservice.model.CreateAppointment;
@@ -333,51 +334,54 @@ public class ServiceImp implements IService {
         button.setSubTitle("This is subtitle");
         List<EasyMap> actions = new ArrayList<>();
         EasyMap bookAction = new EasyMap();
+        EasyMap bookAction2 = new EasyMap();
         bookAction.setName("Label");
         bookAction.setValue("Payload");
         actions.add(bookAction);
+
+        bookAction2.setName("Label");
+        bookAction2.setValue("Payload");
+        actions.add(bookAction2);
         button.setButtonValues(actions);
         ButtonBuilder buttonBuilder = new ButtonBuilder(button);
 
-        ButtonTemplate button2 = new ButtonTemplate();
-        button2.setPictureLink(SAMPLE_IMAGE_PATH);
-        button2.setPicturePath(SAMPLE_IMAGE_PATH);
-        button2.setTitle("This is title 2");
-        button2.setSubTitle("This is subtitle 2");
-        List<EasyMap> actions2 = new ArrayList<>();
-        EasyMap bookAction2 = new EasyMap();
-        bookAction2.setName("Label 2");
-        bookAction2.setValue("Payload 2");
-        actions2.add(bookAction2);
-        button2.setButtonValues(actions2);
-        ButtonBuilder buttonBuilder2 = new ButtonBuilder(button2);
-
-        ButtonTemplate button3 = new ButtonTemplate();
-        button3.setPictureLink(SAMPLE_IMAGE_PATH);
-        button3.setPicturePath(SAMPLE_IMAGE_PATH);
-        button3.setTitle("This is title 3");
-        button3.setSubTitle("This is subtitle 3");
-        button3.setButtonValues(actions2);
-        ButtonBuilder buttonBuilder3 = new ButtonBuilder(button3);
-
-        ButtonTemplate button4 = new ButtonTemplate();
-        button4.setPictureLink(SAMPLE_IMAGE_PATH);
-        button4.setPicturePath(SAMPLE_IMAGE_PATH);
-        button4.setTitle("This is title 4");
-        button4.setSubTitle("This is subtitle 4");
-        button4.setButtonValues(actions2);
-        ButtonBuilder buttonBuilder4 = new ButtonBuilder(button4);
-
-        ButtonTemplate button5 = new ButtonTemplate();
-        button5.setPictureLink(SAMPLE_IMAGE_PATH);
-        button5.setPicturePath(SAMPLE_IMAGE_PATH);
-        button5.setTitle("This is title 5");
-        button5.setSubTitle("This is subtitle 5");
-        button5.setButtonValues(actions2);
-        ButtonBuilder buttonBuilder5 = new ButtonBuilder(button5);
-
-        CarouselBuilder carouselBuilder = new CarouselBuilder(buttonBuilder.build(), buttonBuilder2.build(),
-                buttonBuilder3.build(), buttonBuilder4.build(), buttonBuilder5.build());
+//        ButtonTemplate button2 = new ButtonTemplate();
+//        button2.setPictureLink(SAMPLE_IMAGE_PATH);
+//        button2.setPicturePath(SAMPLE_IMAGE_PATH);
+//        button2.setTitle("This is title 2");
+//        button2.setSubTitle("This is subtitle 2");
+//        List<EasyMap> actions2 = new ArrayList<>();
+//        EasyMap bookAction2 = new EasyMap();
+//        bookAction2.setName("Label 2");
+//        bookAction2.setValue("Payload 2");
+//        actions2.add(bookAction2);
+//        button2.setButtonValues(actions2);
+//        ButtonBuilder buttonBuilder2 = new ButtonBuilder(button2);
+//
+//        ButtonTemplate button3 = new ButtonTemplate();
+//        button3.setPictureLink(SAMPLE_IMAGE_PATH);
+//        button3.setPicturePath(SAMPLE_IMAGE_PATH);
+//        button3.setTitle("This is title 3");
+//        button3.setSubTitle("This is subtitle 3");
+//        button3.setButtonValues(actions2);
+//        ButtonBuilder buttonBuilder3 = new ButtonBuilder(button3);
+//
+//        ButtonTemplate button4 = new ButtonTemplate();
+//        button4.setPictureLink(SAMPLE_IMAGE_PATH);
+//        button4.setPicturePath(SAMPLE_IMAGE_PATH);
+//        button4.setTitle("This is title 4");
+//        button4.setSubTitle("This is subtitle 4");
+//        button4.setButtonValues(actions2);
+//        ButtonBuilder buttonBuilder4 = new ButtonBuilder(button4);
+//
+//        ButtonTemplate button5 = new ButtonTemplate();
+//        button5.setPictureLink(SAMPLE_IMAGE_PATH);
+//        button5.setPicturePath(SAMPLE_IMAGE_PATH);
+//        button5.setTitle("This is title 5");
+//        button5.setSubTitle("This is subtitle 5");
+//        button5.setButtonValues(actions2);
+//        ButtonBuilder buttonBuilder5 = new ButtonBuilder(button5);
+        CarouselBuilder carouselBuilder = new CarouselBuilder(buttonBuilder.build());
 
         output.put(OUTPUT, carouselBuilder.build());
 
@@ -425,6 +429,32 @@ public class ServiceImp implements IService {
         Map<String, String> output = new HashMap<>();
         output.put(OUTPUT, firstLine + ParamSdk.SPLIT_CHAT + secondLine);
 
+        ExtensionResult extensionResult = new ExtensionResult();
+        extensionResult.setAgent(false);
+        extensionResult.setRepeat(false);
+        extensionResult.setSuccess(true);
+        extensionResult.setNext(true);
+        extensionResult.setValue(output);
+        return extensionResult;
+    }
+
+    public ExtensionResult getForms(ExtensionRequest extensionRequest) {
+        Map<String, String> output = new HashMap<>();
+        FormBuilder formBuilder = new FormBuilder("");
+        ButtonTemplate button = new ButtonTemplate();
+        button.setTitle("Title is here");
+        button.setSubTitle("Subtitle is here");
+        button.setPictureLink("Picture link");
+        button.setPicturePath("Picture path");
+        List<EasyMap> actions = new ArrayList<>();
+        EasyMap bookAction = new EasyMap();
+        bookAction.setName("Label here");
+        bookAction.setValue(formBuilder.build());
+        actions.add(bookAction);
+        button.setButtonValues(actions);
+        ButtonBuilder buttonBuilder = new ButtonBuilder(button);
+
+        output.put(OUTPUT, buttonBuilder.build());
         ExtensionResult extensionResult = new ExtensionResult();
         extensionResult.setAgent(false);
         extensionResult.setRepeat(false);
@@ -547,7 +577,7 @@ public class ServiceImp implements IService {
         String longi = alonglat[1];
 
         System.out.println("Lokasi :" + lokasiUser);
-        
+
         String apiHospital = appProperties.getDummyHospital();
         JSONArray results = GeneralExecuteAPI(apiHospital).getJSONArray("data");
         int leng = results.length();
@@ -630,20 +660,23 @@ public class ServiceImp implements IService {
             //Buat Button
             ButtonTemplate button = new ButtonTemplate();
             button.setTitle(areaName);
-            
+            button.setSubTitle("");
+            button.setPictureLink(null);
+            button.setPicturePath(null);
             List<EasyMap> actions = new ArrayList<>();
             EasyMap bookAction = new EasyMap();
             bookAction.setName(areaName);
             bookAction.setValue(areaId);
-            
+
             actions.add(bookAction);
             button.setButtonValues(actions);
             ButtonBuilder buttonBuilder = new ButtonBuilder(button);
 
             String btnBuilder = buttonBuilder.build().toString();
-            sb.append(btnBuilder);
+            sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
         }
-        output.put(OUTPUT, sb.toString());
+        String area = sb.toString();
+        output.put(OUTPUT, area);
         extensionResult.setAgent(false);
         extensionResult.setRepeat(false);
         extensionResult.setSuccess(true);
@@ -903,7 +936,10 @@ public class ServiceImp implements IService {
         String hospitalId = getEasyMapValueByName(extensionRequest, "hospital");
         Calendar calendar = Calendar.getInstance();
 
-        String schedule = appProperties.getApiDoctorschedule() + doctorId + "/" + hospitalId;
+        String[] iddokter = doctorId.split(" ");
+        String dokid = iddokter[1];
+
+        String schedule = appProperties.getApiDoctorschedule() + dokid + "/" + hospitalId;
         JSONArray results = GeneralExecuteAPI(schedule).getJSONArray("data");
         int leng = results.length();
 
@@ -921,7 +957,7 @@ public class ServiceImp implements IService {
             String available = "";
 
             String[] daypoint = new String[leng];
-            String scheduleTime = appProperties.getApiDoctorappointment() + hospitalId + "/doctorId/" + doctorId + "/date/" + date;
+            String scheduleTime = appProperties.getApiDoctorappointment() + hospitalId + "/doctorId/" + dokid + "/date/" + date;
             if (GeneralExecuteAPI(scheduleTime).getInt("code") == 200) {
                 JSONArray results2 = GeneralExecuteAPI(scheduleTime).getJSONArray("data");
                 int leng2 = results2.length();
@@ -1000,22 +1036,19 @@ public class ServiceImp implements IService {
         button1.setTitle("08:00 - 10:00");
         List<EasyMap> actions1 = new ArrayList<>();
         EasyMap butAction11 = new EasyMap();
-        EasyMap butAction21 = new EasyMap();
-        EasyMap butAction31 = new EasyMap();
-
+        EasyMap butAction12 = new EasyMap();
+        EasyMap butAction13 = new EasyMap();
         butAction11.setName("08:00");
-        butAction11.setValue("08:00");
+        butAction11.setValue("pilih jam 08:00");
         actions1.add(butAction11);
-        button1.setButtonValues(actions1);
 
-        butAction21.setName("09:00");
-        butAction21.setValue("09:00");
-        actions1.add(butAction21);
-        button1.setButtonValues(actions1);
+        butAction12.setName("09:00");
+        butAction12.setValue("pilih jam 09:00");
+        actions1.add(butAction12);
 
-        butAction31.setName("10:00");
-        butAction31.setValue("10:00");
-        actions1.add(butAction31);
+        butAction13.setName("10:00");
+        butAction13.setValue("pilih jam 10:00");
+        actions1.add(butAction13);
         button1.setButtonValues(actions1);
         ButtonBuilder buttonBuilder1 = new ButtonBuilder(button1);
 
@@ -1023,23 +1056,21 @@ public class ServiceImp implements IService {
         ButtonTemplate button2 = new ButtonTemplate();
         button2.setTitle("11:00 - 13:00");
         List<EasyMap> actions2 = new ArrayList<>();
-        EasyMap butAction12 = new EasyMap();
+        EasyMap butAction21 = new EasyMap();
         EasyMap butAction22 = new EasyMap();
-        EasyMap butAction32 = new EasyMap();
+        EasyMap butAction23 = new EasyMap();
 
-        butAction12.setName("11:00");
-        butAction12.setValue("11:00");
-        actions2.add(butAction12);
-        button2.setButtonValues(actions2);
+        butAction21.setName("11:00");
+        butAction21.setValue("pilih jam 11:00");
+        actions2.add(butAction21);
 
         butAction22.setName("12:00");
-        butAction22.setValue("12:00");
+        butAction22.setValue("pilih jam 12:00");
         actions2.add(butAction22);
-        button2.setButtonValues(actions2);
 
-        butAction32.setName("13:00");
-        butAction32.setValue("13:00");
-        actions2.add(butAction32);
+        butAction23.setName("13:00");
+        butAction23.setValue("pilih jam 13:00");
+        actions2.add(butAction23);
         button2.setButtonValues(actions2);
         ButtonBuilder buttonBuilder2 = new ButtonBuilder(button2);
 
@@ -1047,22 +1078,20 @@ public class ServiceImp implements IService {
         ButtonTemplate button3 = new ButtonTemplate();
         button3.setTitle("14:00 - 16:00");
         List<EasyMap> actions3 = new ArrayList<>();
-        EasyMap butAction13 = new EasyMap();
-        EasyMap butAction23 = new EasyMap();
+        EasyMap butAction31 = new EasyMap();
+        EasyMap butAction32 = new EasyMap();
         EasyMap butAction33 = new EasyMap();
 
-        butAction13.setName("14:00");
-        butAction13.setValue("14:00");
-        actions3.add(butAction13);
-        button3.setButtonValues(actions3);
+        butAction31.setName("14:00");
+        butAction31.setValue("pilih jam 14:00");
+        actions3.add(butAction31);
 
-        butAction23.setName("15:00");
-        butAction23.setValue("15:00");
-        actions3.add(butAction23);
-        button3.setButtonValues(actions3);
+        butAction32.setName("15:00");
+        butAction32.setValue("pilih jam 15:00");
+        actions3.add(butAction32);
 
         butAction33.setName("16:00");
-        butAction33.setValue("16:00");
+        butAction33.setValue("pilih jam 16:00");
         actions3.add(butAction33);
         button3.setButtonValues(actions3);
         ButtonBuilder buttonBuilder3 = new ButtonBuilder(button3);
@@ -1071,23 +1100,21 @@ public class ServiceImp implements IService {
         ButtonTemplate button4 = new ButtonTemplate();
         button4.setTitle("17:00 - 19:00");
         List<EasyMap> actions4 = new ArrayList<>();
-        EasyMap butAction14 = new EasyMap();
-        EasyMap butAction24 = new EasyMap();
-        EasyMap butAction34 = new EasyMap();
+        EasyMap butAction41 = new EasyMap();
+        EasyMap butAction42 = new EasyMap();
+        EasyMap butAction43 = new EasyMap();
 
-        butAction14.setName("17:00");
-        butAction14.setValue("17:00");
-        actions4.add(butAction14);
-        button4.setButtonValues(actions4);
+        butAction41.setName("17:00");
+        butAction41.setValue("pilih jam 17:00");
+        actions4.add(butAction41);
 
-        butAction24.setName("18:00");
-        butAction24.setValue("18:00");
-        actions4.add(butAction24);
-        button4.setButtonValues(actions4);
+        butAction42.setName("18:00");
+        butAction42.setValue("pilih jam 18:00");
+        actions4.add(butAction42);
 
-        butAction34.setName("19:00");
-        butAction34.setValue("19:00");
-        actions4.add(butAction34);
+        butAction43.setName("19:00");
+        butAction43.setValue("pilih jam 19:00");
+        actions4.add(butAction43);
         button4.setButtonValues(actions4);
         ButtonBuilder buttonBuilder4 = new ButtonBuilder(button4);
 
@@ -1095,23 +1122,21 @@ public class ServiceImp implements IService {
         ButtonTemplate button5 = new ButtonTemplate();
         button5.setTitle("20:00 - 21:00");
         List<EasyMap> actions5 = new ArrayList<>();
-        EasyMap butAction15 = new EasyMap();
-        EasyMap butAction25 = new EasyMap();
-        EasyMap butAction35 = new EasyMap();
+        EasyMap butAction51 = new EasyMap();
+        EasyMap butAction52 = new EasyMap();
+        EasyMap butAction53 = new EasyMap();
 
-        butAction15.setName("20:00");
-        butAction15.setValue("20:00");
-        actions5.add(butAction15);
-        button5.setButtonValues(actions5);
+        butAction51.setName("20:00");
+        butAction51.setValue("pilih jam 20:00");
+        actions5.add(butAction51);
 
-        butAction25.setName("21:00");
-        butAction25.setValue("21:00");
-        actions5.add(butAction25);
-        button5.setButtonValues(actions5);
+        butAction52.setName("21:00");
+        butAction52.setValue("pilih jam 21:00");
+        actions5.add(butAction52);
 
-        butAction35.setName("22:00");
-        butAction35.setValue("22:00");
-        actions5.add(butAction35);
+        butAction53.setName("22:00");
+        butAction53.setValue("pilih jam 22:00");
+        actions5.add(butAction53);
         button5.setButtonValues(actions5);
         ButtonBuilder buttonBuilder5 = new ButtonBuilder(button5);
 
@@ -1142,73 +1167,76 @@ public class ServiceImp implements IService {
         String dokterid = getEasyMapValueByName(extensionRequest, "dokterid");
         String date = getEasyMapValueByName(extensionRequest, "tanggalpesan");
         String kategorijam = getEasyMapValueByName(extensionRequest, "kategorijam");
+        String[] katjam = kategorijam.split(" ");
+        String jam = katjam[2];
 
-        String getDoctorByDoctorId = appProperties.getApiDoctorbydoctorid() + dokterid;
+        String[] iddokter = dokterid.split(" ");
+        String dokid = iddokter[1];
+
+        String getDoctorByDoctorId = appProperties.getApiDoctorbydoctorid() + dokid;
         JSONArray results3 = GeneralExecuteAPI(getDoctorByDoctorId).getJSONArray("data");
         JSONObject jObj3 = results3.getJSONObject(0);
         String hospital = jObj3.getString("hospital_id");
 
-        String getSchedule = appProperties.getApiDoctorappointment() + hospital + "/doctorId/" + dokterid + "/date/" + date;
+        String getSchedule = appProperties.getApiDoctorappointment() + hospital + "/doctorId/" + dokid + "/date/" + date;
         JSONArray results = GeneralExecuteAPI(getSchedule).getJSONArray("data");
         int leng = results.length();
         int index = 0;
+        int indexmin = 0;
+        int indexmax = 0;
         for (int i = 0; i < leng; i++) {
             JSONObject jObj = results.getJSONObject(i);
             String fromtime = jObj.getString("from_time");
-
-            if (kategorijam.substring(0, 2).equals(fromtime.substring(0, 2))) {
+            if (jam.equals(fromtime.substring(0, 2))) {
                 index = i;
 
+                if (index == 0) {
+                    indexmin = index;
+                    indexmax = index + 5;
+                } else if (index == leng - 1) {
+                    indexmin = index - 5;
+                    indexmax = index;
+                } else {
+                    indexmin = index - 5;
+                    indexmax = index + 5;
+                    if (indexmax > leng) {
+                        indexmax = leng;
+                    }
+                    if (indexmin < 0) {
+                        indexmin = 0;
+                    }
+                }
+                for (int j = indexmin; j < indexmax; j++) {
+                    JSONObject jObj2 = results.getJSONObject(j);
+                    String fromtime2 = jObj2.getString("from_time");
+                    Boolean isfull = jObj2.getBoolean("is_full");
+
+                    if (isfull == false) {
+                        //Buat Button
+                        ButtonTemplate button = new ButtonTemplate();
+                        button.setTitle(fromtime2);
+                        List<EasyMap> actions = new ArrayList<>();
+                        EasyMap bookAction = new EasyMap();
+                        bookAction.setName("Pilih");
+                        bookAction.setValue("praktek " + fromtime2);
+                        actions.add(bookAction);
+                        button.setButtonValues(actions);
+                        ButtonBuilder buttonBuilder = new ButtonBuilder(button);
+
+                        String btnBuilder = buttonBuilder.build().toString();
+                        sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
+                    }
+                }
                 break;
-            }
-        }
-        int indexmin = 0;
-        int indexmax = 0;
-        if (index == 0) {
-            indexmin = index;
-            indexmax = index + 5;
-        } else if (index == leng - 1) {
-            indexmin = index - 5;
-            indexmax = index;
-        } else {
-            indexmin = index - 5;
-            indexmax = index + 5;
-            if (indexmax > leng) {
-                indexmax = leng;
-            }
-            if (indexmin < 0) {
-                indexmin = 0;
-            }
-        }
-
-        for (int j = indexmin; j < indexmax; j++) {
-            JSONObject jObj2 = results.getJSONObject(j);
-            String fromtime2 = jObj2.getString("from_time");
-            Boolean isfull = jObj2.getBoolean("is_full");
-
-            if (isfull.equals(false)) {
-                //Buat Button
-                ButtonTemplate button = new ButtonTemplate();
-                button.setTitle(fromtime2);
-                List<EasyMap> actions = new ArrayList<>();
-                EasyMap bookAction = new EasyMap();
-                bookAction.setName("Pilih");
-                bookAction.setValue(fromtime2);
-                actions.add(bookAction);
-                button.setButtonValues(actions);
-                ButtonBuilder buttonBuilder = new ButtonBuilder(button);
-
-                String btnBuilder = buttonBuilder.build().toString();
-                sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
             }
         }
 
         output.put(OUTPUT, sb.toString());
-        if (output.isEmpty()) {
-            Map<String, String> clearEntities = new HashMap<>();
-            clearEntities.put("kategorijam", "");
-            extensionResult.setEntities(clearEntities);
-        }
+//        if (sb.toString().equals("")) {
+//            Map<String, String> clearEntities = new HashMap<>();
+//            clearEntities.put("kategorijam", "");
+//            extensionResult.setEntities(clearEntities);
+//        }
         extensionResult.setAgent(false);
         extensionResult.setRepeat(false);
         extensionResult.setSuccess(true);
@@ -1237,11 +1265,14 @@ public class ServiceImp implements IService {
         String tanggalPesan = getEasyMapValueByName(extensionRequest, "tanggalpesan");
         String jamPraktek = getEasyMapValueByName(extensionRequest, "jampraktek");
         String[] splitjam = jamPraktek.split(" ");
-        String jam = splitjam[0];
-        String menit = splitjam[1];
+        String jam = splitjam[1];
+        String menit = splitjam[2];
         String jammenit = jam + ":" + menit;
 
-        String getDoctorByDoctorId = appProperties.getApiDoctorbydoctorid() + dokterid;
+        String[] iddokter = dokterid.split(" ");
+        String dokid = iddokter[1];
+
+        String getDoctorByDoctorId = appProperties.getApiDoctorbydoctorid() + dokid;
         JSONArray results3 = GeneralExecuteAPI(getDoctorByDoctorId).getJSONArray("data");
         JSONObject jObj3 = results3.getJSONObject(0);
         String hospital = jObj3.getString("hospital_id");
@@ -1274,7 +1305,7 @@ public class ServiceImp implements IService {
         } catch (IOException | JSONException e) {
         }
 
-        String getScheduleId = appProperties.getApiDoctorappointment() + hospital + "/doctorId/" + dokterid + "/date/" + tanggalPesan;
+        String getScheduleId = appProperties.getApiDoctorappointment() + hospital + "/doctorId/" + dokid + "/date/" + tanggalPesan;
         JSONArray results = GeneralExecuteAPI(getScheduleId).getJSONArray("data");
         int leng = results.length();
         String idschedule = "";
@@ -1316,7 +1347,7 @@ public class ServiceImp implements IService {
         createAppointment.setNote("");
         createAppointment.setSchedule_id(idschedule);
         createAppointment.setHospital_id(hospital);
-        createAppointment.setDoctor_id(dokterid);
+        createAppointment.setDoctor_id(dokid);
         createAppointment.setUser_id(appProperties.getUserId());
         createAppointment.setIs_waiting_list(false);
         createAppointment.setContact_id(contact);
@@ -1335,7 +1366,7 @@ public class ServiceImp implements IService {
             RequestBody body = RequestBody.create(JSON, appointment);
             Request request = new Request.Builder().url(url).post(body).addHeader("Content-Type", "application/json").build();
             Response response = okHttpUtil.getClient().newCall(request).execute();
-            JSONObject jsonobj = new JSONObject(response.body().string());
+            JSONObject jsonobj = new JSONObject(response.body().toString());
             if (jsonobj.getInt("code") == 200) {
                 JSONArray results2 = jsonobj.getJSONArray("data");
                 JSONObject jObj = results2.getJSONObject(0);
@@ -1454,14 +1485,12 @@ public class ServiceImp implements IService {
                 String patientname = jObj.getString("patient_name");
                 String doctorname = jObj.getString("doctor_name");
 
-                sb.append("Berikut data informasi untuk Appointment kamu.\n");
-                sb.append("Booking Id :" + bookingid + "\n");
-                sb.append("Contact Id :" + contactid + "\n");
-                sb.append("Booking No :" + bookingno + "\n");
-                sb.append("Booking Date :" + bookingdate + "\n");
-                sb.append("Booking Time :" + bookingtime + "\n");
-                sb.append("Patient Name :" + patientname + "\n");
-                sb.append("Doctor Name :" + doctorname);
+                sb.append("Berikut data informasi untuk Appointment kamu.\n").append("Booking Id :" + bookingid + "\n")
+                        .append("Contact Id :" + contactid + "\n").append("Booking No :" + bookingno + "\n")
+                        .append("Booking Date :" + bookingdate + "\n")
+                        .append("Booking Time :" + bookingtime + "\n")
+                        .append("Patient Name :" + patientname + "\n")
+                        .append("Doctor Name :" + doctorname);
             }
         } catch (Exception e) {
         }
@@ -1503,7 +1532,7 @@ public class ServiceImp implements IService {
                 //Buat Button
                 ButtonTemplate button = new ButtonTemplate();
                 button.setTitle(doctorName);
-                button.setSubTitle(doctorSpecialist + "\n" + doctorHospitals);
+                button.setSubTitle(doctorSpecialist + "<br>" + doctorHospitals);
                 List<EasyMap> actions = new ArrayList<>();
 
                 EasyMap LihatJadwal = new EasyMap();
@@ -1540,15 +1569,17 @@ public class ServiceImp implements IService {
 
         String doctorId = getEasyMapValueByName(extensionRequest, "dokterid");
         Calendar calendar = Calendar.getInstance();
+        String[] iddokter = doctorId.split(" ");
+        String dokid = iddokter[1];
 
-        String getDoctorByDoctorId = appProperties.getApiDoctorbydoctorid() + doctorId;
+        String getDoctorByDoctorId = appProperties.getApiDoctorbydoctorid() + dokid;
         JSONArray results3 = GeneralExecuteAPI(getDoctorByDoctorId).getJSONArray("data");
         int leng3 = results3.length();
         for (int l = 0; l < leng3; l++) {
             JSONObject jObj3 = results3.getJSONObject(l);
             String hospitalId = jObj3.getString("hospital_id");
 
-            String schedule = appProperties.getApiDoctorschedule() + doctorId + "/" + hospitalId;
+            String schedule = appProperties.getApiDoctorschedule() + dokid + "/" + hospitalId;
             JSONArray results = GeneralExecuteAPI(schedule).getJSONArray("data");
             int leng = results.length();
             List<Integer> dayslist = new ArrayList<>();
@@ -1565,7 +1596,7 @@ public class ServiceImp implements IService {
                 String available = "";
 
                 String[] daypoint = new String[leng];
-                String scheduleTime = appProperties.getApiDoctorappointment() + hospitalId + "/doctorId/" + doctorId + "/date/" + date;
+                String scheduleTime = appProperties.getApiDoctorappointment() + hospitalId + "/doctorId/" + dokid + "/date/" + date;
                 if (GeneralExecuteAPI(scheduleTime).getInt("code") == 200) {
                     JSONArray results2 = GeneralExecuteAPI(scheduleTime).getJSONArray("data");
                     int leng2 = results2.length();
@@ -1655,7 +1686,7 @@ public class ServiceImp implements IService {
             int leng;
             leng = leng(code, data);
             sb = carospec(sb, leng, data);
-        } catch (Exception e) {
+        } catch (IOException | JSONException e) {
 
         }
 
