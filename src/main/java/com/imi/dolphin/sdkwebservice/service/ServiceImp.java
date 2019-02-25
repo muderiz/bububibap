@@ -660,7 +660,7 @@ public class ServiceImp implements IService {
             //Buat Button
             ButtonTemplate button = new ButtonTemplate();
             button.setTitle(areaName);
-//            button.setSubTitle(areaName);
+            button.setSubTitle(areaName);
             List<EasyMap> actions = new ArrayList<>();
             EasyMap bookAction = new EasyMap();
             bookAction.setName("Pilih");
@@ -701,7 +701,7 @@ public class ServiceImp implements IService {
             //Buat Button
             ButtonTemplate button = new ButtonTemplate();
             button.setTitle(hospitalName);
-//            button.setSubTitle(hospitalName);
+            button.setSubTitle(hospitalName);
             List<EasyMap> actions = new ArrayList<>();
             EasyMap bookAction = new EasyMap();
             bookAction.setName("Pilih");
@@ -1033,7 +1033,7 @@ public class ServiceImp implements IService {
         //Button 1
         ButtonTemplate button1 = new ButtonTemplate();
         button1.setTitle("08:00 - 10:00");
-        button1.setSubTitle(null);
+        button1.setSubTitle("");
         List<EasyMap> actions1 = new ArrayList<>();
         EasyMap butAction11 = new EasyMap();
         EasyMap butAction12 = new EasyMap();
@@ -1055,7 +1055,7 @@ public class ServiceImp implements IService {
         //Button 2
         ButtonTemplate button2 = new ButtonTemplate();
         button2.setTitle("11:00 - 13:00");
-        button2.setSubTitle(null);
+        button2.setSubTitle("");
         List<EasyMap> actions2 = new ArrayList<>();
         EasyMap butAction21 = new EasyMap();
         EasyMap butAction22 = new EasyMap();
@@ -1078,7 +1078,7 @@ public class ServiceImp implements IService {
         //Button 3
         ButtonTemplate button3 = new ButtonTemplate();
         button3.setTitle("14:00 - 16:00");
-        button3.setSubTitle(null);
+        button3.setSubTitle("");
         List<EasyMap> actions3 = new ArrayList<>();
         EasyMap butAction31 = new EasyMap();
         EasyMap butAction32 = new EasyMap();
@@ -1101,7 +1101,7 @@ public class ServiceImp implements IService {
         //Button 4
         ButtonTemplate button4 = new ButtonTemplate();
         button4.setTitle("17:00 - 19:00");
-        button4.setSubTitle(null);
+        button4.setSubTitle("");
         List<EasyMap> actions4 = new ArrayList<>();
         EasyMap butAction41 = new EasyMap();
         EasyMap butAction42 = new EasyMap();
@@ -1124,7 +1124,7 @@ public class ServiceImp implements IService {
         //Button 5
         ButtonTemplate button5 = new ButtonTemplate();
         button5.setTitle("20:00 - 21:00");
-        button5.setSubTitle(null);
+        button5.setSubTitle("");
         List<EasyMap> actions5 = new ArrayList<>();
         EasyMap butAction51 = new EasyMap();
         EasyMap butAction52 = new EasyMap();
@@ -1219,7 +1219,7 @@ public class ServiceImp implements IService {
                         //Buat Button
                         ButtonTemplate button = new ButtonTemplate();
                         button.setTitle(fromtime2);
-//                        button.setSubTitle(null);
+                        button.setSubTitle("");
                         List<EasyMap> actions = new ArrayList<>();
                         EasyMap bookAction = new EasyMap();
                         bookAction.setName("Pilih");
@@ -1738,8 +1738,6 @@ public class ServiceImp implements IService {
             ButtonTemplate button = new ButtonTemplate();
             button.setTitle(name);
             button.setSubTitle("");
-            button.setPictureLink(null);
-            button.setPicturePath(null);
             List<EasyMap> actions = new ArrayList<>();
             EasyMap bookAction = new EasyMap();
             bookAction.setName("Pilih");
@@ -1754,8 +1752,6 @@ public class ServiceImp implements IService {
         ButtonTemplate button = new ButtonTemplate();
         button.setTitle("lainnya");
         button.setSubTitle("");
-        button.setPictureLink(null);
-        button.setPicturePath(null);
         List<EasyMap> actions = new ArrayList<>();
         EasyMap bookAction = new EasyMap();
         bookAction.setName("Pilih");
