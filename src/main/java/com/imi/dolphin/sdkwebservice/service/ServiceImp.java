@@ -33,6 +33,7 @@ import com.imi.dolphin.sdkwebservice.model.CreatePatient;
 import com.imi.dolphin.sdkwebservice.model.EasyMap;
 import com.imi.dolphin.sdkwebservice.model.ExtensionRequest;
 import com.imi.dolphin.sdkwebservice.model.ExtensionResult;
+import com.imi.dolphin.sdkwebservice.model.TicketModel;
 import com.imi.dolphin.sdkwebservice.param.ParamSdk;
 import com.imi.dolphin.sdkwebservice.property.AppProperties;
 import com.imi.dolphin.sdkwebservice.util.OkHttpUtil;
@@ -533,7 +534,7 @@ public class ServiceImp implements IService {
     public ExtensionResult doSendLocation(ExtensionRequest extensionRequest) {
         Map<String, String> output = new HashMap<>();
         QuickReplyBuilder quickReplyBuilder = new QuickReplyBuilder.Builder("Silahkan kirim Lokasi kamu sekarang ya.")
-                .add("Location", "location").build();
+                .add("Kirim Lokasi", "location").build();
         output.put(OUTPUT, quickReplyBuilder.string());
         ExtensionResult extensionResult = new ExtensionResult();
         extensionResult.setAgent(false);
@@ -571,13 +572,20 @@ public class ServiceImp implements IService {
         Map<String, String> output = new HashMap<>();
         ExtensionResult extensionResult = new ExtensionResult();
         StringBuilder sb = new StringBuilder();
-        String lokasiUser = getEasyMapValueByName(extensionRequest, "lokasi");
-        String[] alonglat = lokasiUser.split(";");
-        String lat = alonglat[0];
-        String longi = alonglat[1];
 
-        System.out.println("Lokasi :" + lokasiUser);
+//        String lokasiUser = getEasyMapValueByName(extensionRequest, "lokasi");
+        double latitude = extensionRequest.getIntent().getTicket().getLatitude();
+        double longitude = extensionRequest.getIntent().getTicket().getLongitude();
 
+//        System.out.println(latitude);
+//        System.out.println(longitude);
+//        
+//        String contactid = extensionRequest.getIntent().getTicket().getContactId();
+//        
+//
+//        String[] alonglat = lokasiUser.split(";");
+//        String lat = alonglat[0];
+//        String longi = alonglat[1];
         String apiHospital = appProperties.getDummyHospital();
         JSONArray results = GeneralExecuteAPI(apiHospital).getJSONArray("data");
         int leng = results.length();
@@ -591,7 +599,7 @@ public class ServiceImp implements IService {
             String hospitalName = jObj.getString("hospital_name");
             longitud = jObj.getBigDecimal("longitude");
             latitud = jObj.getBigDecimal("latitude");
-            hasil = distanceInKilometers((Double.valueOf(lat)), (Double.valueOf(longi)), latitud.doubleValue(), longitud.doubleValue());
+            hasil = distanceInKilometers((Double.valueOf(latitude)), (Double.valueOf(longitude)), latitud.doubleValue(), longitud.doubleValue());
             if (hasil < 20) {
                 point[x][0] = latitud;
                 point[x][1] = longitud;
@@ -605,12 +613,13 @@ public class ServiceImp implements IService {
                 EasyMap callAction = new EasyMap();
 
                 bookAction.setName("Direction");
-                bookAction.setValue(appProperties.getGoogleMapQuery() + "" + point[x][0] + "," + point[x][1]);
+//                bookAction.setValue(appProperties.getGoogleMapQuery() + "" + point[x][0] + "," + point[x][1]);
+                bookAction.setValue(appProperties.getGoogleMapQuery() + hospitalName);
                 actions.add(bookAction);
                 button.setButtonValues(actions);
 
                 callAction.setName("Call Center");
-                callAction.setValue("tel:");
+                callAction.setValue("tel:+62");
                 actions.add(callAction);
                 button.setButtonValues(actions);
 
@@ -1025,7 +1034,12 @@ public class ServiceImp implements IService {
         return extensionResult;
     }
 
-    // Get Jam Praktek, Post to API Booking Siloam //
+    /**
+     * Get Kategori Jam Praktek, Post to API Booking Siloam
+     *
+     * @param extensionRequest
+     * @return
+     */
     @Override
     public ExtensionResult CarouselJam(ExtensionRequest extensionRequest) {
         Map<String, String> output = new HashMap<>();
@@ -1159,6 +1173,7 @@ public class ServiceImp implements IService {
     }
 
     /**
+     * Get Jam Praktek, Post to API Booking Siloam
      *
      * @param extensionRequest
      * @return
@@ -1235,13 +1250,15 @@ public class ServiceImp implements IService {
                 break;
             }
         }
-
         output.put(OUTPUT, sb.toString());
-//        if (sb.toString().equals("")) {
-//            Map<String, String> clearEntities = new HashMap<>();
-//            clearEntities.put("kategorijam", "");
-//            extensionResult.setEntities(clearEntities);
-//        }
+        if (sb.toString().equals("")) {
+            Map<String, String> clearEntities = new HashMap<>();
+
+            clearEntities.put("kategorijam", "");
+            extensionResult.setEntities(clearEntities);
+            output.put(OUTPUT, CarouselJam(extensionRequest).toString());
+        }
+
         extensionResult.setAgent(false);
         extensionResult.setRepeat(false);
         extensionResult.setSuccess(true);
