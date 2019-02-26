@@ -1041,9 +1041,23 @@ public class ServiceImp implements IService {
      * @return
      */
     @Override
-    public ExtensionResult CarouselJam(ExtensionRequest extensionRequest) {
+    public ExtensionResult KategoriJam(ExtensionRequest extensionRequest) {
         Map<String, String> output = new HashMap<>();
+        CarouselBuilder cb = CarouselJam();
 
+        output.put(OUTPUT, "Silahkan pilih waktu kunjungan yang kamu kehendaki.\n"
+                + ParamSdk.SPLIT_CHAT + cb.build());
+//        output.put(OUTPUT, cb.build());
+        ExtensionResult extensionResult = new ExtensionResult();
+        extensionResult.setAgent(false);
+        extensionResult.setRepeat(false);
+        extensionResult.setSuccess(true);
+        extensionResult.setNext(true);
+        extensionResult.setValue(output);
+        return extensionResult;
+    }
+
+    public CarouselBuilder CarouselJam() {
         //Button 1
         ButtonTemplate button1 = new ButtonTemplate();
         button1.setTitle("08:00 - 10:00");
@@ -1161,15 +1175,7 @@ public class ServiceImp implements IService {
         CarouselBuilder carouselBuilder = new CarouselBuilder(buttonBuilder1.build(), buttonBuilder2.build(),
                 buttonBuilder3.build(), buttonBuilder4.build(), buttonBuilder5.build());
 
-        output.put(OUTPUT, carouselBuilder.build());
-
-        ExtensionResult extensionResult = new ExtensionResult();
-        extensionResult.setAgent(false);
-        extensionResult.setRepeat(false);
-        extensionResult.setSuccess(true);
-        extensionResult.setNext(true);
-        extensionResult.setValue(output);
-        return extensionResult;
+        return carouselBuilder;
     }
 
     /**
@@ -1250,13 +1256,20 @@ public class ServiceImp implements IService {
                 break;
             }
         }
-        output.put(OUTPUT, sb.toString());
+
         if (sb.toString().equals("")) {
             Map<String, String> clearEntities = new HashMap<>();
-
             clearEntities.put("kategorijam", "");
             extensionResult.setEntities(clearEntities);
-            output.put(OUTPUT, CarouselJam(extensionRequest).toString());
+
+            CarouselBuilder cb = CarouselJam();
+            output.put(OUTPUT, "Maaf. Kategori jam yang kamu pilih tidak termasuk dalam jadwal Dokter pada Hari Tersebut.\n"
+                    + "Silahkan pilih kembali waktu kunjungan yang kamu kehendaki."
+                    + ParamSdk.SPLIT_CHAT + cb.build());
+
+        } else {
+            output.put(OUTPUT, sb.toString());
+
         }
 
         extensionResult.setAgent(false);

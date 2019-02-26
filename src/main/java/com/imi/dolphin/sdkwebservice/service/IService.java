@@ -80,7 +80,7 @@ public interface IService {
 
     ExtensionResult doPostCreateAppointment(ExtensionRequest extensionRequest);
 
-    ExtensionResult CarouselJam(ExtensionRequest extensionRequest);
+    ExtensionResult KategoriJam(ExtensionRequest extensionRequest);
 
     ExtensionResult doGetJamPraktekDokter(ExtensionRequest extensionRequest);
 

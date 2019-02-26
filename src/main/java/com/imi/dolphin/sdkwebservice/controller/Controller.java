@@ -210,8 +210,8 @@ public class Controller {
     // Booking Doctor //
     @RequestMapping("/kategorijam")
     @PostMapping
-    public ExtensionResult CarouselJam(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.CarouselJam(extensionRequest);
+    public ExtensionResult KategoriJam(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.KategoriJam(extensionRequest);
     }
 
     @RequestMapping("/jampraktek")
