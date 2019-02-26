@@ -1366,7 +1366,7 @@ public class ServiceImp implements IService {
         String contact_phone_number = "";
         //Jika Pasien Lama//
         if (!contactid.equalsIgnoreCase("no")) {
-            contact = contactid + "";
+            contact = "\"" + contactid + "\"";
             name = null;
             dob = null;
             nophone = null;
