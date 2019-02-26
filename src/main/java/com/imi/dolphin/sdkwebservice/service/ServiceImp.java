@@ -1366,7 +1366,7 @@ public class ServiceImp implements IService {
         String contact_phone_number = "";
         //Jika Pasien Lama//
         if (!contactid.equalsIgnoreCase("no")) {
-            contact = contactid;
+            contact = contactid + "";
             name = null;
             dob = null;
             nophone = null;
@@ -1380,6 +1380,7 @@ public class ServiceImp implements IService {
             nationality = null;
             contact_phone_number = null;
         }
+
         createAppointment.setBooking_id(null);
         createAppointment.setBooking_type_id(appProperties.getBookingTypeId());
         createAppointment.setBooking_no(null);

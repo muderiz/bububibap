@@ -51,9 +51,9 @@ public class CreateAppointment {
 
     public String build() {
         String result = PEMBUKA
-                + "\"booking_id\":" + BATAS + null + KOMA
+                + "\"booking_id\":" + null + ","
                 + "\"booking_type_id\":" + BATAS + booking_type_id + KOMA
-                + "\"booking_no\":" + BATAS + null + KOMA
+                + "\"booking_no\":" + null + ","
                 + "\"booking_date\":" + BATAS + booking_date + KOMA
                 + "\"booking_time\":" + BATAS + booking_time + KOMA
                 + "\"note\":" + BATAS + note + KOMA
@@ -62,7 +62,7 @@ public class CreateAppointment {
                 + "\"doctor_id\":" + BATAS + doctor_id + KOMA
                 + "\"user_id\":" + BATAS + user_id + KOMA
                 + "\"is_waiting_list\":" + BATAS + is_waiting_list + KOMA
-                + "\"contact_id\":" + BATAS + contact_id + KOMA
+                + "\"contact_id\":" + contact_id + ","
                 + "\"name\":" + BATAS + name + KOMA
                 + "\"date_of_birth\":" + BATAS + date_of_birth + KOMA
                 + "\"phone_number\":" + BATAS + phone_number + KOMA
@@ -74,7 +74,7 @@ public class CreateAppointment {
                 + "\"district\":" + PEMBUKA + "\"id\":" + "1" + "," + "\"name\":" + BATAS + districtname + BATAS + PENUTUP + ","
                 + "\"subdistrict\":" + PEMBUKA + "\"id\":" + "1" + "," + "\"name\":" + BATAS + subdistrictid + BATAS + PENUTUP + ","
                 + "\"nationality\":" + PEMBUKA + "\"id\":" + "1" + "," + "\"name\":" + BATAS + nationalityname + BATAS + PENUTUP + ","
-                + "\"emergency_contact_detail\":" + PEMBUKA + "\"contact_name\":" + "1" + "," + "\"contact_phone_number\":" + BATAS + emergencycontactnumber + BATAS + PENUTUP
+                + "\"emergency_contact_detail\":" + PEMBUKA + "\"contact_name\":" + "\"\"" + "," + "\"contact_phone_number\":" + BATAS + emergencycontactnumber + BATAS + PENUTUP
                 + PENUTUP;
         return result;
     }
