@@ -231,5 +231,23 @@ public class Controller {
     public ExtensionResult doPostCreateAppointment(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.doPostCreateAppointment(extensionRequest);
     }
+
     //------------------------//
+    @RequestMapping("/validatephone")
+    @PostMapping
+    public ExtensionResult doValidatePhone(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.doValidatePhone(extensionRequest);
+    }
+
+    @RequestMapping("/valdate")
+    @PostMapping
+    public ExtensionResult doValidateDate(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.doValidateDate(extensionRequest);
+    }
+
+    @RequestMapping("/cleardate")
+    @PostMapping
+    public ExtensionResult doClearDate(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.doClearDate(extensionRequest);
+    }
 }

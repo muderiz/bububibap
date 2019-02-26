@@ -83,5 +83,11 @@ public interface IService {
     ExtensionResult KategoriJam(ExtensionRequest extensionRequest);
 
     ExtensionResult doGetJamPraktekDokter(ExtensionRequest extensionRequest);
+    
+    ExtensionResult doValidatePhone(ExtensionRequest extensionRequest);
+
+    ExtensionResult doValidateDate(ExtensionRequest extensionRequest);
+
+    ExtensionResult doClearDate(ExtensionRequest extensionRequest);
 
 }

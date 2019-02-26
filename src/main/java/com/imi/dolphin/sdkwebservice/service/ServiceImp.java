@@ -33,6 +33,7 @@ import com.imi.dolphin.sdkwebservice.model.CreatePatient;
 import com.imi.dolphin.sdkwebservice.model.EasyMap;
 import com.imi.dolphin.sdkwebservice.model.ExtensionRequest;
 import com.imi.dolphin.sdkwebservice.model.ExtensionResult;
+import com.imi.dolphin.sdkwebservice.model.MonthBuilder;
 import com.imi.dolphin.sdkwebservice.model.TicketModel;
 import com.imi.dolphin.sdkwebservice.param.ParamSdk;
 import com.imi.dolphin.sdkwebservice.property.AppProperties;
@@ -1973,4 +1974,139 @@ public class ServiceImp implements IService {
     }
 
     //-------------------------------------------------------------------//
+    @Override
+    public ExtensionResult doValidatePhone(ExtensionRequest extensionRequest) {
+        ExtensionResult extensionResult = new ExtensionResult();
+        extensionResult.setAgent(false);
+        extensionResult.setRepeat(false);
+        extensionResult.setSuccess(true);
+        extensionResult.setNext(true);
+
+        Map<String, String> clearEntities = new HashMap<>();
+        String phone = getEasyMapValueByName(extensionRequest, "notelp");
+        phone = phone.replace(" ", "");
+        phone = phone.replace("(", "");
+        phone = phone.replace(")", "");
+        phone = phone.replace("-", "");
+        phone = phone.replace(".", "");
+
+        if (phone.matches("^[+0-9]*$")) {
+            String preZero8 = phone.substring(0, 2);
+            String prePlus62 = phone.substring(0, 4);
+
+            if (phone.length() > 9 && phone.length() < 16) {
+                if (prePlus62.equals("+628")) {
+                    phone = phone.replace("+628", "08");
+                    clearEntities.put("notelp", phone);
+//                    clearEntities.put("notelp", addWordPhone(phone));
+                    clearEntities.put("confirm", "confirm dong");
+                } else if (!preZero8.equals("08")) {
+                    clearEntities.put("notelp", null);
+                } else {
+                    clearEntities.put("notelp", phone);
+//                    clearEntities.put("notelp", addWordPhone(phone));
+                    clearEntities.put("confirm", "confirm dong");
+                }
+            } else {
+                clearEntities.put("notelp", null);
+            }
+        } else {
+            clearEntities.put("notelp", null);
+        }
+        extensionResult.setEntities(clearEntities);
+        return extensionResult;
+    }
+
+    @Override
+    public ExtensionResult doValidateDate(ExtensionRequest extensionRequest) {
+        ExtensionResult extensionResult = new ExtensionResult();
+        String sdate = getEasyMapValueByName(extensionRequest, "tanggallahir");
+        Map<String, String> clearEntities = new HashMap<>();
+        MonthBuilder monthBuilder = new MonthBuilder();
+        String result = "";
+        sdate = sdate.replaceAll("/", "-");
+        sdate = sdate.replaceAll(" ", "-");
+        String[] arrDate = sdate.split("-");
+        boolean isNumeric;
+
+        // mengubah nama bulan ke dalam angka
+        for (int i = 0; i < arrDate.length; i++) {
+            isNumeric = arrDate[i].chars().allMatch(Character::isDigit);
+            if (isNumeric == false) {
+                arrDate[i] = monthBuilder.toMonthNumber(arrDate[i]);
+            }
+        }
+
+        String[] temp = new String[3];
+        int dex = 1;
+        int obj;
+        try {
+            for (int i = 0; i < arrDate.length; i++) {
+                obj = Integer.parseInt(arrDate[i]);
+
+                // memposisikan tahun di index ke 0
+                if (arrDate[i].length() == 4) {
+                    temp[0] = arrDate[i];
+                } // mengubah date 1 angka jadi 2 angka
+                else if (arrDate[i].length() < 2) {
+                    temp[dex] = "0" + arrDate[i];
+                    dex++;
+                } // memposisikan tanggal dan bulan di index selain 0
+                else {
+                    // cek hari
+                    if (obj > 12) {
+                        temp[2] = arrDate[i];
+                    } else {
+                        temp[dex] = arrDate[i];
+                        dex++;
+                    }
+                }
+            }
+
+            // membuat format tanggal yyyy-mm-dd
+            for (int i = 0; i < temp.length; i++) {
+                result += temp[i];
+                if (i < temp.length - 1) {
+                    result += "-";
+                }
+            }
+            clearEntities.put("tanggallahir", result);
+            extensionResult.setEntities(clearEntities);
+        } catch (Exception e) {
+            clearEntities = new HashMap<>();
+            clearEntities.put("tanggallahir", null);
+            extensionResult.setEntities(clearEntities);
+        }
+
+        extensionResult.setAgent(false);
+        extensionResult.setRepeat(false);
+        extensionResult.setSuccess(true);
+        extensionResult.setNext(true);
+        Map<String, String> output = new HashMap<>();
+
+        output.put(OUTPUT, result);
+        extensionResult.setValue(output);
+        return extensionResult;
+    }
+
+    @Override
+    public ExtensionResult doClearDate(ExtensionRequest extensionRequest) {
+        ExtensionResult extensionResult = new ExtensionResult();
+        Map<String, String> clearEntities = new HashMap<>();
+
+        String confirm = getEasyMapValueByName(extensionRequest, "confirm");
+        if (confirm.equalsIgnoreCase("tidak")) {
+            clearEntities.put("tanggal", null);
+            clearEntities.put("confirm", null);
+        } else {
+            clearEntities.put("confirm2", "confirm2");
+        }
+        extensionResult.setAgent(false);
+        extensionResult.setRepeat(false);
+        extensionResult.setSuccess(true);
+        extensionResult.setNext(true);
+        extensionResult.setEntities(clearEntities);
+        return extensionResult;
+    }
+
 }
