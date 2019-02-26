@@ -41,6 +41,8 @@ public class CreateAppointment {
     private String subdistrictname;
     private String nationalityid;
     private String nationalityname;
+    private String emergencycontactname;
+    private String emergencycontactnumber;
 
     private static final String PEMBUKA = "{";
     private static final String PENUTUP = "}";
@@ -67,12 +69,12 @@ public class CreateAppointment {
                 + "\"address_line_1\":" + BATAS + address_line_1 + KOMA
                 + "\"address_line_2\":" + BATAS + address_line_2 + KOMA
                 + "\"email\":" + BATAS + email + KOMA
-                + "\"sex\":" + PEMBUKA + "\"id\":" + "1" + "," + "\"name\":" + sexname + PENUTUP + ","
-                + "\"city\":" + PEMBUKA + "\"id\":" + "1" + "," + "\"name\":" + cityname + PENUTUP + ","
-                + "\"district\":" + PEMBUKA + "\"id\":" + "1" + "," + "\"name\":" + "" + PENUTUP + ","
-                + "\"subdistrict\":" + PEMBUKA + "\"id\":" + "1" + "," + "\"name\":" + "" + PENUTUP + ","
-                + "\"nationality\":" + PEMBUKA + "\"id\":" + "1" + "," + "\"name\":" + "" + PENUTUP + ","
-                + "\"emergency_contact_detail\":" + PEMBUKA + "\"contact_name\":" + "1" + "," + "\"contact_phone_number\":" + "" + PENUTUP
+                + "\"sex\":" + PEMBUKA + "\"id\":" + "1" + "," + "\"name\":" + BATAS + sexname + BATAS + PENUTUP + ","
+                + "\"city\":" + PEMBUKA + "\"id\":" + "1" + "," + "\"name\":" + BATAS + cityname + BATAS + PENUTUP + ","
+                + "\"district\":" + PEMBUKA + "\"id\":" + "1" + "," + "\"name\":" + BATAS + districtname + BATAS + PENUTUP + ","
+                + "\"subdistrict\":" + PEMBUKA + "\"id\":" + "1" + "," + "\"name\":" + BATAS + subdistrictid + BATAS + PENUTUP + ","
+                + "\"nationality\":" + PEMBUKA + "\"id\":" + "1" + "," + "\"name\":" + BATAS + nationalityname + BATAS + PENUTUP + ","
+                + "\"emergency_contact_detail\":" + PEMBUKA + "\"contact_name\":" + "1" + "," + "\"contact_phone_number\":" + BATAS + emergencycontactnumber + BATAS + PENUTUP
                 + PENUTUP;
         return result;
     }
@@ -187,6 +189,22 @@ public class CreateAppointment {
 
     public void setNationalityname(String nationalityname) {
         this.nationalityname = nationalityname;
+    }
+
+    public String getEmergencycontactname() {
+        return emergencycontactname;
+    }
+
+    public void setEmergencycontactname(String emergencycontactname) {
+        this.emergencycontactname = emergencycontactname;
+    }
+
+    public String getEmergencycontactnumber() {
+        return emergencycontactnumber;
+    }
+
+    public void setEmergencycontactnumber(String emergencycontactnumber) {
+        this.emergencycontactnumber = emergencycontactnumber;
     }
 
 }

@@ -1045,10 +1045,8 @@ public class ServiceImp implements IService {
     public ExtensionResult KategoriJam(ExtensionRequest extensionRequest) {
         Map<String, String> output = new HashMap<>();
         CarouselBuilder cb = CarouselJam();
-
-        output.put(OUTPUT, "Silahkan pilih waktu kunjungan yang kamu kehendaki.\n"
-                + ParamSdk.SPLIT_CHAT + cb.build());
-//        output.put(OUTPUT, cb.build());
+        String dialog = "Silahkan pilih waktu kunjungan yang kamu kehendaki.";
+        output.put(OUTPUT, dialog + ParamSdk.SPLIT_CHAT + cb.build());
         ExtensionResult extensionResult = new ExtensionResult();
         extensionResult.setAgent(false);
         extensionResult.setRepeat(false);
@@ -1262,12 +1260,11 @@ public class ServiceImp implements IService {
             Map<String, String> clearEntities = new HashMap<>();
             clearEntities.put("kategorijam", "");
             extensionResult.setEntities(clearEntities);
+            String dialog1 = "Maaf. Kategori jam yang kamu pilih tidak termasuk dalam jadwal Dokter pada Hari Tersebut.";
+            String dialog2 = "Silahkan pilih kembali waktu kunjungan yang kamu kehendaki.";
 
             CarouselBuilder cb = CarouselJam();
-            output.put(OUTPUT, "Maaf. Kategori jam yang kamu pilih tidak termasuk dalam jadwal Dokter pada Hari Tersebut.\n"
-                    + "Silahkan pilih kembali waktu kunjungan yang kamu kehendaki."
-                    + ParamSdk.SPLIT_CHAT + cb.build());
-
+            output.put(OUTPUT, dialog1 + ParamSdk.SPLIT_CHAT + dialog2 + ParamSdk.SPLIT_CHAT + cb.build());
         } else {
             output.put(OUTPUT, sb.toString());
 
@@ -1363,6 +1360,10 @@ public class ServiceImp implements IService {
         String email = "no-reply@siloamhospitals.com";
         String sexname = "Male";
         String cityname = "Jakarta";
+        String district = "";
+        String subdistrict = "";
+        String nationality = "";
+        String contact_phone_number = "";
         //Jika Pasien Lama//
         if (!contactid.equalsIgnoreCase("no")) {
             contact = contactid;
@@ -1374,6 +1375,10 @@ public class ServiceImp implements IService {
             Adress2 = null;
             sexname = null;
             cityname = null;
+            district = null;
+            subdistrict = null;
+            nationality = null;
+            contact_phone_number = null;
         }
         createAppointment.setBooking_id(null);
         createAppointment.setBooking_type_id(appProperties.getBookingTypeId());
@@ -1395,6 +1400,10 @@ public class ServiceImp implements IService {
         createAppointment.setEmail(email);
         createAppointment.setSexname(sexname);
         createAppointment.setCityname(cityname);
+        createAppointment.setDistrictname(district);
+        createAppointment.setSubdistrictname(subdistrict);
+        createAppointment.setNationalityname(nationality);
+        createAppointment.setEmergencycontactnumber(contact_phone_number);
 
         String appointment = createAppointment.build();
         try {
@@ -1402,7 +1411,7 @@ public class ServiceImp implements IService {
             RequestBody body = RequestBody.create(JSON, appointment);
             Request request = new Request.Builder().url(url).post(body).addHeader("Content-Type", "application/json").build();
             Response response = okHttpUtil.getClient().newCall(request).execute();
-            JSONObject jsonobj = new JSONObject(response.body().toString());
+            JSONObject jsonobj = new JSONObject(response.body().string());
             if (jsonobj.getInt("code") == 200) {
                 JSONArray results2 = jsonobj.getJSONArray("data");
                 JSONObject jObj = results2.getJSONObject(0);
@@ -1422,10 +1431,13 @@ public class ServiceImp implements IService {
                 sb.append("Booking Time :" + booking_time + "\n");
                 sb.append("Patient Name :" + patient_name + "\n");
                 sb.append("Doctor Name :" + doctor_name);
+                output.put(OUTPUT, sb.toString());
+            } else {
+
             }
         } catch (Exception e) {
         }
-        output.put(OUTPUT, sb.toString());
+
         extensionResult.setAgent(false);
         extensionResult.setRepeat(false);
         extensionResult.setSuccess(true);
@@ -2001,17 +2013,17 @@ public class ServiceImp implements IService {
 //                    clearEntities.put("notelp", addWordPhone(phone));
                     clearEntities.put("confirm", "confirm dong");
                 } else if (!preZero8.equals("08")) {
-                    clearEntities.put("notelp", null);
+                    clearEntities.put("notelp", "");
                 } else {
                     clearEntities.put("notelp", phone);
 //                    clearEntities.put("notelp", addWordPhone(phone));
                     clearEntities.put("confirm", "confirm dong");
                 }
             } else {
-                clearEntities.put("notelp", null);
+                clearEntities.put("notelp", "");
             }
         } else {
-            clearEntities.put("notelp", null);
+            clearEntities.put("notelp", "");
         }
         extensionResult.setEntities(clearEntities);
         return extensionResult;
@@ -2074,7 +2086,7 @@ public class ServiceImp implements IService {
             extensionResult.setEntities(clearEntities);
         } catch (Exception e) {
             clearEntities = new HashMap<>();
-            clearEntities.put("tanggallahir", null);
+            clearEntities.put("tanggallahir", "");
             extensionResult.setEntities(clearEntities);
         }
 
