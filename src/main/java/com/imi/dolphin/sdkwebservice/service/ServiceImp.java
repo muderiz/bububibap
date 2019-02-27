@@ -2255,5 +2255,5 @@ public class ServiceImp implements IService {
         extensionResult.setEntities(clearEntities);
         return extensionResult;
     }
-
+//new
 }
