@@ -783,10 +783,10 @@ public class ServiceImp implements IService {
         extensionResult.setNext(true);
 
         Map<String, String> clearEntities = new HashMap<>();
-        String konfirmasi = getEasyMapValueByName(extensionRequest, "spesialisid");
+        String spesialisid = getEasyMapValueByName(extensionRequest, "spesialisid");
         String counter = getEasyMapValueByName(extensionRequest, "counter");
-           int code = Integer.parseInt(counter);
-        if (konfirmasi.equalsIgnoreCase("lainnya")) {
+        int code = Integer.parseInt(counter);
+        if (spesialisid.equalsIgnoreCase("lainnya")) {
             code++;
             clearEntities.put("counter", "" + code);
             clearEntities.put("spesialisid", "");
@@ -810,7 +810,7 @@ public class ServiceImp implements IService {
             output.put(OUTPUT, sb.toString());
             //-----------------------------------------------------------------------------
             extensionResult.setValue(output);
-        } else if (konfirmasi.contains("spesialisid ")) {
+        } else if (spesialisid.contains("spesialisid")) {
             clearEntities.put("konfirmasi", "yes");
             extensionResult.setEntities(clearEntities);
         } else {
@@ -821,7 +821,7 @@ public class ServiceImp implements IService {
             try {
                 OkHttpUtil okHttpUtil = new OkHttpUtil();
                 okHttpUtil.init(true);
-                Request request = new Request.Builder().url(appProperties.getApiSpecialistbyname() + konfirmasi).get().build();
+                Request request = new Request.Builder().url(appProperties.getApiSpecialistbyname() + spesialisid).get().build();
                 Response response = okHttpUtil.getClient().newCall(request).execute();
                 JSONObject jsonobj = new JSONObject(response.body().string());
                 if (jsonobj.getInt("code") == 200) {
