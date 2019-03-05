@@ -810,7 +810,7 @@ public class ServiceImp implements IService {
             output.put(OUTPUT, sb.toString());
             //-----------------------------------------------------------------------------
             extensionResult.setValue(output);
-        } else if ("spesialisid".contains(spesialisid)) {
+        } else if ("spesialisid".equalsIgnoreCase(spesialisid)) {
             clearEntities.put("konfirmasi", "yes");
             extensionResult.setEntities(clearEntities);
         } else {
