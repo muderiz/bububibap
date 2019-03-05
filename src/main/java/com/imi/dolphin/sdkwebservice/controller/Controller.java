@@ -201,12 +201,6 @@ public class Controller {
     }
     // ---------------------- //
 
-    @RequestMapping("/getspecialistpage1")
-    @PostMapping
-    public ExtensionResult doGetSpecialistPage1(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.doGetSpecialistList1(extensionRequest);
-    }
-
     // Booking Doctor //
     @RequestMapping("/kategorijam")
     @PostMapping

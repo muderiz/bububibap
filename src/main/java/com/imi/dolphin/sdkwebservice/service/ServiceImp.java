@@ -34,24 +34,25 @@ import com.imi.dolphin.sdkwebservice.model.EasyMap;
 import com.imi.dolphin.sdkwebservice.model.ExtensionRequest;
 import com.imi.dolphin.sdkwebservice.model.ExtensionResult;
 import com.imi.dolphin.sdkwebservice.model.MonthBuilder;
-import com.imi.dolphin.sdkwebservice.model.TicketModel;
 import com.imi.dolphin.sdkwebservice.param.ParamSdk;
 import com.imi.dolphin.sdkwebservice.property.AppProperties;
 import com.imi.dolphin.sdkwebservice.util.OkHttpUtil;
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jdk.nashorn.internal.ir.CaseNode;
 
 import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import okio.ByteString;
 import org.json.JSONException;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  *
@@ -574,65 +575,73 @@ public class ServiceImp implements IService {
         ExtensionResult extensionResult = new ExtensionResult();
         StringBuilder sb = new StringBuilder();
 
-//        String lokasiUser = getEasyMapValueByName(extensionRequest, "lokasi");
         double latitude = extensionRequest.getIntent().getTicket().getLatitude();
         double longitude = extensionRequest.getIntent().getTicket().getLongitude();
 
-//        System.out.println(latitude);
-//        System.out.println(longitude);
-//        
-//        String contactid = extensionRequest.getIntent().getTicket().getContactId();
-//        
-//
-//        String[] alonglat = lokasiUser.split(";");
-//        String lat = alonglat[0];
-//        String longi = alonglat[1];
         String apiHospital = appProperties.getDummyHospital();
         JSONArray results = GeneralExecuteAPI(apiHospital).getJSONArray("data");
         int leng = results.length();
         BigDecimal longitud;
         BigDecimal latitud;
-        BigDecimal[][] point = new BigDecimal[leng][leng];
-        int x = 0;
+        List<List<String>> data = new ArrayList<>();
         double hasil;
         for (int i = 0; i < leng; i++) {
             JSONObject jObj = results.getJSONObject(i);
-            String hospitalName = jObj.getString("hospital_name");
+            String hospitalid = jObj.getString("hospital_id");
+            String hospitalname = jObj.getString("hospital_name");
             longitud = jObj.getBigDecimal("longitude");
             latitud = jObj.getBigDecimal("latitude");
+
             hasil = distanceInKilometers((Double.valueOf(latitude)), (Double.valueOf(longitude)), latitud.doubleValue(), longitud.doubleValue());
-            if (hasil < 20) {
-                point[x][0] = latitud;
-                point[x][1] = longitud;
-
-                ButtonTemplate button = new ButtonTemplate();
-                button.setTitle(hospitalName);
-                button.setSubTitle(hospitalName);
-                List<EasyMap> actions = new ArrayList<>();
-
-                EasyMap bookAction = new EasyMap();
-                EasyMap callAction = new EasyMap();
-
-                bookAction.setName("Direction");
-//                bookAction.setValue(appProperties.getGoogleMapQuery() + "" + point[x][0] + "," + point[x][1]);
-                bookAction.setValue(appProperties.getGoogleMapQuery() + hospitalName);
-                actions.add(bookAction);
-                button.setButtonValues(actions);
-
-                callAction.setName("Call Center");
-                callAction.setValue("tel:+62");
-                actions.add(callAction);
-                button.setButtonValues(actions);
-
-                ButtonBuilder buttonBuilder = new ButtonBuilder(button);
-
-                String btnBuilder = buttonBuilder.build().toString();
-                sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
-
-                x++;
+            List<String> jarak = new ArrayList<>();
+            if (hasil < 30) {
+                jarak.add(hasil + "");
+                jarak.add(hospitalid);
+                jarak.add(hospitalname);
+                data.add(jarak);
             }
+        }
+        Collections.sort(data, new Comparator<List<String>>() {
+            @Override
+            public int compare(List<String> o1, List<String> o2) {
+                return Double.valueOf(o1.get(0)).compareTo(Double.valueOf(o2.get(0)));
+            }
+        });
+        for (int j = 0; j < data.size(); j++) {
+            String idhospital = data.get(j).get(1);
+            String namehospital = data.get(j).get(2);
+
+            ButtonTemplate button = new ButtonTemplate();
+            button.setTitle(namehospital);
+            button.setSubTitle(namehospital);
+            List<EasyMap> actions = new ArrayList<>();
+
+            EasyMap direction = new EasyMap();
+            EasyMap callAction = new EasyMap();
+            EasyMap booknow = new EasyMap();
+
+            direction.setName("Direction");
+            direction.setValue(appProperties.getGoogleMapQuery() + namehospital);
+            actions.add(direction);
+            button.setButtonValues(actions);
+
+            callAction.setName("Call Center");
+            callAction.setValue("tel:+62");
+            actions.add(callAction);
+            button.setButtonValues(actions);
+
+            booknow.setName("Book Now");
+            booknow.setValue("dokter by area di dummy di " + idhospital + " konter 1");
+            actions.add(booknow);
+            button.setButtonValues(actions);
+
+            ButtonBuilder buttonBuilder = new ButtonBuilder(button);
+
+            String btnBuilder = buttonBuilder.build().toString();
+            sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
 
         }
+
         output.put(OUTPUT, sb.toString());
         extensionResult.setAgent(false);
         extensionResult.setRepeat(false);
@@ -776,7 +785,7 @@ public class ServiceImp implements IService {
         Map<String, String> clearEntities = new HashMap<>();
         String konfirmasi = getEasyMapValueByName(extensionRequest, "spesialisid");
         String counter = getEasyMapValueByName(extensionRequest, "counter");
-        int code = Integer.parseInt(counter);
+           int code = Integer.parseInt(counter);
         if (konfirmasi.equalsIgnoreCase("lainnya")) {
             code++;
             clearEntities.put("counter", "" + code);
@@ -797,15 +806,49 @@ public class ServiceImp implements IService {
                 leng = leng(code, data);
                 sb = carospec(sb, leng, data);
             } catch (Exception e) {
-
             }
-
             output.put(OUTPUT, sb.toString());
             //-----------------------------------------------------------------------------
             extensionResult.setValue(output);
-        } else {
+        } else if (konfirmasi.contains("spesialisid ")) {
             clearEntities.put("konfirmasi", "yes");
             extensionResult.setEntities(clearEntities);
+        } else {
+            clearEntities.put("spesialisid", "");
+            extensionResult.setEntities(clearEntities);
+            Map<String, String> output = new HashMap<>();
+            StringBuilder sb = new StringBuilder();
+            try {
+                OkHttpUtil okHttpUtil = new OkHttpUtil();
+                okHttpUtil.init(true);
+                Request request = new Request.Builder().url(appProperties.getApiSpecialistbyname() + konfirmasi).get().build();
+                Response response = okHttpUtil.getClient().newCall(request).execute();
+                JSONObject jsonobj = new JSONObject(response.body().string());
+                if (jsonobj.getInt("code") == 200) {
+                    JSONArray data = jsonobj.getJSONArray("data");
+                    int leng;
+                    leng = data.length();
+                    sb = carospec(sb, leng, data);
+                    String truecase = "Berikut Spesialis yang {bot_name} dapat temukan. Silahkan pilih Spesialis yang ingin kamu kunjungi.";
+                    output.put(OUTPUT, truecase + ParamSdk.SPLIT_CHAT + sb.toString());
+                } else {
+                    String hospitalid = getEasyMapValueByName(extensionRequest, "hospitalid");
+                    request = new Request.Builder().url(appProperties.getApiSpecialistbyHospital() + hospitalid).get().build();
+//                    request = new Request.Builder().url(appProperties.getApiSpecialist()).get().build();
+                    response = okHttpUtil.getClient().newCall(request).execute();
+                    jsonobj = new JSONObject(response.body().string());
+                    JSONArray data = jsonobj.getJSONArray("data");
+                    int leng;
+                    leng = leng(code, data);
+                    sb = carospec(sb, leng, data);
+                    String falsecase1 = "Maaf {bot_name} tidak dapat menemukan yang kamu cari.";
+                    String falsecase2 = "Silahkan pilih Spesialis yang ingin kamu tuju.";
+                    output.put(OUTPUT, falsecase1 + ParamSdk.SPLIT_CHAT + falsecase2 + ParamSdk.SPLIT_CHAT + sb.toString());
+                }
+            } catch (Exception e) {
+            }
+            //-----------------------------------------------------------------------------
+            extensionResult.setValue(output);
         }
         return extensionResult;
     }
@@ -832,7 +875,7 @@ public class ServiceImp implements IService {
             //Buat Button
             ButtonTemplate button = new ButtonTemplate();
             button.setTitle(doctorName);
-            button.setSubTitle(doctorSpecialist + "\n" + doctorHospitals);
+            button.setSubTitle(doctorSpecialist);
             List<EasyMap> actions = new ArrayList<>();
 
             EasyMap LihatJadwal = new EasyMap();
@@ -877,7 +920,7 @@ public class ServiceImp implements IService {
             //Buat Button
             ButtonTemplate button = new ButtonTemplate();
             button.setTitle(doctorName);
-            button.setSubTitle(doctorSpecialist + "\n" + doctorHospitals);
+            button.setSubTitle(doctorSpecialist + " " + doctorHospitals);
             List<EasyMap> actions = new ArrayList<>();
 
             EasyMap LihatJadwal = new EasyMap();
@@ -1315,11 +1358,12 @@ public class ServiceImp implements IService {
         createPatient.setPhone_number(notelp);
         createPatient.setHospital_id(hospital);
         createPatient.setUser_id(appProperties.getUserId());
-
         String pasien = createPatient.build();
         String contactid = "";
         OkHttpUtil okHttpUtil = new OkHttpUtil();
-        okHttpUtil.init(true);
+
+        okHttpUtil.init(
+                true);
         try {
 
             String url = appProperties.getCreatePatient();
@@ -1342,7 +1386,9 @@ public class ServiceImp implements IService {
         JSONArray results = GeneralExecuteAPI(getScheduleId).getJSONArray("data");
         int leng = results.length();
         String idschedule = "";
-        for (int i = 0; i < leng; i++) {
+        for (int i = 0;
+                i < leng;
+                i++) {
             JSONObject jObj = results.getJSONObject(i);
             String fromtime = jObj.getString("from_time");
             String scheduleid = jObj.getString("schedule_id");
@@ -1351,6 +1397,15 @@ public class ServiceImp implements IService {
                 break;
             }
         }
+        Map<String, String> sex = new HashMap<>();
+        Map<String, String> city = new HashMap<>();
+        Map<String, String> district = new HashMap<>();
+        Map<String, String> subdistrict = new HashMap<>();
+        Map<String, String> nationality = new HashMap<>();
+        Map<String, String> emergency_contact_detail = new HashMap<>();
+
+        String bookingid = null;
+        String bookingno = null;
         String contact = null;
         String name = namapasien;
         String dob = tanggallahir;
@@ -1358,32 +1413,45 @@ public class ServiceImp implements IService {
         String Adress1 = "Jakarta";
         String Adress2 = "";
         String email = "no-reply@siloamhospitals.com";
+        String sexid = "1";
         String sexname = "Male";
+        String cityid = "1";
         String cityname = "Jakarta";
-        String district = "";
-        String subdistrict = "";
-        String nationality = "";
+        String districtid = "1 ";
+        String districtname = "";
+        String subdistrictid = "1";
+        String subdistrictname = "";
+        String nationalityid = "1";
+        String nationalityname = "";
+        String contact_name = "";
         String contact_phone_number = "";
+
         //Jika Pasien Lama//
         if (!contactid.equalsIgnoreCase("no")) {
-            contact = "\"" + contactid + "\"";
+            contact = contactid;
             name = null;
             dob = null;
             nophone = null;
-            email = null;
             Adress1 = null;
             Adress2 = null;
+            email = null;
+            sexid = null;
             sexname = null;
+            cityid = null;
             cityname = null;
-            district = null;
-            subdistrict = null;
-            nationality = null;
+            districtid = null;
+            districtname = null;
+            subdistrictid = null;
+            subdistrictname = null;
+            nationalityid = null;
+            nationalityname = null;
+            contact_name = null;
             contact_phone_number = null;
         }
 
-        createAppointment.setBooking_id(null);
+        createAppointment.setBooking_id(bookingid);
         createAppointment.setBooking_type_id(appProperties.getBookingTypeId());
-        createAppointment.setBooking_no(null);
+        createAppointment.setBooking_no(bookingno);
         createAppointment.setBooking_date(tanggalPesan);
         createAppointment.setBooking_time(jammenit);
         createAppointment.setNote("");
@@ -1399,44 +1467,66 @@ public class ServiceImp implements IService {
         createAppointment.setAddress_line_1(Adress1);
         createAppointment.setAddress_line_2(Adress2);
         createAppointment.setEmail(email);
-        createAppointment.setSexname(sexname);
-        createAppointment.setCityname(cityname);
-        createAppointment.setDistrictname(district);
-        createAppointment.setSubdistrictname(subdistrict);
-        createAppointment.setNationalityname(nationality);
-        createAppointment.setEmergencycontactnumber(contact_phone_number);
 
-        String appointment = createAppointment.build();
+        sex.put("id", sexid);
+        sex.put("name", sexname);
+        createAppointment.setSex(sex);
+
+        city.put("id", cityid);
+        city.put("name", cityname);
+        createAppointment.setCity(city);
+
+        district.put("id", districtid);
+        district.put("name", districtname);
+        createAppointment.setDistrict(district);
+
+        subdistrict.put("id", subdistrictid);
+        subdistrict.put("name", subdistrictname);
+        createAppointment.setSubdistrict(subdistrict);
+
+        nationality.put("id", nationalityid);
+        nationality.put("name", nationalityname);
+        createAppointment.setNationality(nationality);
+
+        emergency_contact_detail.put("contact_name", contact_name);
+        emergency_contact_detail.put("contact_phone_number", contact_phone_number);
+        createAppointment.setEmergency_contact_detail(emergency_contact_detail);
+
+        JSONObject ca = new JSONObject(createAppointment);
+        String appointment = ca.toString();
         try {
             String url = appProperties.getCreateAppointment();
             RequestBody body = RequestBody.create(JSON, appointment);
             Request request = new Request.Builder().url(url).post(body).addHeader("Content-Type", "application/json").build();
             Response response = okHttpUtil.getClient().newCall(request).execute();
             JSONObject jsonobj = new JSONObject(response.body().string());
+
             if (jsonobj.getInt("code") == 200) {
                 JSONArray results2 = jsonobj.getJSONArray("data");
                 JSONObject jObj = results2.getJSONObject(0);
-                String booking_id = jObj.getString("booking_id");
-                String contact_id = jObj.getString("contact_id");
-                String booking_no = jObj.getString("booking_no");
+                String booking_id = jObj.optString("booking_id");
+                String contact_id = jObj.optString("contact_id");
+                String booking_no = jObj.optString("booking_no");
                 String booking_date = jObj.getString("booking_date");
                 String booking_time = jObj.getString("booking_time");
-                String patient_name = jObj.getString("patient_name");
+                String patient_name = jObj.optString("contact_name");
                 String doctor_name = jObj.getString("doctor_name");
 
-                sb.append("Berikut data informasi untuk Appointment kamu.\n");
-                sb.append("Booking Id :" + booking_id + "\n");
-                sb.append("Contact Id :" + contact_id + "\n");
-                sb.append("Booking No :" + booking_no + "\n");
-                sb.append("Booking Date :" + booking_date + "\n");
-                sb.append("Booking Time :" + booking_time + "\n");
-                sb.append("Patient Name :" + patient_name + "\n");
+                String dialog1 = "Terima kasih. Appointment kamu berhasil {bot_name} buat. Berikut data informasi untuk Appointment kamu.";
+                sb.append("Booking Id :" + booking_id);
+                sb.append("Contact Id :" + contact_id);
+                sb.append("Booking No :" + booking_no);
+                sb.append("Booking Date :" + booking_date);
+                sb.append("Booking Time :" + booking_time);
+                sb.append("Patient Name :" + patient_name);
                 sb.append("Doctor Name :" + doctor_name);
-                output.put(OUTPUT, sb.toString());
+                output.put(OUTPUT, dialog1 + ParamSdk.SPLIT_CHAT + sb.toString());
             } else {
-
+                String dialog1 = "Mohon maaf {bot_name} belum bisa membuatkan Appointment kamu.";
+                output.put(OUTPUT, dialog1);
             }
         } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
 
         extensionResult.setAgent(false);
@@ -1453,103 +1543,103 @@ public class ServiceImp implements IService {
 
     @Override
     public ExtensionResult doPostCreateAppointment(ExtensionRequest extensionRequest) {
-        Map<String, String> output = new HashMap<>();
-        StringBuilder sb = new StringBuilder();
-        CreateAppointment createAppointment = new CreateAppointment();
+//        Map<String, String> output = new HashMap<>();
+//        StringBuilder sb = new StringBuilder();
+//        CreateAppointment createAppointment = new CreateAppointment();
         ExtensionResult extensionResult = new ExtensionResult();
-
-        String tanggallahir = getEasyMapValueByName(extensionRequest, "tanggallahir");
-        String tanggalPesan = getEasyMapValueByName(extensionRequest, "tanggalpesan");
-        String jamPraktek = getEasyMapValueByName(extensionRequest, "jampraktek");
-        String namaPasien = getEasyMapValueByName(extensionRequest, "namapasien");
-        String noTelp = getEasyMapValueByName(extensionRequest, "notelp");
-        String dokterid = getEasyMapValueByName(extensionRequest, "dokterid");
-        String contactId = getEasyMapValueByName(extensionRequest, "contactid");
-
-        String getDoctorByDoctorId = appProperties.getApiDoctorbydoctorid() + dokterid;
-        JSONArray results3 = GeneralExecuteAPI(getDoctorByDoctorId).getJSONArray("data");
-        JSONObject jObj3 = results3.getJSONObject(0);
-        String hospital = jObj3.getString("hospital_id");
-
-        String getScheduleId = appProperties.getApiDoctorappointment() + hospital + "/doctorId/" + dokterid + "/date/" + tanggalPesan;
-        JSONArray results = GeneralExecuteAPI(getScheduleId).getJSONArray("data");
-        int leng = results.length();
-        String idschedule = "";
-        for (int i = 0; i < leng; i++) {
-            JSONObject jObj = results.getJSONObject(i);
-            String fromtime = jObj.getString("from_time");
-            String scheduleid = jObj.getString("schedule_id");
-            if (jamPraktek.equals(fromtime)) {
-                idschedule = scheduleid;
-                break;
-            }
-        }
-        String contact = "";
-        String name = "";
-        String dob = "";
-        String nophone = "";
-        if (!contactId.contains("no")) {
-            contact = contactId;
-            name = namaPasien;
-            dob = tanggallahir;
-            nophone = noTelp;
-        }
-        createAppointment.setBooking_id(null);
-        createAppointment.setBooking_type_id(appProperties.getBookingTypeId());
-        createAppointment.setBooking_no(null);
-        createAppointment.setBooking_date(tanggalPesan);
-        createAppointment.setBooking_time(jamPraktek);
-        createAppointment.setNote("");
-        createAppointment.setSchedule_id(idschedule);
-        createAppointment.setHospital_id(hospital);
-        createAppointment.setDoctor_id(dokterid);
-        createAppointment.setUser_id(appProperties.getUserId());
-        createAppointment.setIs_waiting_list(false);
-        createAppointment.setContact_id(contact);
-        createAppointment.setName(name);
-        createAppointment.setDate_of_birth(dob);
-        createAppointment.setPhone_number(nophone);
-        createAppointment.setAddress_line_1("");
-        createAppointment.setAddress_line_2("");
-        createAppointment.setEmail(null);
-
-        String pasien = createAppointment.build();
-        try {
-            OkHttpUtil okHttpUtil = new OkHttpUtil();
-            okHttpUtil.init(true);
-
-            String url = appProperties.getCreateAppointment();
-            RequestBody body = RequestBody.create(JSON, pasien);
-            Request request = new Request.Builder().url(url).post(body).addHeader("Content-Type", "application/json").build();
-            Response response = okHttpUtil.getClient().newCall(request).execute();
-            JSONObject jsonobj = new JSONObject(response.body().string());
-            if (jsonobj.getInt("code") == 200) {
-                JSONArray results2 = jsonobj.getJSONArray("data");
-                JSONObject jObj = results2.getJSONObject(0);
-                String bookingid = jObj.getString("booking_id");
-                String contactid = jObj.getString("contact_id");
-                String bookingno = jObj.getString("booking_no");
-                String bookingdate = jObj.getString("booking_date");
-                String bookingtime = jObj.getString("booking_time");
-                String patientname = jObj.getString("patient_name");
-                String doctorname = jObj.getString("doctor_name");
-
-                sb.append("Berikut data informasi untuk Appointment kamu.\n").append("Booking Id :" + bookingid + "\n")
-                        .append("Contact Id :" + contactid + "\n").append("Booking No :" + bookingno + "\n")
-                        .append("Booking Date :" + bookingdate + "\n")
-                        .append("Booking Time :" + bookingtime + "\n")
-                        .append("Patient Name :" + patientname + "\n")
-                        .append("Doctor Name :" + doctorname);
-            }
-        } catch (Exception e) {
-        }
-        output.put(OUTPUT, sb.toString());
-        extensionResult.setAgent(false);
-        extensionResult.setRepeat(false);
-        extensionResult.setSuccess(true);
-        extensionResult.setNext(true);
-        extensionResult.setValue(output);
-
+//
+//        String tanggallahir = getEasyMapValueByName(extensionRequest, "tanggallahir");
+//        String tanggalPesan = getEasyMapValueByName(extensionRequest, "tanggalpesan");
+//        String jamPraktek = getEasyMapValueByName(extensionRequest, "jampraktek");
+//        String namaPasien = getEasyMapValueByName(extensionRequest, "namapasien");
+//        String noTelp = getEasyMapValueByName(extensionRequest, "notelp");
+//        String dokterid = getEasyMapValueByName(extensionRequest, "dokterid");
+//        String contactId = getEasyMapValueByName(extensionRequest, "contactid");
+//
+//        String getDoctorByDoctorId = appProperties.getApiDoctorbydoctorid() + dokterid;
+//        JSONArray results3 = GeneralExecuteAPI(getDoctorByDoctorId).getJSONArray("data");
+//        JSONObject jObj3 = results3.getJSONObject(0);
+//        String hospital = jObj3.getString("hospital_id");
+//
+//        String getScheduleId = appProperties.getApiDoctorappointment() + hospital + "/doctorId/" + dokterid + "/date/" + tanggalPesan;
+//        JSONArray results = GeneralExecuteAPI(getScheduleId).getJSONArray("data");
+//        int leng = results.length();
+//        String idschedule = "";
+//        for (int i = 0; i < leng; i++) {
+//            JSONObject jObj = results.getJSONObject(i);
+//            String fromtime = jObj.getString("from_time");
+//            String scheduleid = jObj.getString("schedule_id");
+//            if (jamPraktek.equals(fromtime)) {
+//                idschedule = scheduleid;
+//                break;
+//            }
+//        }
+//        String contact = "";
+//        String name = "";
+//        String dob = "";
+//        String nophone = "";
+//        if (!contactId.contains("no")) {
+//            contact = contactId;
+//            name = namaPasien;
+//            dob = tanggallahir;
+//            nophone = noTelp;
+//        }
+//        createAppointment.setBooking_id(null);
+//        createAppointment.setBooking_type_id(appProperties.getBookingTypeId());
+//        createAppointment.setBooking_no(null);
+//        createAppointment.setBooking_date(tanggalPesan);
+//        createAppointment.setBooking_time(jamPraktek);
+//        createAppointment.setNote("");
+//        createAppointment.setSchedule_id(idschedule);
+//        createAppointment.setHospital_id(hospital);
+//        createAppointment.setDoctor_id(dokterid);
+//        createAppointment.setUser_id(appProperties.getUserId());
+//        createAppointment.setIs_waiting_list(false);
+//        createAppointment.setContact_id(contact);
+//        createAppointment.setName(name);
+//        createAppointment.setDate_of_birth(dob);
+//        createAppointment.setPhone_number(nophone);
+//        createAppointment.setAddress_line_1("");
+//        createAppointment.setAddress_line_2("");
+//        createAppointment.setEmail(null);
+//
+//        String pasien = createAppointment.build();
+//        try {
+//            OkHttpUtil okHttpUtil = new OkHttpUtil();
+//            okHttpUtil.init(true);
+//
+//            String url = appProperties.getCreateAppointment();
+//            RequestBody body = RequestBody.create(JSON, pasien);
+//            Request request = new Request.Builder().url(url).post(body).addHeader("Content-Type", "application/json").build();
+//            Response response = okHttpUtil.getClient().newCall(request).execute();
+//            JSONObject jsonobj = new JSONObject(response.body().string());
+//            if (jsonobj.getInt("code") == 200) {
+//                JSONArray results2 = jsonobj.getJSONArray("data");
+//                JSONObject jObj = results2.getJSONObject(0);
+//                String bookingid = jObj.getString("booking_id");
+//                String contactid = jObj.getString("contact_id");
+//                String bookingno = jObj.getString("booking_no");
+//                String bookingdate = jObj.getString("booking_date");
+//                String bookingtime = jObj.getString("booking_time");
+//                String patientname = jObj.getString("patient_name");
+//                String doctorname = jObj.getString("doctor_name");
+//
+//                sb.append("Berikut data informasi untuk Appointment kamu.\n").append("Booking Id :" + bookingid + "\n")
+//                        .append("Contact Id :" + contactid + "\n").append("Booking No :" + bookingno + "\n")
+//                        .append("Booking Date :" + bookingdate + "\n")
+//                        .append("Booking Time :" + bookingtime + "\n")
+//                        .append("Patient Name :" + patientname + "\n")
+//                        .append("Doctor Name :" + doctorname);
+//            }
+//        } catch (Exception e) {
+//        }
+//        output.put(OUTPUT, sb.toString());
+//        extensionResult.setAgent(false);
+//        extensionResult.setRepeat(false);
+//        extensionResult.setSuccess(true);
+//        extensionResult.setNext(true);
+//        extensionResult.setValue(output);
+//
         return extensionResult;
     }
 
@@ -1581,7 +1671,7 @@ public class ServiceImp implements IService {
                 //Buat Button
                 ButtonTemplate button = new ButtonTemplate();
                 button.setTitle(doctorName);
-                button.setSubTitle(doctorSpecialist + "<br>" + doctorHospitals);
+                button.setSubTitle(doctorSpecialist + " " + doctorHospitals);
                 List<EasyMap> actions = new ArrayList<>();
 
                 EasyMap LihatJadwal = new EasyMap();
@@ -1731,15 +1821,28 @@ public class ServiceImp implements IService {
             Request request = new Request.Builder().url(appProperties.getApiSpecialistbyname() + namaspesialis).get().build();
             Response response = okHttpUtil.getClient().newCall(request).execute();
             JSONObject jsonobj = new JSONObject(response.body().string());
-            JSONArray data = jsonobj.getJSONArray("data");
-            int leng;
-            leng = leng(code, data);
-            sb = carospec(sb, leng, data);
+            if (jsonobj.getInt("code") == 200) {
+                JSONArray data = jsonobj.getJSONArray("data");
+                int leng;
+                leng = data.length();
+                sb = carospec(sb, leng, data);
+                String truecase = "Berikut Spesialis yang {bot_name} dapat temukan. Silahkan pilih Spesialis yang ingin kamu kunjungi.";
+                output.put(OUTPUT, truecase + ParamSdk.SPLIT_CHAT + sb.toString());
+            } else {
+                request = new Request.Builder().url(appProperties.getApiSpecialist()).get().build();
+                response = okHttpUtil.getClient().newCall(request).execute();
+                jsonobj = new JSONObject(response.body().string());
+                JSONArray data = jsonobj.getJSONArray("data");
+                int leng;
+                leng = leng(code, data);
+                sb = carospec(sb, leng, data);
+                String falsecase1 = "Maaf {bot_name} tidak dapat menemukan yang kamu cari.";
+                String falsecase2 = "Silahkan pilih Spesialis yang ingin kamu tuju.";
+                output.put(OUTPUT, falsecase1 + ParamSdk.SPLIT_CHAT + falsecase2 + ParamSdk.SPLIT_CHAT + sb.toString());
+            }
         } catch (IOException | JSONException e) {
-
         }
 
-        output.put(OUTPUT, sb.toString());
         extensionResult.setAgent(false);
         extensionResult.setRepeat(false);
         extensionResult.setSuccess(true);
@@ -1774,18 +1877,22 @@ public class ServiceImp implements IService {
     }
 
     private StringBuilder carospec(StringBuilder sb, int leng, JSONArray data) {
-        for (int i = leng - 9; i < leng; i++) {
+        int minus = 9;
+        if (leng < 9) {
+            minus = leng;
+        }
+        for (int i = leng - minus; i < leng; i++) {
             JSONObject jObj = data.getJSONObject(i);
             String id_spesialis = jObj.getString("specialization_id");
             String name = jObj.getString("name_id");
             //Buat Button 
             ButtonTemplate button = new ButtonTemplate();
             button.setTitle(name);
-            button.setSubTitle("");
+            button.setSubTitle(name);
             List<EasyMap> actions = new ArrayList<>();
             EasyMap bookAction = new EasyMap();
             bookAction.setName("Pilih");
-            bookAction.setValue("" + id_spesialis);
+            bookAction.setValue("spesialisid " + id_spesialis);
             actions.add(bookAction);
             button.setButtonValues(actions);
             ButtonBuilder buttonBuilder = new ButtonBuilder(button);
@@ -1793,19 +1900,22 @@ public class ServiceImp implements IService {
             String btnBuilder = buttonBuilder.build().toString();
             sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
         }
-        ButtonTemplate button = new ButtonTemplate();
-        button.setTitle("lainnya");
-        button.setSubTitle("");
-        List<EasyMap> actions = new ArrayList<>();
-        EasyMap bookAction = new EasyMap();
-        bookAction.setName("Pilih");
-        bookAction.setValue("lainnya");
-        actions.add(bookAction);
-        button.setButtonValues(actions);
-        ButtonBuilder buttonBuilder = new ButtonBuilder(button);
+        int minus2 = 9;
+        if (leng == minus2 || leng > minus2) {
+            ButtonTemplate button = new ButtonTemplate();
+            button.setTitle("lainnya");
+            button.setSubTitle("");
+            List<EasyMap> actions = new ArrayList<>();
+            EasyMap bookAction = new EasyMap();
+            bookAction.setName("Pilih");
+            bookAction.setValue("lainnya");
+            actions.add(bookAction);
+            button.setButtonValues(actions);
+            ButtonBuilder buttonBuilder = new ButtonBuilder(button);
 
-        String btnBuilder = buttonBuilder.build().toString();
-        sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
+            String btnBuilder = buttonBuilder.build().toString();
+            sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
+        }
 
         return sb;
     }
@@ -1891,7 +2001,7 @@ public class ServiceImp implements IService {
             //Buat Button
             ButtonTemplate button = new ButtonTemplate();
             button.setTitle(doctorName);
-            button.setSubTitle(doctorSpecialist + "\n" + doctorHospitals);
+            button.setSubTitle(doctorSpecialist);
             List<EasyMap> actions = new ArrayList<>();
 
             EasyMap LihatJadwal = new EasyMap();
@@ -1916,77 +2026,6 @@ public class ServiceImp implements IService {
     }
     //-------------------------------------------------------------------//
 
-    // Method Get List Specialist //
-    @Override
-    public ExtensionResult doGetSpecialistList1(ExtensionRequest extensionRequest) {
-        Map<String, String> output = new HashMap<>();
-        ExtensionResult extensionResult = new ExtensionResult();
-        StringBuilder sb = new StringBuilder();
-
-        String specialist = getEasyMapValueByName(extensionRequest, "specialist");
-
-        if (specialist.contains("Lainnya")) {
-            String getSpecialistPage1 = appProperties.getApiSpecialistbyname();
-            JSONArray results = GeneralExecuteAPI(getSpecialistPage1).getJSONArray("data");
-            int leng = 18;
-            for (int i = 9; i < leng; i++) {
-                JSONObject jObj = results.getJSONObject(i);
-                String specialistId = jObj.getString("specialization_id");
-                String specialistName = jObj.getString("name_id");
-
-                //Buat Button
-                ButtonTemplate button = new ButtonTemplate();
-                button.setTitle(specialistName);
-                List<EasyMap> actions = new ArrayList<>();
-                EasyMap bookAction = new EasyMap();
-                bookAction.setName(specialistName);
-                bookAction.setValue(specialistId);
-                actions.add(bookAction);
-                button.setButtonValues(actions);
-                ButtonBuilder buttonBuilder = new ButtonBuilder(button);
-
-                String btnBuilder = buttonBuilder.build().toString();
-                sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
-            }
-            ButtonTemplate button = new ButtonTemplate();
-            button.setTitle("Lainnya");
-            List<EasyMap> actions = new ArrayList<>();
-
-            EasyMap bookAction = new EasyMap();
-            bookAction.setName("Lainnya");
-            bookAction.setValue("Lainnya");
-            actions.add(bookAction);
-
-            button.setButtonValues(actions);
-            ButtonBuilder buttonBuilder = new ButtonBuilder(button);
-
-            String btnBuilder = buttonBuilder.build().toString();
-            sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
-
-            output.put(OUTPUT, sb.toString());
-            extensionResult.setAgent(false);
-            extensionResult.setRepeat(false);
-            extensionResult.setSuccess(true);
-            extensionResult.setNext(true);
-            extensionResult.setValue(output);
-        } else {
-            extensionResult.setAgent(false);
-            extensionResult.setRepeat(false);
-            extensionResult.setSuccess(true);
-            extensionResult.setNext(true);
-
-            Map<String, String> clearEntities = new HashMap<>();
-            clearEntities.put("specialist2", "Lainnya");
-            clearEntities.put("specialist3", "Lainnya");
-            clearEntities.put("specialist4", "Lainnya");
-
-            extensionResult.setEntities(clearEntities);
-        }
-
-        return extensionResult;
-    }
-
-    //-------------------------------------------------------------------//
     @Override
     public ExtensionResult doValidatePhone(ExtensionRequest extensionRequest) {
         ExtensionResult extensionResult = new ExtensionResult();
@@ -2037,68 +2076,76 @@ public class ServiceImp implements IService {
         Map<String, String> clearEntities = new HashMap<>();
         MonthBuilder monthBuilder = new MonthBuilder();
         String result = "";
-        sdate = sdate.replaceAll("/", "-");
-        sdate = sdate.replaceAll(" ", "-");
-        String[] arrDate = sdate.split("-");
+        String[] arrDate = sdate.split(" ");
         boolean isNumeric;
+        boolean isAllowed = true;
 
-        // mengubah nama bulan ke dalam angka
-        for (int i = 0; i < arrDate.length; i++) {
-            isNumeric = arrDate[i].chars().allMatch(Character::isDigit);
-            if (isNumeric == false) {
-                arrDate[i] = monthBuilder.toMonthNumber(arrDate[i]);
-            }
-        }
-
-        String[] temp = new String[3];
-        int dex = 1;
-        int obj;
         try {
+            // mengubah nama bulan ke dalam angka
             for (int i = 0; i < arrDate.length; i++) {
-                obj = Integer.parseInt(arrDate[i]);
-
-                // memposisikan tahun di index ke 0
-                if (arrDate[i].length() == 4) {
-                    temp[0] = arrDate[i];
-                } // mengubah date 1 angka jadi 2 angka
-                else if (arrDate[i].length() < 2) {
-                    temp[dex] = "0" + arrDate[i];
-                    dex++;
-                } // memposisikan tanggal dan bulan di index selain 0
-                else {
-                    // cek hari
-                    if (obj > 12) {
-                        temp[2] = arrDate[i];
-                    } else {
-                        temp[dex] = arrDate[i];
-                        dex++;
-                    }
+                isNumeric = arrDate[i].chars().allMatch(Character::isDigit);
+                if (isNumeric == false) {
+                    arrDate[i] = monthBuilder.toMonthNumber(arrDate[i]);
                 }
             }
 
-            // membuat format tanggal yyyy-mm-dd
-            for (int i = 0; i < temp.length; i++) {
-                result += temp[i];
-                if (i < temp.length - 1) {
-                    result += "-";
+            int year = Integer.parseInt(arrDate[2]);
+            int month = Integer.parseInt(arrDate[1]);
+            int day = Integer.parseInt(arrDate[0]);
+
+            String sDate1 = day + "/" + month + "/" + year;
+            String sDate2 = "";
+            if (month < 12) {
+                month++;
+                sDate2 = "01/" + month + "/" + year;
+            } else {
+                year++;
+                sDate2 = "01/01/" + year;
+            }
+
+            //get last date of the month
+            Date date1 = new SimpleDateFormat("dd/MM/yyyy").parse(sDate2);
+            Calendar c = Calendar.getInstance();
+            c.setTime(date1);
+            c.add(Calendar.DATE, -1);
+            Date res = c.getTime();
+            int day2 = res.getDate();
+
+            //cek last date dgn tanggal yg diinputkan
+            if (day > day2) {
+                isAllowed = false;
+            } //checking future date or no
+            else {
+                date1 = new SimpleDateFormat("dd/MM/yyyy").parse(sDate1);
+                c.setTime(date1);
+                Date date2 = new Date();
+                if (date1.compareTo(date2) > 0) {
+                    isAllowed = false;
                 }
             }
-            clearEntities.put("tanggallahir", result);
-            extensionResult.setEntities(clearEntities);
+
+            if (sdate.contains("-") || sdate.contains(".") || arrDate[2].length() != 4
+                    || arrDate[0].length() != 2 || arrDate[1].length() != 2) {
+                isAllowed = false;
+            }
+
+            if (isAllowed) {
+                result = arrDate[2] + "-" + arrDate[1] + "-" + arrDate[0];
+                clearEntities.put("tanggallahir", result);
+
+            } else {
+                clearEntities.put("tanggallahir", "");
+            }
         } catch (Exception e) {
-            clearEntities = new HashMap<>();
             clearEntities.put("tanggallahir", "");
-            extensionResult.setEntities(clearEntities);
         }
-
         extensionResult.setAgent(false);
         extensionResult.setRepeat(false);
         extensionResult.setSuccess(true);
         extensionResult.setNext(true);
         Map<String, String> output = new HashMap<>();
-
+        extensionResult.setEntities(clearEntities);
         output.put(OUTPUT, result);
-        extensionResult.setValue(output);
         return extensionResult;
     }
 

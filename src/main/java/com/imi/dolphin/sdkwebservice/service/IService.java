@@ -73,8 +73,6 @@ public interface IService {
 
     ExtensionResult SetKonfirmasiSpesialis(ExtensionRequest extensionRequest);
 
-    ExtensionResult doGetSpecialistList1(ExtensionRequest extensionRequest);
-
     //
     ExtensionResult doPostCreatePatient(ExtensionRequest extensionRequest);
 

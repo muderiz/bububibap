@@ -5,12 +5,14 @@
  */
 package com.imi.dolphin.sdkwebservice.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import java.util.Map;
 
 /**
  *
  * @author Deka
  */
+@JsonInclude(JsonInclude.Include.ALWAYS)
 public class CreateAppointment {
 
     private String booking_id;
@@ -31,180 +33,237 @@ public class CreateAppointment {
     private String address_line_1;
     private String address_line_2;
     private String email;
-    private String sexid;
-    private String sexname;
-    private String cityid;
-    private String cityname;
-    private String districtid;
-    private String districtname;
-    private String subdistrictid;
-    private String subdistrictname;
-    private String nationalityid;
-    private String nationalityname;
-    private String emergencycontactname;
-    private String emergencycontactnumber;
 
-    private static final String PEMBUKA = "{";
-    private static final String PENUTUP = "}";
-    private static final String BATAS = "\"";
-    private static final String KOMA = "\",";
+    private Map<String, String> sex;
+    private Map<String, String> city;
+    private Map<String, String> district;
+    private Map<String, String> subdistrict;
+    private Map<String, String> nationality;
+    private Map<String, String> emergency_contact_detail;
+//    private static final String PEMBUKA = "{";
+//    private static final String PENUTUP = "}";
+//    private static final String BATAS = "\"";
+//    private static final String KOMA = "\",";
+//    public String build() {
+//        String result = PEMBUKA
+//                + "\"booking_id\":" + null + ","
+//                + "\"booking_type_id\":" + BATAS + booking_type_id + KOMA
+//                + "\"booking_no\":" + null + ","
+//                + "\"booking_date\":" + BATAS + booking_date + KOMA
+//                + "\"booking_time\":" + BATAS + booking_time + KOMA
+//                + "\"note\":" + BATAS + note + KOMA
+//                + "\"schedule_id\":" + BATAS + schedule_id + KOMA
+//                + "\"hospital_id\":" + BATAS + hospital_id + KOMA
+//                + "\"doctor_id\":" + BATAS + doctor_id + KOMA
+//                + "\"user_id\":" + BATAS + user_id + KOMA
+//                + "\"is_waiting_list\":" + BATAS + is_waiting_list + KOMA
+//                + "\"contact_id\":" + contact_id + ","
+//                + "\"name\":" + BATAS + name + KOMA
+//                + "\"date_of_birth\":" + BATAS + date_of_birth + KOMA
+//                + "\"phone_number\":" + BATAS + phone_number + KOMA
+//                + "\"address_line_1\":" + BATAS + address_line_1 + KOMA
+//                + "\"address_line_2\":" + BATAS + address_line_2 + KOMA
+//                + "\"email\":" + BATAS + email + KOMA
+//                + "\"sex\":" + PEMBUKA + "\"id\":" + "1" + "," + "\"name\":" + BATAS + sexname + BATAS + PENUTUP + ","
+//                + "\"city\":" + PEMBUKA + "\"id\":" + "1" + "," + "\"name\":" + BATAS + cityname + BATAS + PENUTUP + ","
+//                + "\"district\":" + PEMBUKA + "\"id\":" + "1" + "," + "\"name\":" + BATAS + districtname + BATAS + PENUTUP + ","
+//                + "\"subdistrict\":" + PEMBUKA + "\"id\":" + "1" + "," + "\"name\":" + BATAS + subdistrictid + BATAS + PENUTUP + ","
+//                + "\"nationality\":" + PEMBUKA + "\"id\":" + "1" + "," + "\"name\":" + BATAS + nationalityname + BATAS + PENUTUP + ","
+//                + "\"emergency_contact_detail\":" + PEMBUKA + "\"contact_name\":" + "\"\"" + "," + "\"contact_phone_number\":" + BATAS + emergencycontactnumber + BATAS + PENUTUP
+//                + PENUTUP;
+//        return result;
+//    }
 
-    public String build() {
-        String result = PEMBUKA
-                + "\"booking_id\":" + null + ","
-                + "\"booking_type_id\":" + BATAS + booking_type_id + KOMA
-                + "\"booking_no\":" + null + ","
-                + "\"booking_date\":" + BATAS + booking_date + KOMA
-                + "\"booking_time\":" + BATAS + booking_time + KOMA
-                + "\"note\":" + BATAS + note + KOMA
-                + "\"schedule_id\":" + BATAS + schedule_id + KOMA
-                + "\"hospital_id\":" + BATAS + hospital_id + KOMA
-                + "\"doctor_id\":" + BATAS + doctor_id + KOMA
-                + "\"user_id\":" + BATAS + user_id + KOMA
-                + "\"is_waiting_list\":" + BATAS + is_waiting_list + KOMA
-                + "\"contact_id\":" + contact_id + ","
-                + "\"name\":" + BATAS + name + KOMA
-                + "\"date_of_birth\":" + BATAS + date_of_birth + KOMA
-                + "\"phone_number\":" + BATAS + phone_number + KOMA
-                + "\"address_line_1\":" + BATAS + address_line_1 + KOMA
-                + "\"address_line_2\":" + BATAS + address_line_2 + KOMA
-                + "\"email\":" + BATAS + email + KOMA
-                + "\"sex\":" + PEMBUKA + "\"id\":" + "1" + "," + "\"name\":" + BATAS + sexname + BATAS + PENUTUP + ","
-                + "\"city\":" + PEMBUKA + "\"id\":" + "1" + "," + "\"name\":" + BATAS + cityname + BATAS + PENUTUP + ","
-                + "\"district\":" + PEMBUKA + "\"id\":" + "1" + "," + "\"name\":" + BATAS + districtname + BATAS + PENUTUP + ","
-                + "\"subdistrict\":" + PEMBUKA + "\"id\":" + "1" + "," + "\"name\":" + BATAS + subdistrictid + BATAS + PENUTUP + ","
-                + "\"nationality\":" + PEMBUKA + "\"id\":" + "1" + "," + "\"name\":" + BATAS + nationalityname + BATAS + PENUTUP + ","
-                + "\"emergency_contact_detail\":" + PEMBUKA + "\"contact_name\":" + "\"\"" + "," + "\"contact_phone_number\":" + BATAS + emergencycontactnumber + BATAS + PENUTUP
-                + PENUTUP;
-        return result;
+    public String getBooking_id() {
+        return booking_id;
     }
 
     public void setBooking_id(String booking_id) {
         this.booking_id = booking_id;
     }
 
+    public String getBooking_type_id() {
+        return booking_type_id;
+    }
+
     public void setBooking_type_id(String booking_type_id) {
         this.booking_type_id = booking_type_id;
+    }
+
+    public String getBooking_no() {
+        return booking_no;
     }
 
     public void setBooking_no(String booking_no) {
         this.booking_no = booking_no;
     }
 
+    public String getBooking_date() {
+        return booking_date;
+    }
+
     public void setBooking_date(String booking_date) {
         this.booking_date = booking_date;
+    }
+
+    public String getBooking_time() {
+        return booking_time;
     }
 
     public void setBooking_time(String booking_time) {
         this.booking_time = booking_time;
     }
 
+    public String getNote() {
+        return note;
+    }
+
     public void setNote(String note) {
         this.note = note;
+    }
+
+    public String getSchedule_id() {
+        return schedule_id;
     }
 
     public void setSchedule_id(String schedule_id) {
         this.schedule_id = schedule_id;
     }
 
+    public String getHospital_id() {
+        return hospital_id;
+    }
+
     public void setHospital_id(String hospital_id) {
         this.hospital_id = hospital_id;
+    }
+
+    public String getDoctor_id() {
+        return doctor_id;
     }
 
     public void setDoctor_id(String doctor_id) {
         this.doctor_id = doctor_id;
     }
 
+    public String getUser_id() {
+        return user_id;
+    }
+
     public void setUser_id(String user_id) {
         this.user_id = user_id;
+    }
+
+    public boolean isIs_waiting_list() {
+        return is_waiting_list;
     }
 
     public void setIs_waiting_list(boolean is_waiting_list) {
         this.is_waiting_list = is_waiting_list;
     }
 
+    public String getContact_id() {
+        return contact_id;
+    }
+
     public void setContact_id(String contact_id) {
         this.contact_id = contact_id;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
+    public String getDate_of_birth() {
+        return date_of_birth;
+    }
+
     public void setDate_of_birth(String date_of_birth) {
         this.date_of_birth = date_of_birth;
+    }
+
+    public String getPhone_number() {
+        return phone_number;
     }
 
     public void setPhone_number(String phone_number) {
         this.phone_number = phone_number;
     }
 
+    public String getAddress_line_1() {
+        return address_line_1;
+    }
+
     public void setAddress_line_1(String address_line_1) {
         this.address_line_1 = address_line_1;
+    }
+
+    public String getAddress_line_2() {
+        return address_line_2;
     }
 
     public void setAddress_line_2(String address_line_2) {
         this.address_line_2 = address_line_2;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
     public void setEmail(String email) {
         this.email = email;
     }
 
-    public void setSexid(String sexid) {
-        this.sexid = sexid;
+    public Map<String, String> getSex() {
+        return sex;
     }
 
-    public void setSexname(String sexname) {
-        this.sexname = sexname;
+    public void setSex(Map<String, String> sex) {
+        this.sex = sex;
     }
 
-    public void setCityid(String cityid) {
-        this.cityid = cityid;
+    public Map<String, String> getCity() {
+        return city;
     }
 
-    public void setCityname(String cityname) {
-        this.cityname = cityname;
+    public void setCity(Map<String, String> city) {
+        this.city = city;
     }
 
-    public void setDistrictid(String districtid) {
-        this.districtid = districtid;
+    public Map<String, String> getDistrict() {
+        return district;
     }
 
-    public void setDistrictname(String districtname) {
-        this.districtname = districtname;
+    public void setDistrict(Map<String, String> district) {
+        this.district = district;
     }
 
-    public void setSubdistrictid(String subdistrictid) {
-        this.subdistrictid = subdistrictid;
+    public Map<String, String> getSubdistrict() {
+        return subdistrict;
     }
 
-    public void setSubdistrictname(String subdistrictname) {
-        this.subdistrictname = subdistrictname;
+    public void setSubdistrict(Map<String, String> subdistrict) {
+        this.subdistrict = subdistrict;
     }
 
-    public void setNationalityid(String nationalityid) {
-        this.nationalityid = nationalityid;
+    public Map<String, String> getNationality() {
+        return nationality;
     }
 
-    public void setNationalityname(String nationalityname) {
-        this.nationalityname = nationalityname;
+    public void setNationality(Map<String, String> nationality) {
+        this.nationality = nationality;
     }
 
-    public String getEmergencycontactname() {
-        return emergencycontactname;
+    public Map<String, String> getEmergency_contact_detail() {
+        return emergency_contact_detail;
     }
 
-    public void setEmergencycontactname(String emergencycontactname) {
-        this.emergencycontactname = emergencycontactname;
-    }
-
-    public String getEmergencycontactnumber() {
-        return emergencycontactnumber;
-    }
-
-    public void setEmergencycontactnumber(String emergencycontactnumber) {
-        this.emergencycontactnumber = emergencycontactnumber;
+    public void setEmergency_contact_detail(Map<String, String> emergency_contact_detail) {
+        this.emergency_contact_detail = emergency_contact_detail;
     }
 
 }
