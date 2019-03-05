@@ -810,7 +810,10 @@ public class ServiceImp implements IService {
             output.put(OUTPUT, sb.toString());
             //-----------------------------------------------------------------------------
             extensionResult.setValue(output);
-        } else if (!"spesialisid".equals(spesialisid)) {
+        } else if (spesialisid.contentEquals("spesialisid")) {
+            clearEntities.put("konfirmasi", "yes");
+            extensionResult.setEntities(clearEntities);
+        } else {
             Map<String, String> output = new HashMap<>();
             StringBuilder sb = new StringBuilder();
             try {
@@ -846,9 +849,6 @@ public class ServiceImp implements IService {
             clearEntities.put("spesialisid", "");
             extensionResult.setEntities(clearEntities);
             extensionResult.setValue(output);
-        } else {
-            clearEntities.put("konfirmasi", "yes");
-            extensionResult.setEntities(clearEntities);
         }
         return extensionResult;
     }
@@ -1047,6 +1047,7 @@ public class ServiceImp implements IService {
 //                    sb.append(ft.format(dnow) + " # ");
                 }
             }
+
             if (dayslist.contains(kodeHari)) {
                 //Buat Button
                 ButtonTemplate button = new ButtonTemplate();
