@@ -810,9 +810,7 @@ public class ServiceImp implements IService {
             output.put(OUTPUT, sb.toString());
             //-----------------------------------------------------------------------------
             extensionResult.setValue(output);
-        } else if (!spesialisid.contains("spesialisid")) {
-            clearEntities.put("spesialisid", "");
-            extensionResult.setEntities(clearEntities);
+        } else if (!"spesialisid".equals(spesialisid)) {
             Map<String, String> output = new HashMap<>();
             StringBuilder sb = new StringBuilder();
             try {
@@ -845,6 +843,8 @@ public class ServiceImp implements IService {
             } catch (Exception e) {
             }
             //-----------------------------------------------------------------------------
+            clearEntities.put("spesialisid", "");
+            extensionResult.setEntities(clearEntities);
             extensionResult.setValue(output);
         } else {
             clearEntities.put("konfirmasi", "yes");
