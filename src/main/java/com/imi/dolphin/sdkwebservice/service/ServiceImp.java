@@ -810,45 +810,46 @@ public class ServiceImp implements IService {
             output.put(OUTPUT, sb.toString());
             //-----------------------------------------------------------------------------
             extensionResult.setValue(output);
-        } else if (spesialisid.contentEquals("spesialisid")) {
+        } //        else if (!spesialisid.equals("spesialisid")) {
+        //            Map<String, String> output = new HashMap<>();
+        //            StringBuilder sb = new StringBuilder();
+        //            try {
+        //                OkHttpUtil okHttpUtil = new OkHttpUtil();
+        //                okHttpUtil.init(true);
+        //                Request request = new Request.Builder().url(appProperties.getApiSpecialistbyname() + spesialisid).get().build();
+        //                Response response = okHttpUtil.getClient().newCall(request).execute();
+        //                JSONObject jsonobj = new JSONObject(response.body().string());
+        //                if (jsonobj.getInt("code") == 200) {
+        //                    JSONArray data = jsonobj.getJSONArray("data");
+        //                    int leng;
+        //                    leng = data.length();
+        //                    sb = carospec(sb, leng, data);
+        //                    String truecase = "Berikut Spesialis yang {bot_name} dapat temukan. Silahkan pilih Spesialis yang ingin kamu kunjungi.";
+        //                    output.put(OUTPUT, truecase + ParamSdk.SPLIT_CHAT + sb.toString());
+        //                } else {
+        //                    String hospitalid = getEasyMapValueByName(extensionRequest, "hospitalid");
+        //                    request = new Request.Builder().url(appProperties.getApiSpecialistbyHospital() + hospitalid).get().build();
+        ////                    request = new Request.Builder().url(appProperties.getApiSpecialist()).get().build();
+        //                    response = okHttpUtil.getClient().newCall(request).execute();
+        //                    jsonobj = new JSONObject(response.body().string());
+        //                    JSONArray data = jsonobj.getJSONArray("data");
+        //                    int leng;
+        //                    leng = leng(code, data);
+        //                    sb = carospec(sb, leng, data);
+        //                    String falsecase1 = "Maaf {bot_name} tidak dapat menemukan yang kamu cari.";
+        //                    String falsecase2 = "Silahkan pilih Spesialis yang ingin kamu tuju.";
+        //                    output.put(OUTPUT, falsecase1 + ParamSdk.SPLIT_CHAT + falsecase2 + ParamSdk.SPLIT_CHAT + sb.toString());
+        //                }
+        //            } catch (Exception e) {
+        //            }
+        //            //-----------------------------------------------------------------------------
+        //            clearEntities.put("spesialisid", "");
+        //            extensionResult.setEntities(clearEntities);
+        //            extensionResult.setValue(output);
+        //        } 
+        else {
             clearEntities.put("konfirmasi", "yes");
             extensionResult.setEntities(clearEntities);
-        } else {
-            Map<String, String> output = new HashMap<>();
-            StringBuilder sb = new StringBuilder();
-            try {
-                OkHttpUtil okHttpUtil = new OkHttpUtil();
-                okHttpUtil.init(true);
-                Request request = new Request.Builder().url(appProperties.getApiSpecialistbyname() + spesialisid).get().build();
-                Response response = okHttpUtil.getClient().newCall(request).execute();
-                JSONObject jsonobj = new JSONObject(response.body().string());
-                if (jsonobj.getInt("code") == 200) {
-                    JSONArray data = jsonobj.getJSONArray("data");
-                    int leng;
-                    leng = data.length();
-                    sb = carospec(sb, leng, data);
-                    String truecase = "Berikut Spesialis yang {bot_name} dapat temukan. Silahkan pilih Spesialis yang ingin kamu kunjungi.";
-                    output.put(OUTPUT, truecase + ParamSdk.SPLIT_CHAT + sb.toString());
-                } else {
-                    String hospitalid = getEasyMapValueByName(extensionRequest, "hospitalid");
-                    request = new Request.Builder().url(appProperties.getApiSpecialistbyHospital() + hospitalid).get().build();
-//                    request = new Request.Builder().url(appProperties.getApiSpecialist()).get().build();
-                    response = okHttpUtil.getClient().newCall(request).execute();
-                    jsonobj = new JSONObject(response.body().string());
-                    JSONArray data = jsonobj.getJSONArray("data");
-                    int leng;
-                    leng = leng(code, data);
-                    sb = carospec(sb, leng, data);
-                    String falsecase1 = "Maaf {bot_name} tidak dapat menemukan yang kamu cari.";
-                    String falsecase2 = "Silahkan pilih Spesialis yang ingin kamu tuju.";
-                    output.put(OUTPUT, falsecase1 + ParamSdk.SPLIT_CHAT + falsecase2 + ParamSdk.SPLIT_CHAT + sb.toString());
-                }
-            } catch (Exception e) {
-            }
-            //-----------------------------------------------------------------------------
-            clearEntities.put("spesialisid", "");
-            extensionResult.setEntities(clearEntities);
-            extensionResult.setValue(output);
         }
         return extensionResult;
     }
