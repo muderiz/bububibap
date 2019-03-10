@@ -60,7 +60,7 @@ public interface IService {
 
     ExtensionResult doGetScheduleByDoctorId(ExtensionRequest extensionRequest);
 
-    ExtensionResult MenuDoctorSchedule(ExtensionRequest extensionRequest);
+    ExtensionResult MenuUtama(ExtensionRequest extensionRequest);
 
     ExtensionResult doGetHospitalTerdekat(ExtensionRequest extensionRequest);
 

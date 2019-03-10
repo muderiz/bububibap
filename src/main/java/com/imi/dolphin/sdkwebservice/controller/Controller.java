@@ -100,10 +100,10 @@ public class Controller {
         return svcService.doTransferToAgent(extensionRequest);
     }
 
-    @RequestMapping("/menudoctorschedule")
+    @RequestMapping("/menuutama")
     @PostMapping
-    public ExtensionResult MenuDoctorSchedule(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.MenuDoctorSchedule(extensionRequest);
+    public ExtensionResult MenuUtama(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.MenuUtama(extensionRequest);
     }
 
     // Get Nearest Hospital //
