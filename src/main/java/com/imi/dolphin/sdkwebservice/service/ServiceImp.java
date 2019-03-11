@@ -497,6 +497,8 @@ public class ServiceImp implements IService {
 
         //Button 2
         ButtonTemplate button2 = new ButtonTemplate();
+        button2.setPictureLink(SAMPLE_IMAGE_PATH);
+        button2.setPicturePath(SAMPLE_IMAGE_PATH);
         button2.setTitle("Reservasi Online");
         button2.setSubTitle("");
         List<EasyMap> actions2 = new ArrayList<>();
@@ -520,6 +522,8 @@ public class ServiceImp implements IService {
 
         //Button 3
         ButtonTemplate button3 = new ButtonTemplate();
+        button3.setPictureLink(SAMPLE_IMAGE_PATH);
+        button3.setPicturePath(SAMPLE_IMAGE_PATH);
         button3.setTitle("Inquiry");
         button3.setSubTitle("");
         List<EasyMap> actions3 = new ArrayList<>();
@@ -543,6 +547,8 @@ public class ServiceImp implements IService {
 
         //Button 4
         ButtonTemplate button4 = new ButtonTemplate();
+        button4.setPictureLink(SAMPLE_IMAGE_PATH);
+        button4.setPicturePath(SAMPLE_IMAGE_PATH);
         button4.setTitle("Medical Check Up");
         button4.setSubTitle("");
         List<EasyMap> actions4 = new ArrayList<>();
@@ -566,6 +572,8 @@ public class ServiceImp implements IService {
 
         //Button 5
         ButtonTemplate button5 = new ButtonTemplate();
+        button5.setPictureLink(SAMPLE_IMAGE_PATH);
+        button5.setPicturePath(SAMPLE_IMAGE_PATH);
         button5.setTitle("Feedback");
         button5.setSubTitle("");
         List<EasyMap> actions5 = new ArrayList<>();
@@ -589,6 +597,7 @@ public class ServiceImp implements IService {
 
         CarouselBuilder carouselBuilder = new CarouselBuilder(buttonBuilder1.build(), buttonBuilder2.build(),
                 buttonBuilder3.build(), buttonBuilder4.build(), buttonBuilder5.build());
+
         output.put(OUTPUT, carouselBuilder.build());
         ExtensionResult extensionResult = new ExtensionResult();
         extensionResult.setAgent(false);
@@ -667,6 +676,7 @@ public class ServiceImp implements IService {
             String hospitalname = jObj.getString("hospital_name");
             longitud = jObj.getBigDecimal("longitude");
             latitud = jObj.getBigDecimal("latitude");
+            String phonenumber = jObj.getString("phoneNumber");
 
             hasil = distanceInKilometers((Double.valueOf(latitude)), (Double.valueOf(longitude)), latitud.doubleValue(), longitud.doubleValue());
             List<String> jarak = new ArrayList<>();
@@ -674,6 +684,7 @@ public class ServiceImp implements IService {
                 jarak.add(hasil + "");
                 jarak.add(hospitalid);
                 jarak.add(hospitalname);
+                jarak.add(phonenumber);
                 data.add(jarak);
             }
         }
@@ -686,8 +697,11 @@ public class ServiceImp implements IService {
         for (int j = 0; j < data.size(); j++) {
             String idhospital = data.get(j).get(1);
             String namehospital = data.get(j).get(2);
+            String phonenum = data.get(j).get(3);
 
             ButtonTemplate button = new ButtonTemplate();
+            button.setPictureLink("");
+            button.setPicturePath("");
             button.setTitle(namehospital);
             button.setSubTitle(namehospital);
             List<EasyMap> actions = new ArrayList<>();
@@ -696,19 +710,19 @@ public class ServiceImp implements IService {
             EasyMap callAction = new EasyMap();
             EasyMap booknow = new EasyMap();
 
-            direction.setName("Direction");
-            direction.setValue(appProperties.getGoogleMapQuery() + namehospital);
-            actions.add(direction);
-            button.setButtonValues(actions);
-
-            callAction.setName("Call Center");
-            callAction.setValue("tel:+62");
-            actions.add(callAction);
-            button.setButtonValues(actions);
-
             booknow.setName("Book Now");
             booknow.setValue("dokter by area di dummy di " + idhospital + " konter 1");
             actions.add(booknow);
+            button.setButtonValues(actions);
+
+            callAction.setName("Call Hospital");
+            callAction.setValue(phonenum);
+            actions.add(callAction);
+            button.setButtonValues(actions);
+
+            direction.setName("Direction");
+            direction.setValue(appProperties.getGoogleMapQuery() + namehospital);
+            actions.add(direction);
             button.setButtonValues(actions);
 
             ButtonBuilder buttonBuilder = new ButtonBuilder(button);
@@ -1591,18 +1605,12 @@ public class ServiceImp implements IService {
             if (jsonobj.getInt("code") == 200) {
                 JSONArray results2 = jsonobj.getJSONArray("data");
                 JSONObject jObj = results2.getJSONObject(0);
-                String booking_id = jObj.optString("booking_id");
-                String contact_id = jObj.optString("contact_id");
-                String booking_no = jObj.optString("booking_no");
                 String booking_date = jObj.getString("booking_date");
                 String booking_time = jObj.getString("booking_time");
                 String patient_name = jObj.optString("contact_name");
                 String doctor_name = jObj.getString("doctor_name");
 
                 String dialog1 = "Terima kasih. Appointment kamu berhasil {bot_name} buat. Berikut data informasi untuk Appointment kamu.";
-                sb.append("Booking Id :" + booking_id);
-                sb.append("Contact Id :" + contact_id);
-                sb.append("Booking No :" + booking_no);
                 sb.append("Booking Date :" + booking_date);
                 sb.append("Booking Time :" + booking_time);
                 sb.append("Patient Name :" + patient_name);
