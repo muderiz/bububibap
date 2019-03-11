@@ -2168,6 +2168,11 @@ public class ServiceImp implements IService {
         boolean isAllowed = true;
 
         try {
+            if (arrDate.length == 1) {
+                sdate = sdate.substring(0, 2) + " " + sdate.substring(2, 4) + " " + sdate.substring(4, 8);
+                arrDate = sdate.split(" ");
+            }
+
             // mengubah nama bulan ke dalam angka
             for (int i = 0; i < arrDate.length; i++) {
                 isNumeric = arrDate[i].chars().allMatch(Character::isDigit);
