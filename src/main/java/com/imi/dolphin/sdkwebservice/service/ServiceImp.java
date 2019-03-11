@@ -875,8 +875,10 @@ public class ServiceImp implements IService {
             }
             String dialog1 = "Silahkan pilih Spesialis yang ingin kamu tuju.";
             output.put(OUTPUT, dialog1 + ParamSdk.SPLIT_CHAT + sb.toString());
+
         } else {
             Map<String, String> clearEntities = new HashMap<>();
+//            clearEntities.put("areaid", hospital + "");
             clearEntities.put("hospitalid", "");
             extensionResult.setEntities(clearEntities);
 
@@ -884,7 +886,7 @@ public class ServiceImp implements IService {
             JSONArray results2 = GeneralExecuteAPI(apiHosArea).getJSONArray("data");
             int leng = results2.length();
             for (int i = 0; i < leng; i++) {
-                JSONObject jObj = results.getJSONObject(i);
+                JSONObject jObj = results2.getJSONObject(i);
                 String hospitalId = jObj.getString("hospital_id");
                 String hospitalName = jObj.getString("hospital_name");
 
@@ -1688,7 +1690,7 @@ public class ServiceImp implements IService {
         extensionResult.setSuccess(true);
         extensionResult.setNext(true);
         extensionResult.setValue(output);
-//
+
 //        Map<String, String> clearEntities = new HashMap<>();
 //        clearEntities.put("contactId", sb.toString());
 //        extensionResult.setEntities(clearEntities);
@@ -1808,7 +1810,6 @@ public class ServiceImp implements IService {
 
         String getDoctorByName = appProperties.getApiDoctorbyname() + namadokter;
         JSONArray results = GeneralExecuteAPI(getDoctorByName).getJSONArray("data");
-
         int leng = results.length();
         if (GeneralExecuteAPI(getDoctorByName).getInt("code") == 200) {
             for (int i = 0; i < leng; i++) {
@@ -1827,7 +1828,7 @@ public class ServiceImp implements IService {
                     //Buat Button
                     ButtonTemplate button = new ButtonTemplate();
                     button.setTitle(doctorName);
-                    button.setSubTitle(doctorSpecialist + " " + doctorHospitals);
+                    button.setSubTitle(doctorSpecialist + ParamSdk.SPLIT_CHAT + doctorHospitals);
                     List<EasyMap> actions = new ArrayList<>();
 
                     EasyMap LihatJadwal = new EasyMap();
@@ -1841,20 +1842,25 @@ public class ServiceImp implements IService {
                     sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
                 }
             }
-        }
+            output.put(OUTPUT, sb.toString());
 
-        output.put(OUTPUT, sb.toString());
+        } else {
+            Map<String, String> clearEntities = new HashMap<>();
+            clearEntities.put("namadokter", "");
+            extensionResult.setEntities(clearEntities);
+        }
+        extensionResult.setValue(output);
         extensionResult.setAgent(false);
         extensionResult.setRepeat(false);
         extensionResult.setSuccess(true);
         extensionResult.setNext(true);
-        extensionResult.setValue(output);
         return extensionResult;
     }
     //-----------------------//
 
     @Override
-    public ExtensionResult doGetScheduleByDoctorId(ExtensionRequest extensionRequest) {
+    public ExtensionResult doGetScheduleByDoctorId(ExtensionRequest extensionRequest
+    ) {
         StringBuilder proctime = new StringBuilder();
         Date dnow = new Date();
         SimpleDateFormat ft = new SimpleDateFormat("hh:mm:ss SSS");
@@ -1966,7 +1972,8 @@ public class ServiceImp implements IService {
 
     // Get Dokter by Spesialis //
     @Override
-    public ExtensionResult SiloamGetSpecialistbyName(ExtensionRequest extensionRequest) {
+    public ExtensionResult SiloamGetSpecialistbyName(ExtensionRequest extensionRequest
+    ) {
         Map<String, String> output = new HashMap<>();
         StringBuilder sb = new StringBuilder();
         ExtensionResult extensionResult = new ExtensionResult();
