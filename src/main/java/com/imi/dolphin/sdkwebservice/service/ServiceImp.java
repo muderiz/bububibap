@@ -639,7 +639,7 @@ public class ServiceImp implements IService {
      * @return
      */
     private JSONObject GeneralExecuteAPI(String link) {
-        OkHttpUtil okHttpUtil = new OkHttpUtil();
+        OkHttpUtil okHttpUtil = new OkHttpUtil();  
         okHttpUtil.init(true);
         JSONObject jsonobj = null;
         try {
