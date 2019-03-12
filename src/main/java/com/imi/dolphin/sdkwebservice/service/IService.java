@@ -56,8 +56,14 @@ public interface IService {
 
     ExtensionResult doGetDoctorSchedule(ExtensionRequest extensionRequest);
 
+    // get Dokter by Nama
+    ExtensionResult tanyaNama(ExtensionRequest extensionRequest);
+
+    ExtensionResult validasiNama(ExtensionRequest extensionRequest);
+
     ExtensionResult doGetDoctorByName(ExtensionRequest extensionRequest);
 
+    //
     ExtensionResult doGetScheduleByDoctorId(ExtensionRequest extensionRequest);
 
     ExtensionResult MenuUtama(ExtensionRequest extensionRequest);
@@ -74,14 +80,14 @@ public interface IService {
     ExtensionResult SetKonfirmasiSpesialis(ExtensionRequest extensionRequest);
 
     //
-    ExtensionResult doPostCreatePatient(ExtensionRequest extensionRequest);
+//    ExtensionResult doPostCreatePatient(ExtensionRequest extensionRequest);
 
     ExtensionResult doPostCreateAppointment(ExtensionRequest extensionRequest);
 
     ExtensionResult KategoriJam(ExtensionRequest extensionRequest);
 
     ExtensionResult doGetJamPraktekDokter(ExtensionRequest extensionRequest);
-    
+
     ExtensionResult doValidatePhone(ExtensionRequest extensionRequest);
 
     ExtensionResult doValidateDate(ExtensionRequest extensionRequest);

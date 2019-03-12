@@ -160,6 +160,17 @@ public class Controller {
     }
 
     // Get Doctor by Name //
+    
+    @RequestMapping("/tanyanama")
+    @PostMapping
+    public ExtensionResult tanyaNama(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.tanyaNama(extensionRequest);
+    }
+    @RequestMapping("/validasinama")
+    @PostMapping
+    public ExtensionResult validasiNama(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.validasiNama(extensionRequest);
+    }
     @RequestMapping("/getdoctor/name")
     @PostMapping
     public ExtensionResult doGetDoctorByName(@RequestBody ExtensionRequest extensionRequest) {
@@ -212,12 +223,6 @@ public class Controller {
     @PostMapping
     public ExtensionResult doGetJamPraktekDokter(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.doGetJamPraktekDokter(extensionRequest);
-    }
-
-    @RequestMapping("/createpatient")
-    @PostMapping
-    public ExtensionResult doPostCreatePatient(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.doPostCreatePatient(extensionRequest);
     }
 
     @RequestMapping("/createappointment")
