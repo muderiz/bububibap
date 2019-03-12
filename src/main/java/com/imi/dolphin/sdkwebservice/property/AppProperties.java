@@ -132,6 +132,9 @@ public class AppProperties {
 
     @Value("${create.appointment}")
     String createAppointment;
+    
+    @Value("${siloam.logo}")
+    String siloamLogo;
 
     public String getTicketNumber() {
         return ticketNumber;
@@ -413,4 +416,13 @@ public class AppProperties {
         this.createAppointment = createAppointment;
     }
 
+    public String getSiloamLogo() {
+        return siloamLogo;
+    }
+
+    public void setSiloamLogo(String siloamLogo) {
+        this.siloamLogo = siloamLogo;
+    }
+
+    
 }

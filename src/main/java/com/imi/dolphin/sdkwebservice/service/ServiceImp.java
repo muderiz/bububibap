@@ -704,7 +704,7 @@ public class ServiceImp implements IService {
             String phonenum = data.get(j).get(3);
 
             ButtonTemplate button = new ButtonTemplate();
-//            button.setPictureLink("");
+            button.setPictureLink(appProperties.getSiloamLogo());
 //            button.setPicturePath("");
             button.setTitle(namehospital);
             button.setSubTitle(namehospital);
