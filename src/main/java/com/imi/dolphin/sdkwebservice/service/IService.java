@@ -94,4 +94,5 @@ public interface IService {
 
     ExtensionResult doClearDate(ExtensionRequest extensionRequest);
 
+    ExtensionResult siloamMenggunakanBPJS(ExtensionRequest extensionRequest);
 }

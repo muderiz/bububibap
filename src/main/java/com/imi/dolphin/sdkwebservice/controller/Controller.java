@@ -249,4 +249,10 @@ public class Controller {
     public ExtensionResult doClearDate(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.doClearDate(extensionRequest);
     }
+    
+    @RequestMapping("/SiloammenggunakanBPJS")
+    @PostMapping
+    public ExtensionResult SiloamMenggunakanBPJS(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.siloamMenggunakanBPJS(extensionRequest);
+    }
 }
