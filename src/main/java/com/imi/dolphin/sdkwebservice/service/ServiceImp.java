@@ -835,7 +835,7 @@ public class ServiceImp implements IService {
         output.put(OUTPUT, sb.toString());
         Map<String, String> clearEntities = new HashMap<>();
 
-        clearEntities.put("counter", "1");
+        clearEntities.put("counter", "0");
         extensionResult.setEntities(clearEntities);
         extensionResult.setAgent(false);
         extensionResult.setRepeat(false);
@@ -849,38 +849,64 @@ public class ServiceImp implements IService {
     public ExtensionResult SiloamGetSpecialistByHospital(ExtensionRequest extensionRequest) {
         Map<String, String> output = new HashMap<>();
         StringBuilder sb = new StringBuilder();
+        StringBuilder btnbuild = new StringBuilder();
         ExtensionResult extensionResult = new ExtensionResult();
+        String area = getEasyMapValueByName(extensionRequest, "areaid");
         String hospital = getEasyMapValueByName(extensionRequest, "hospitalid");
         String counter = getEasyMapValueByName(extensionRequest, "counter");
 
-        String apiHospital = appProperties.getApiHospital();
+        String apiHospital = appProperties.getApiHospitalByArea() + area;
         JSONArray results = GeneralExecuteAPI(apiHospital).getJSONArray("data");
         int lenghospital = results.length();
         String stat = "";
         for (int i = 0; i < lenghospital; i++) {
             JSONObject jObj = results.getJSONObject(i);
             String hospitalId = jObj.getString("hospital_id");
+            String hospitalName = jObj.getString("hospital_name");
+            hospitalName = hospitalName.toLowerCase();
             if (hospital.equalsIgnoreCase(hospitalId)) {
                 stat = "hospital";
                 break;
             }
+            if (hospital.equalsIgnoreCase(hospitalName)) {
+                stat = "hospital";
+                hospital = hospitalId;
+                break;
+            }
         }
+
         if (stat.equalsIgnoreCase("hospital")) {
             int code = Integer.parseInt(counter);
             try {
                 OkHttpUtil okHttpUtil = new OkHttpUtil();
                 okHttpUtil.init(true);
-                Request request = new Request.Builder().url(appProperties.getApiSpecialistbyHospital() + hospital).get().build();
+//                Request request = new Request.Builder().url(appProperties.getApiSpecialistbyHospital() + hospital).get().build();
+                Request request = new Request.Builder().url(appProperties.getApiSpecialistbyHospital() + hospital + "&high10=true").get().build();
                 Response response = okHttpUtil.getClient().newCall(request).execute();
                 JSONObject jsonobj = new JSONObject(response.body().string());
                 JSONArray data = jsonobj.getJSONArray("data");
+                code = code - 1;
                 int leng;
                 leng = leng(code, data);
                 sb = carospec(sb, leng, data);
+
+                ButtonTemplate button = new ButtonTemplate();
+                button.setTitle("lainnya");
+                button.setSubTitle("");
+                List<EasyMap> actions = new ArrayList<>();
+                EasyMap bookAction = new EasyMap();
+                bookAction.setName("Pilih");
+                bookAction.setValue("lainnya");
+                actions.add(bookAction);
+                button.setButtonValues(actions);
+                ButtonBuilder buttonBuilder = new ButtonBuilder(button);
+
+                String btnBuilder = buttonBuilder.build().toString();
+                btnbuild.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
             } catch (Exception e) {
             }
             String dialog1 = "Silahkan pilih atau ketikan nama Spesialis yang ingin kamu tuju.";
-            output.put(OUTPUT, dialog1 + ParamSdk.SPLIT_CHAT + sb.toString());
+            output.put(OUTPUT, dialog1 + ParamSdk.SPLIT_CHAT + sb.toString() + ParamSdk.SPLIT_CHAT + btnbuild.toString());
 
         } else {
             Map<String, String> clearEntities = new HashMap<>();
@@ -1042,7 +1068,7 @@ public class ServiceImp implements IService {
             //Buat Button
             ButtonTemplate button = new ButtonTemplate();
             button.setTitle(doctorName);
-            button.setSubTitle(doctorSpecialist);
+            button.setSubTitle(doctorSpecialist + "  |  " + doctorHospitals);
             List<EasyMap> actions = new ArrayList<>();
 
             EasyMap LihatJadwal = new EasyMap();
@@ -1087,7 +1113,7 @@ public class ServiceImp implements IService {
             //Buat Button
             ButtonTemplate button = new ButtonTemplate();
             button.setTitle(doctorName);
-            button.setSubTitle(doctorSpecialist + " " + doctorHospitals);
+            button.setSubTitle(doctorSpecialist + "  |  " + doctorHospitals);
             List<EasyMap> actions = new ArrayList<>();
 
             EasyMap LihatJadwal = new EasyMap();
@@ -1794,11 +1820,11 @@ public class ServiceImp implements IService {
                 //Buat Button
                 ButtonTemplate button = new ButtonTemplate();
                 button.setTitle(doctorName);
-                button.setSubTitle(doctorSpecialist + " " + doctorHospitals);
+                button.setSubTitle(doctorSpecialist + "  |  " + doctorHospitals);
                 List<EasyMap> actions = new ArrayList<>();
 
                 EasyMap LihatJadwal = new EasyMap();
-                LihatJadwal.setName("Lihat Jadwal");
+                LihatJadwal.setName("Lihat Jadwal " + doctorName);
                 LihatJadwal.setValue("booking dokter id " + doctorId);
                 actions.add(LihatJadwal);
                 button.setButtonValues(actions);
@@ -1861,8 +1887,9 @@ public class ServiceImp implements IService {
 
                 String[] daypoint = new String[leng];
                 String scheduleTime = appProperties.getApiDoctorappointment() + hospitalId + "/doctorId/" + dokid + "/date/" + date;
-                if (GeneralExecuteAPI(scheduleTime).getInt("code") == 200) {
-                    JSONArray results2 = GeneralExecuteAPI(scheduleTime).getJSONArray("data");
+                JSONObject jobj = GeneralExecuteAPI(scheduleTime);
+                JSONArray results2 = jobj.getJSONArray("data");
+                if (jobj.getInt("code") == 200) {
                     int leng2 = results2.length();
                     for (int j = 0; j < leng2; j++) {
                         JSONObject jObj2 = results2.getJSONObject(j);
@@ -1890,7 +1917,7 @@ public class ServiceImp implements IService {
                             if (daypoint[x] == null) {
                                 daypoint[x] = jadwal;
                             } else {
-                                daypoint[x] = daypoint[x] + "/" + jadwal;
+                                daypoint[x] = daypoint[x] + " | " + jadwal;
                             }
                         }
                     }
@@ -1980,6 +2007,10 @@ public class ServiceImp implements IService {
     public int leng(int code, JSONArray data) {
         int leng;
         switch (code) {
+            // ubah jadi top 10 spesialis
+            case 0:
+                leng = 10;
+                break;
             case 1:
                 leng = 9;
                 break;
@@ -2003,44 +2034,67 @@ public class ServiceImp implements IService {
     }
 
     private StringBuilder carospec(StringBuilder sb, int leng, JSONArray data) {
-        int minus = 9;
-        if (leng < 9) {
-            minus = leng;
-        }
-        for (int i = leng - minus; i < leng; i++) {
-            JSONObject jObj = data.getJSONObject(i);
-            String id_spesialis = jObj.getString("specialization_id");
-            String name = jObj.getString("name_id");
-            //Buat Button 
-            ButtonTemplate button = new ButtonTemplate();
-            button.setTitle(name);
-            button.setSubTitle(name);
-            List<EasyMap> actions = new ArrayList<>();
-            EasyMap bookAction = new EasyMap();
-            bookAction.setName("Pilih");
-            bookAction.setValue("spesialisid " + id_spesialis);
-            actions.add(bookAction);
-            button.setButtonValues(actions);
-            ButtonBuilder buttonBuilder = new ButtonBuilder(button);
+        if (leng == 10) {
+            for (int i = 0; i < leng; i++) {
+                JSONObject jObj = data.getJSONObject(i);
+                String id_spesialis = jObj.getString("specialization_id");
+                String nameEn = jObj.getString("name_en");
+                String name = jObj.getString("name_id");
+                //Buat Button 
+                ButtonTemplate button = new ButtonTemplate();
+                button.setTitle(name);
+                button.setSubTitle(nameEn);
+                List<EasyMap> actions = new ArrayList<>();
+                EasyMap bookAction = new EasyMap();
+                bookAction.setName(name);
+                bookAction.setValue("spesialisid " + id_spesialis);
+                actions.add(bookAction);
+                button.setButtonValues(actions);
+                ButtonBuilder buttonBuilder = new ButtonBuilder(button);
 
-            String btnBuilder = buttonBuilder.build().toString();
-            sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
-        }
-        int minus2 = 9;
-        if (leng == minus2 || leng > minus2) {
-            ButtonTemplate button = new ButtonTemplate();
-            button.setTitle("lainnya");
-            button.setSubTitle("");
-            List<EasyMap> actions = new ArrayList<>();
-            EasyMap bookAction = new EasyMap();
-            bookAction.setName("Pilih");
-            bookAction.setValue("lainnya");
-            actions.add(bookAction);
-            button.setButtonValues(actions);
-            ButtonBuilder buttonBuilder = new ButtonBuilder(button);
+                String btnBuilder = buttonBuilder.build().toString();
+                sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
+            }
+        } else {
+            int minus = 9;
+            if (leng < 9) {
+                minus = leng;
+            }
+            for (int i = leng - minus; i < leng; i++) {
+                JSONObject jObj = data.getJSONObject(i);
+                String id_spesialis = jObj.getString("specialization_id");
+                String name = jObj.getString("name_id");
+                //Buat Button 
+                ButtonTemplate button = new ButtonTemplate();
+                button.setTitle(name);
+                button.setSubTitle(name);
+                List<EasyMap> actions = new ArrayList<>();
+                EasyMap bookAction = new EasyMap();
+                bookAction.setName(name);
+                bookAction.setValue("spesialisid " + id_spesialis);
+                actions.add(bookAction);
+                button.setButtonValues(actions);
+                ButtonBuilder buttonBuilder = new ButtonBuilder(button);
 
-            String btnBuilder = buttonBuilder.build().toString();
-            sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
+                String btnBuilder = buttonBuilder.build().toString();
+                sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
+            }
+            int minus2 = 9;
+            if (leng == minus2 || leng > minus2) {
+                ButtonTemplate button = new ButtonTemplate();
+                button.setTitle("lainnya");
+                button.setSubTitle("");
+                List<EasyMap> actions = new ArrayList<>();
+                EasyMap bookAction = new EasyMap();
+                bookAction.setName("Pilih");
+                bookAction.setValue("lainnya");
+                actions.add(bookAction);
+                button.setButtonValues(actions);
+                ButtonBuilder buttonBuilder = new ButtonBuilder(button);
+
+                String btnBuilder = buttonBuilder.build().toString();
+                sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
+            }
         }
 
         return sb;
@@ -2127,11 +2181,11 @@ public class ServiceImp implements IService {
             //Buat Button
             ButtonTemplate button = new ButtonTemplate();
             button.setTitle(doctorName);
-            button.setSubTitle(doctorSpecialist);
+            button.setSubTitle(doctorSpecialist + "  |  " + doctorHospitals);
             List<EasyMap> actions = new ArrayList<>();
 
             EasyMap LihatJadwal = new EasyMap();
-            LihatJadwal.setName("Lihat Jadwal");
+            LihatJadwal.setName("Lihat Jadwal " + doctorName);
             LihatJadwal.setValue("booking dokter id " + doctorId);
             actions.add(LihatJadwal);
             button.setButtonValues(actions);
