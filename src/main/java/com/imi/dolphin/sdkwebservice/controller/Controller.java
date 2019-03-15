@@ -160,17 +160,18 @@ public class Controller {
     }
 
     // Get Doctor by Name //
-    
     @RequestMapping("/tanyanama")
     @PostMapping
     public ExtensionResult tanyaNama(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.tanyaNama(extensionRequest);
     }
+
     @RequestMapping("/validasinama")
     @PostMapping
     public ExtensionResult validasiNama(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.validasiNama(extensionRequest);
     }
+
     @RequestMapping("/getdoctor/name")
     @PostMapping
     public ExtensionResult doGetDoctorByName(@RequestBody ExtensionRequest extensionRequest) {
@@ -203,6 +204,12 @@ public class Controller {
     @PostMapping
     public ExtensionResult SetKonfirmasiSpesialis(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.SetKonfirmasiSpesialis(extensionRequest);
+    }
+
+    @RequestMapping("/specialisthospitalterdekat")
+    @PostMapping
+    public ExtensionResult SpecialistHospitalTerdekat(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.SpecialistHospitalTerdekat(extensionRequest);
     }
 
     @RequestMapping("/getdoctor/specialist")
@@ -249,7 +256,7 @@ public class Controller {
     public ExtensionResult doClearDate(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.doClearDate(extensionRequest);
     }
-    
+
     @RequestMapping("/SiloammenggunakanBPJS")
     @PostMapping
     public ExtensionResult SiloamMenggunakanBPJS(@RequestBody ExtensionRequest extensionRequest) {
