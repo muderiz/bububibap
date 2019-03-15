@@ -1281,14 +1281,15 @@ public class ServiceImp implements IService {
     @Override
     public ExtensionResult KategoriJam(ExtensionRequest extensionRequest) {
         Map<String, String> output = new HashMap<>();
-        CarouselBuilder cb = CarouselJam();
+//        CarouselBuilder cb = CarouselJam();
         String tanggalpesan = getEasyMapValueByName(extensionRequest, "tanggalpesan");
         String[] jampilihan = tanggalpesan.split("=");
         String jam = jampilihan[0];
         String newjam = jam.replace(" ", ":");
-
+        String cb = CarouselJamDinamic(jam);
         String dialog = "Silahkan pilih waktu kunjungan antara " + newjam + " yang anda kehendaki.";
-        output.put(OUTPUT, dialog + ParamSdk.SPLIT_CHAT + cb.build());
+//        output.put(OUTPUT, dialog + ParamSdk.SPLIT_CHAT + cb.build());
+        output.put(OUTPUT, dialog + ParamSdk.SPLIT_CHAT + cb);
         ExtensionResult extensionResult = new ExtensionResult();
         extensionResult.setAgent(false);
         extensionResult.setRepeat(false);
@@ -1298,7 +1299,46 @@ public class ServiceImp implements IService {
         return extensionResult;
     }
 
-    public CarouselBuilder CarouselJam() {
+    private String CarouselJamDinamic(String jam) {
+		// TODO Auto-generated method stub
+    	String[] jamArray = jam.split("-");
+    	int jamStart = Integer.parseInt(jamArray[0].split(":")[0]);
+    	int jamFinish = Integer.parseInt(jamArray[1].split(":")[0]);
+    	int selisihJam = jamFinish - jamStart;
+    	int jumlahButton = (selisihJam / 3) + (selisihJam % 3);
+    	int jamFlag = jamStart;
+    	int loopBtnAction = 0;
+    	
+    	StringBuilder sb = new StringBuilder();
+    	
+    	for(int x = 0; x <jumlahButton; x++) {
+    		ButtonTemplate button = new ButtonTemplate();
+    		button.setTitle(String.format("%02d:00", jamFlag) + " - " + String.format("%02d:00", jamFlag+3));
+    		button.setSubTitle("");
+    		
+    		
+    		
+    		List<EasyMap> actions = new ArrayList<>();
+    		for(int y = loopBtnAction; y< loopBtnAction+3;y++) {
+    			EasyMap btnAction = new EasyMap();
+    			btnAction.setName(String.format("%02d:00", jamFlag));
+    			btnAction.setValue(String.format("pilih jam %02d:00", jamFlag));
+    			actions.add(btnAction);
+    			jamFlag++;
+    			if(loopBtnAction >=selisihJam) 
+        			break;
+    		}
+    		
+    		button.setButtonValues(actions);
+    		ButtonBuilder buttonBuilder = new ButtonBuilder(button);
+    		sb.append(buttonBuilder.build()).append(CONSTANT_SPLIT_SYNTAX);
+    	}
+    	
+    	
+    	return sb.toString();
+	}
+
+	public CarouselBuilder CarouselJam() {
         //Button 1
         ButtonTemplate button1 = new ButtonTemplate();
         button1.setTitle("08:00 - 10:00");
