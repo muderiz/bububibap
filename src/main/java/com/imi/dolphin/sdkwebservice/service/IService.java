@@ -79,9 +79,9 @@ public interface IService {
 
     ExtensionResult SetKonfirmasiSpesialis(ExtensionRequest extensionRequest);
 
-    //
-//    ExtensionResult doPostCreatePatient(ExtensionRequest extensionRequest);
+    ExtensionResult SpecialistHospitalTerdekat(ExtensionRequest extensionRequest);
 
+    // ExtensionResult doPostCreatePatient(ExtensionRequest extensionRequest);
     ExtensionResult doPostCreateAppointment(ExtensionRequest extensionRequest);
 
     ExtensionResult KategoriJam(ExtensionRequest extensionRequest);
