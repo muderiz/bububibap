@@ -889,24 +889,26 @@ public class ServiceImp implements IService {
                 int leng;
                 leng = leng(code, data);
                 sb = carospec(sb, leng, data);
-
-                ButtonTemplate button = new ButtonTemplate();
-                button.setTitle("lainnya");
-                button.setSubTitle("");
-                List<EasyMap> actions = new ArrayList<>();
-                EasyMap bookAction = new EasyMap();
-                bookAction.setName("Pilih");
-                bookAction.setValue("lainnya");
-                actions.add(bookAction);
-                button.setButtonValues(actions);
-                ButtonBuilder buttonBuilder = new ButtonBuilder(button);
-
-                String btnBuilder = buttonBuilder.build().toString();
-                btnbuild.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
+                
             } catch (Exception e) {
             }
+            ButtonTemplate button = new ButtonTemplate();
+            button.setTitle("lainnya");
+            button.setSubTitle("");
+            List<EasyMap> actions = new ArrayList<>();
+            EasyMap bookAction = new EasyMap();
+            bookAction.setName("Pilih");
+            bookAction.setValue("lainnya");
+            actions.add(bookAction);
+            button.setButtonValues(actions);
+            ButtonBuilder buttonBuilder = new ButtonBuilder(button);
+
+            String btnBuilder = buttonBuilder.build().toString();
+            btnbuild.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
+
             String dialog1 = "Silahkan pilih atau ketikan nama Spesialis yang ingin kamu tuju.";
-            output.put(OUTPUT, dialog1 + ParamSdk.SPLIT_CHAT + sb.toString() + ParamSdk.SPLIT_CHAT + btnbuild.toString());
+            String btn = btnbuild.toString();
+            output.put(OUTPUT, dialog1 + ParamSdk.SPLIT_CHAT + sb.toString() + ParamSdk.SPLIT_CHAT + btn);
 
         } else {
             Map<String, String> clearEntities = new HashMap<>();
@@ -994,7 +996,8 @@ public class ServiceImp implements IService {
                 sb = carospec(sb, leng, data);
             } catch (Exception e) {
             }
-            output.put(OUTPUT, sb.toString());
+            String dialog = "Silahkan pilih Spesialis yang ingin kamu tuju.";
+            output.put(OUTPUT, dialog + ParamSdk.SPLIT_CHAT + sb.toString());
             //-----------------------------------------------------------------------------
             extensionResult.setValue(output);
         } else if (spesial1.equalsIgnoreCase("spesialisid")) {
@@ -1960,8 +1963,7 @@ public class ServiceImp implements IService {
 
     // Get Dokter by Spesialis //
     @Override
-    public ExtensionResult SiloamGetSpecialistbyName(ExtensionRequest extensionRequest
-    ) {
+    public ExtensionResult SiloamGetSpecialistbyName(ExtensionRequest extensionRequest) {
         Map<String, String> output = new HashMap<>();
         StringBuilder sb = new StringBuilder();
         ExtensionResult extensionResult = new ExtensionResult();
