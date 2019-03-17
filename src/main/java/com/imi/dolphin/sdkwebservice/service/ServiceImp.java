@@ -628,6 +628,28 @@ public class ServiceImp implements IService {
         return extensionResult;
     }
 
+    @Override
+    public ExtensionResult doSendLocationSpecialist(ExtensionRequest extensionRequest) {
+        Map<String, String> output = new HashMap<>();
+        String konfirmasi = getEasyMapValueByName(extensionRequest, "konfirmasi");
+        if (konfirmasi.equalsIgnoreCase("yes")) {
+            QuickReplyBuilder quickReplyBuilder = new QuickReplyBuilder.Builder("Silahkan kirim Lokasi kamu sekarang ya.")
+                    .add("Kirim Lokasi", "location").build();
+            output.put(OUTPUT, quickReplyBuilder.string());
+        } else {
+            String dialogfail = "Maaf gagal mengambil lokasi.";
+            output.put(OUTPUT, dialogfail);
+        }
+
+        ExtensionResult extensionResult = new ExtensionResult();
+        extensionResult.setAgent(false);
+        extensionResult.setRepeat(false);
+        extensionResult.setSuccess(true);
+        extensionResult.setNext(true);
+        extensionResult.setValue(output);
+        return extensionResult;
+    }
+
     /**
      * Method ExecuteAPI General
      *

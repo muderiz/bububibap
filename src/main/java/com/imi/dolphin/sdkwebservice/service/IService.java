@@ -42,6 +42,8 @@ public interface IService {
 
     ExtensionResult doSendLocation(ExtensionRequest extensionRequest);
 
+    ExtensionResult doSendLocationSpecialist(ExtensionRequest extensionRequest);
+
     ExtensionResult getSplitConversation(ExtensionRequest extensionRequest);
 
     ExtensionResult doGetAreas(ExtensionRequest extensionRequest);
