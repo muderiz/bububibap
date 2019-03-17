@@ -1914,7 +1914,7 @@ public class ServiceImp implements IService {
             JSONArray results = GeneralExecuteAPI(schedule).getJSONArray("data");
             int leng = results.length();
             List<Integer> dayslist = new ArrayList<>();
-            for (int i = 0; i < 7; i++) {
+            for (int i = 0; i < leng; i++) {
                 String datenow = calendar.getTime().toString();
                 String hari = datenow.substring(0, 3);
                 String tanggal = datenow.substring(8, 10);
@@ -1929,8 +1929,8 @@ public class ServiceImp implements IService {
                 String[] daypoint = new String[leng];
                 String scheduleTime = appProperties.getApiDoctorappointment() + hospitalId + "/doctorId/" + dokid + "/date/" + date;
                 JSONObject jobj = GeneralExecuteAPI(scheduleTime);
-                JSONArray results2 = jobj.getJSONArray("data");
                 if (jobj.getInt("code") == 200) {
+                    JSONArray results2 = jobj.getJSONArray("data");
                     int leng2 = results2.length();
                     for (int j = 0; j < leng2; j++) {
                         JSONObject jObj2 = results2.getJSONObject(j);
@@ -1958,7 +1958,7 @@ public class ServiceImp implements IService {
                             if (daypoint[x] == null) {
                                 daypoint[x] = jadwal;
                             } else {
-                                daypoint[x] = daypoint[x] + " | " + jadwal;
+                                daypoint[x] = daypoint[x] + "&" + jadwal;
                             }
                         }
                     }
@@ -2087,7 +2087,7 @@ public class ServiceImp implements IService {
                 List<EasyMap> actions = new ArrayList<>();
                 EasyMap bookAction = new EasyMap();
                 bookAction.setName(name);
-                bookAction.setValue("spesialisid " + id_spesialis);
+                bookAction.setValue("spesialis id " + id_spesialis);
                 actions.add(bookAction);
                 button.setButtonValues(actions);
                 ButtonBuilder buttonBuilder = new ButtonBuilder(button);
@@ -2282,7 +2282,7 @@ public class ServiceImp implements IService {
 
         Map<String, String> output = new HashMap<>();
         String hospitalId = getEasyMapValueByName(extensionRequest, "hospitalid");
-        String specialistId = getEasyMapValueByName(extensionRequest, "pilihan");
+        String specialistId = getEasyMapValueByName(extensionRequest, "spesialisid");
         String apiGetDokter = appProperties.getApiDoctorbyhospitalIdSpecialist() + hospitalId + "&specialistId=" + specialistId;
 //        String apiGetDokter = appProperties.getDummyDoctor();
         JSONArray results = GeneralExecuteAPI(apiGetDokter).getJSONArray("data");
@@ -2301,7 +2301,7 @@ public class ServiceImp implements IService {
             List<EasyMap> actions = new ArrayList<>();
 
             EasyMap LihatJadwal = new EasyMap();
-            LihatJadwal.setName("Lihat Jadwal " + doctorName);
+            LihatJadwal.setName(doctorName);
             LihatJadwal.setValue("booking dokter id " + doctorId);
             actions.add(LihatJadwal);
             button.setButtonValues(actions);
