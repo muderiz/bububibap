@@ -112,6 +112,7 @@ public class Controller {
     public ExtensionResult doSendLocation(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.doSendLocation(extensionRequest);
     }
+
     @RequestMapping("/sendlocationspecialist")
     @PostMapping
     public ExtensionResult doSendLocationSpecialist(@RequestBody ExtensionRequest extensionRequest) {
