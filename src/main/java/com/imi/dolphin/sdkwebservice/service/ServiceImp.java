@@ -789,32 +789,33 @@ public class ServiceImp implements IService {
             String areaId = jObj.getString("area_id");
             String areaName = jObj.getString("area_name");
             //Buat QuickReplay
-            quickBuilder.append(areaName).append("@===@").append(areaId).append(COMMA);
+//            quickBuilder.append(areaName).append("@===@").append(areaId).append(COMMA);
 
-//            //Buat Button
-//            ButtonTemplate button = new ButtonTemplate();
-//            button.setTitle(areaName);
-//            button.setSubTitle(areaName);
-//            List<EasyMap> actions = new ArrayList<>();
-//            EasyMap bookAction = new EasyMap();
-//            bookAction.setName(areaName);
-//            bookAction.setValue(areaId);
-//
-//            actions.add(bookAction);
-//            button.setButtonValues(actions);
-//            ButtonBuilder buttonBuilder = new ButtonBuilder(button);
-//
-//            String btnBuilder = buttonBuilder.build().toString();
-//            sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
+            //Buat Button
+            ButtonTemplate button = new ButtonTemplate();
+            button.setTitle(areaName);
+            button.setSubTitle(areaName);
+            List<EasyMap> actions = new ArrayList<>();
+            EasyMap bookAction = new EasyMap();
+            bookAction.setName(areaName);
+            bookAction.setValue(areaId);
+
+            actions.add(bookAction);
+            button.setButtonValues(actions);
+            ButtonBuilder buttonBuilder = new ButtonBuilder(button);
+
+            String btnBuilder = buttonBuilder.build().toString();
+            sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
         }
-        sb.append(QUICK_REPLY_SYNTAX);
-        sb.append("Silahkan pilih area yang ingin kamu tuju.").append(COMMA);
-        sb.append(quickBuilder);
-        sb.replace(sb.toString().length() - 1, sb.toString().length(), "");
-        sb.append(QUICK_REPLY_SYNTAX_SUFFIX);
+//        sb.append(QUICK_REPLY_SYNTAX);
+//        sb.append("Silahkan pilih area yang ingin kamu tuju.").append(COMMA);
+//        sb.append(quickBuilder);
+//        sb.replace(sb.toString().length() - 1, sb.toString().length(), "");
+//        sb.append(QUICK_REPLY_SYNTAX_SUFFIX);
 
+        String dialog = "Silahkan pilih area yang ingin kamu tuju.";
         String area = sb.toString();
-        output.put(OUTPUT, area);
+        output.put(OUTPUT, dialog + ParamSdk.SPLIT_CHAT + area);
         extensionResult.setAgent(false);
         extensionResult.setRepeat(false);
         extensionResult.setSuccess(true);
@@ -914,23 +915,9 @@ public class ServiceImp implements IService {
 
             } catch (Exception e) {
             }
-            ButtonTemplate button = new ButtonTemplate();
-            button.setTitle("lainnya");
-            button.setSubTitle("");
-            List<EasyMap> actions = new ArrayList<>();
-            EasyMap bookAction = new EasyMap();
-            bookAction.setName("Pilih");
-            bookAction.setValue("lainnya");
-            actions.add(bookAction);
-            button.setButtonValues(actions);
-            ButtonBuilder buttonBuilder = new ButtonBuilder(button);
-
-            String btnBuilder = buttonBuilder.build().toString();
-            btnbuild.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
 
             String dialog1 = "Silahkan pilih atau ketikan nama Spesialis yang ingin kamu tuju.";
-            String btn = btnbuild.toString();
-            output.put(OUTPUT, dialog1 + ParamSdk.SPLIT_CHAT + sb.toString() + ParamSdk.SPLIT_CHAT + btn);
+            output.put(OUTPUT, dialog1 + ParamSdk.SPLIT_CHAT + sb.toString());
 
         } else {
             Map<String, String> clearEntities = new HashMap<>();
@@ -1022,7 +1009,7 @@ public class ServiceImp implements IService {
             output.put(OUTPUT, dialog + ParamSdk.SPLIT_CHAT + sb.toString());
             //-----------------------------------------------------------------------------
             extensionResult.setValue(output);
-        } else if (spesial1.equalsIgnoreCase("spesialisid")) {
+        } else if (spesial1.equalsIgnoreCase("spesialis")) {
             clearEntities.put("konfirmasi", "yes");
             extensionResult.setEntities(clearEntities);
         } else {
@@ -1073,17 +1060,17 @@ public class ServiceImp implements IService {
         StringBuilder sb = new StringBuilder();
 
         Map<String, String> output = new HashMap<>();
-//        String spesialisid = getEasyMapValueByName(extensionRequest, "spesialisid");
-//        String hospitalid = getEasyMapValueByName(extensionRequest, "hospitalid");
-//        String[] splitspesialis = spesialisid.split(" ");
-//        String spesial1 = splitspesialis[1];
+        String spesialisid = getEasyMapValueByName(extensionRequest, "spesialisid");
+        String hospitalid = getEasyMapValueByName(extensionRequest, "hospitalid");
+        String[] splitspesialis = spesialisid.split(" ");
+        String spesial1 = splitspesialis[2];
 
-//        String apiGetDokter = appProperties.getApiDoctorbyhospitalIdSpecialist() + hospitalid + "&specialistId=" + spesial1;
-        String apiGetDokter = appProperties.getDummyDoctor();
+        String apiGetDokter = appProperties.getApiDoctorbyhospitalIdSpecialist() + hospitalid + "&specialistId=" + spesial1;
+//        String apiGetDokter = appProperties.getDummyDoctor();
 
         JSONArray results = GeneralExecuteAPI(apiGetDokter).getJSONArray("data");
         int leng = results.length();
-        for (int i = 0; i < leng; i++) {
+        for (int i = 0; i < 10; i++) {
             JSONObject jObj = results.getJSONObject(i);
             String doctorId = jObj.getString("doctor_id");
             String doctorName = jObj.getString("doctor_name");
@@ -1097,7 +1084,7 @@ public class ServiceImp implements IService {
             List<EasyMap> actions = new ArrayList<>();
 
             EasyMap LihatJadwal = new EasyMap();
-            LihatJadwal.setName("Lihat Jadwal " + doctorName);
+            LihatJadwal.setName(doctorName);
             LihatJadwal.setValue("booking dokter id " + doctorId);
             actions.add(LihatJadwal);
             button.setButtonValues(actions);
@@ -1143,7 +1130,7 @@ public class ServiceImp implements IService {
 
             EasyMap LihatJadwal = new EasyMap();
 
-            LihatJadwal.setName("Lihat Jadwal " + doctorName);
+            LihatJadwal.setName(doctorName);
             LihatJadwal.setValue(doctorId);
             actions.add(LihatJadwal);
 
@@ -1329,26 +1316,27 @@ public class ServiceImp implements IService {
         String[] jamArray = jam.split("-");
         int jamStart = Integer.parseInt(jamArray[0].split(":")[0]);
         int jamFinish = Integer.parseInt(jamArray[1].split(":")[0]);
-        int selisihJam = jamFinish - jamStart;
+        int selisihJam = jamFinish - jamStart + 1;
         int jumlahButton = (selisihJam / 3) + (selisihJam % 3);
         int jamFlag = jamStart;
-        int loopBtnAction = 0;
+//        int loopBtnAction = 0;
 
         StringBuilder sb = new StringBuilder();
 
         for (int x = 0; x < jumlahButton; x++) {
             ButtonTemplate button = new ButtonTemplate();
-            button.setTitle(String.format("%02d:00", jamFlag) + " - " + String.format("%02d:00", jamFlag + 3));
+            button.setTitle(String.format("%02d:00", jamFlag) + " - "
+                    + (jamFlag + 2 <= jamFinish ? String.format("%02d:00", jamFlag + 2) : String.format("%02d:00", jamFinish)));
             button.setSubTitle("");
 
             List<EasyMap> actions = new ArrayList<>();
-            for (int y = loopBtnAction; y < loopBtnAction + 3; y++) {
+            for (int y = 0; y < 3; y++) {
                 EasyMap btnAction = new EasyMap();
                 btnAction.setName(String.format("%02d:00", jamFlag));
                 btnAction.setValue(String.format("pilih jam %02d:00", jamFlag));
                 actions.add(btnAction);
                 jamFlag++;
-                if (loopBtnAction >= selisihJam) {
+                if (jamFlag >= jamFinish) {
                     break;
                 }
             }
@@ -1572,11 +1560,14 @@ public class ServiceImp implements IService {
             clearEntities.put("kategorijam", "");
             extensionResult.setEntities(clearEntities);
 
-            String dialog1 = "Maaf. Kategori jam yang kamu pilih tidak termasuk dalam jadwal Dokter pada Hari Tersebut.";
+            String dialog1 = "Maaf. Jam yang kamu pilih tidak tersedia dalam jadwal Dokter pada Hari Tersebut.";
             String dialog2 = "Silahkan pilih waktu kunjungan antara " + jamtanggal + " yang anda kehendaki.";
 
-            CarouselBuilder cb = CarouselJam();
-            output.put(OUTPUT, dialog1 + ParamSdk.SPLIT_CHAT + dialog2 + ParamSdk.SPLIT_CHAT + cb.build());
+            String[] jampilihan = date.split("=");
+            String arraydate = jampilihan[0];
+            String newjam = arraydate.replace(" ", ":");
+            String cb = CarouselJamDinamic(newjam);
+            output.put(OUTPUT, dialog1 + ParamSdk.SPLIT_CHAT + dialog2 + ParamSdk.SPLIT_CHAT + cb);
         } else {
             output.put(OUTPUT, sb.toString());
 
@@ -1614,6 +1605,8 @@ public class ServiceImp implements IService {
         String dokid = iddokter[1];
 
         String[] tanggal = tanggalPesan.split("=");
+        String jamtanggal = tanggal[0];
+        String jampesan = jamtanggal.replace(" ", ":");
         String date = tanggal[1];
 
         String getDoctorByDoctorId = appProperties.getApiDoctorbydoctorid() + dokid;
@@ -1887,7 +1880,7 @@ public class ServiceImp implements IService {
                 List<EasyMap> actions = new ArrayList<>();
 
                 EasyMap LihatJadwal = new EasyMap();
-                LihatJadwal.setName("Lihat Jadwal " + doctorName);
+                LihatJadwal.setName(doctorName);
                 LihatJadwal.setValue("booking dokter id " + doctorId);
                 actions.add(LihatJadwal);
                 button.setButtonValues(actions);
@@ -1936,7 +1929,7 @@ public class ServiceImp implements IService {
             JSONArray results = GeneralExecuteAPI(schedule).getJSONArray("data");
             int leng = results.length();
             List<Integer> dayslist = new ArrayList<>();
-            for (int i = 0; i < leng; i++) {
+            for (int i = 0; i < leng;) {
                 String datenow = calendar.getTime().toString();
                 String hari = datenow.substring(0, 3);
                 String tanggal = datenow.substring(8, 10);
@@ -1984,6 +1977,7 @@ public class ServiceImp implements IService {
                             }
                         }
                     }
+                    i++;
                 }
                 if (dayslist.contains(kodeHari)) {
                     //Buat Button
@@ -2218,6 +2212,18 @@ public class ServiceImp implements IService {
         } else {
             clearEntities.put("konfirmasi", "yes");
             extensionResult.setEntities(clearEntities);
+
+            Map<String, String> output = new HashMap<>();
+            QuickReplyBuilder quickReplyBuilder = new QuickReplyBuilder.Builder("Silahkan kirim Lokasi kamu sekarang ya.")
+                    .add("Kirim Lokasi", "location").build();
+            output.put(OUTPUT, quickReplyBuilder.string());
+
+            extensionResult.setAgent(false);
+            extensionResult.setRepeat(false);
+            extensionResult.setSuccess(true);
+            extensionResult.setNext(true);
+            extensionResult.setValue(output);
+            return extensionResult;
         }
         return extensionResult;
     }
@@ -2305,11 +2311,16 @@ public class ServiceImp implements IService {
         Map<String, String> output = new HashMap<>();
         String hospitalId = getEasyMapValueByName(extensionRequest, "hospitalid");
         String specialistId = getEasyMapValueByName(extensionRequest, "spesialisid");
-        String apiGetDokter = appProperties.getApiDoctorbyhospitalIdSpecialist() + hospitalId + "&specialistId=" + specialistId;
+        String[] splitspec = specialistId.split(" ");
+        String idspecialis = splitspec[2];
+        String apiGetDokter = appProperties.getApiDoctorbyhospitalIdSpecialist() + hospitalId + "&specialistId=" + idspecialis;
 //        String apiGetDokter = appProperties.getDummyDoctor();
         JSONArray results = GeneralExecuteAPI(apiGetDokter).getJSONArray("data");
         int leng = results.length();
-        for (int i = 0; i < 10; i++) {
+        if (leng >= 10) {
+            leng = 10;
+        }
+        for (int i = 0; i < leng; i++) {
             JSONObject jObj = results.getJSONObject(i);
             String doctorId = jObj.getString("doctor_id");
             String doctorName = jObj.getString("doctor_name");
