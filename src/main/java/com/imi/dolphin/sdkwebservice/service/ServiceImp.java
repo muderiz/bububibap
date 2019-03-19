@@ -2236,8 +2236,10 @@ public class ServiceImp implements IService {
 
         double latitude = extensionRequest.getIntent().getTicket().getLatitude();
         double longitude = extensionRequest.getIntent().getTicket().getLongitude();
-//        String longi = getEasyMapValueByName(extensionRequest, "longitude");
-//        String latit = getEasyMapValueByName(extensionRequest, "latitude");
+//        String lokasi = getEasyMapValueByName(extensionRequest, "lokasi");
+//        String[] splitlokasi = lokasi.split(";");
+//        String latitude = splitlokasi[0];
+//        String longitude = splitlokasi[1];
 
         String apiHospitalDummy = appProperties.getDummyHospital();
 //        String apiHospital = appProperties.getApiHospital();
@@ -2284,7 +2286,7 @@ public class ServiceImp implements IService {
             List<EasyMap> actions = new ArrayList<>();
             EasyMap bookAction = new EasyMap();
             bookAction.setName(namehospital);
-            bookAction.setValue(idhospital);
+            bookAction.setValue(idhospital + "");
             actions.add(bookAction);
             button.setButtonValues(actions);
             ButtonBuilder buttonBuilder = new ButtonBuilder(button);
@@ -2312,7 +2314,7 @@ public class ServiceImp implements IService {
         String hospitalId = getEasyMapValueByName(extensionRequest, "hospitalid");
         String specialistId = getEasyMapValueByName(extensionRequest, "spesialisid");
         String[] splitspec = specialistId.split(" ");
-        String idspecialis = splitspec[2];
+        String idspecialis = splitspec[1];
         String apiGetDokter = appProperties.getApiDoctorbyhospitalIdSpecialist() + hospitalId + "&specialistId=" + idspecialis;
 //        String apiGetDokter = appProperties.getDummyDoctor();
         JSONArray results = GeneralExecuteAPI(apiGetDokter).getJSONArray("data");
