@@ -72,6 +72,8 @@ public interface IService {
 
     ExtensionResult doGetHospitalTerdekat(ExtensionRequest extensionRequest);
 
+    ExtensionResult doCallHospital(ExtensionRequest extensionRequest);
+
     // get Dokter by Spesialis
     ExtensionResult SiloamGetSpecialistByHospital(ExtensionRequest extensionRequest);
 

@@ -124,6 +124,11 @@ public class Controller {
     public ExtensionResult doGetHospitalTerdekat(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.doGetHospitalTerdekat(extensionRequest);
     }
+    @RequestMapping("/callhospital")
+    @PostMapping
+    public ExtensionResult doCallHospital(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.doCallHospital(extensionRequest);
+    }
     // ----------------------- //
 
     // Get Doctor by Area //
@@ -145,7 +150,7 @@ public class Controller {
         return svcService.SiloamGetSpecialistByHospital(extensionRequest);
     }
 
-    @RequestMapping("/setkonfirmasispecbyarea")
+    @RequestMapping("/setkonfirmasispecbyhospital")
     @PostMapping
     public ExtensionResult SetKonfirmasiSpesialisbyHospital(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.SetKonfirmasiSpesialisbyHospital(extensionRequest);

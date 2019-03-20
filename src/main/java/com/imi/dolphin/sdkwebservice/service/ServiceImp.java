@@ -733,12 +733,12 @@ public class ServiceImp implements IService {
             EasyMap booknow = new EasyMap();
 
             booknow.setName("Book Now");
-            booknow.setValue("dokter by area di dummy di " + idhospital + " konter 1");
+            booknow.setValue("dokter by area di dummy di " + idhospital + " konter 0");
             actions.add(booknow);
             button.setButtonValues(actions);
 
             callAction.setName("Call Hospital");
-            callAction.setValue(phonenum);
+            callAction.setValue("call hospital nomor " + phonenum + " ya");
             actions.add(callAction);
             button.setButtonValues(actions);
 
@@ -771,8 +771,30 @@ public class ServiceImp implements IService {
         double lam2 = long2 * PI_RAD;
         return 6371.01 * Math.acos(Math.sin(phi1) * Math.sin(phi2) + Math.cos(phi1) * Math.cos(phi2) * Math.cos(lam2 - lam1));
     }
-    //---------------------------------//
 
+    @Override
+    public ExtensionResult doCallHospital(ExtensionRequest extensionRequest) {
+        Map<String, String> output = new HashMap<>();
+        String callhospital = getEasyMapValueByName(extensionRequest, "callhospital");
+        String dialog = "";
+        if (callhospital.equalsIgnoreCase("")) {
+            dialog = "Berikut nomor telepon Hospital tersebut yang dapat kamu hubungi " + callhospital;
+        } else {
+            dialog = "Maaf. nomor telepon Hospital tersebut belum tersedia.";
+        }
+        output.put(OUTPUT, dialog);
+
+        ExtensionResult extensionResult = new ExtensionResult();
+        extensionResult.setAgent(false);
+        extensionResult.setRepeat(false);
+        extensionResult.setSuccess(true);
+        extensionResult.setNext(true);
+
+        extensionResult.setValue(output);
+        return extensionResult;
+    }
+
+    //---------------------------------//
     // Doctor Schedule Flow Search By Area, Hospital, Specialist //
     @Override
     public ExtensionResult doGetAreas(ExtensionRequest extensionRequest) {
@@ -877,24 +899,32 @@ public class ServiceImp implements IService {
         String area = getEasyMapValueByName(extensionRequest, "areaid");
         String hospital = getEasyMapValueByName(extensionRequest, "hospitalid");
         String counter = getEasyMapValueByName(extensionRequest, "counter");
-
-        String apiHospital = appProperties.getApiHospitalByArea() + area;
-        JSONArray results = GeneralExecuteAPI(apiHospital).getJSONArray("data");
-        int lenghospital = results.length();
         String stat = "";
-        for (int i = 0; i < lenghospital; i++) {
-            JSONObject jObj = results.getJSONObject(i);
-            String hospitalId = jObj.getString("hospital_id");
-            String hospitalName = jObj.getString("hospital_name");
-            hospitalName = hospitalName.toLowerCase();
-            if (hospital.equalsIgnoreCase(hospitalId)) {
+
+        if (area.equalsIgnoreCase("dummy")) {
+            String apiHospital = appProperties.getApiHospitalbyId() + hospital;
+            JSONObject jobj = GeneralExecuteAPI(apiHospital);
+            if (jobj.getInt("code") == 200) {
                 stat = "hospital";
-                break;
             }
-            if (hospital.equalsIgnoreCase(hospitalName)) {
-                stat = "hospital";
-                hospital = hospitalId;
-                break;
+        } else {
+            String apiHospital = appProperties.getApiHospitalByArea() + area;
+            JSONArray results = GeneralExecuteAPI(apiHospital).getJSONArray("data");
+            int lenghospital = results.length();
+            for (int i = 0; i < lenghospital; i++) {
+                JSONObject jObj = results.getJSONObject(i);
+                String hospitalId = jObj.getString("hospital_id");
+                String hospitalName = jObj.getString("hospital_name");
+                hospitalName = hospitalName.toLowerCase();
+                if (hospital.equalsIgnoreCase(hospitalId)) {
+                    stat = "hospital";
+                    break;
+                }
+                if (hospital.equalsIgnoreCase(hospitalName)) {
+                    stat = "hospital";
+                    hospital = hospitalId;
+                    break;
+                }
             }
         }
 
@@ -979,6 +1009,7 @@ public class ServiceImp implements IService {
         Map<String, String> clearEntities = new HashMap<>();
         String spesialisid = getEasyMapValueByName(extensionRequest, "spesialisid");
         String counter = getEasyMapValueByName(extensionRequest, "counter");
+        String hospitalid = getEasyMapValueByName(extensionRequest, "hospitalid");
 
         String[] splitspesialis = spesialisid.split(" ");
         String spesial1 = splitspesialis[0];
@@ -992,11 +1023,11 @@ public class ServiceImp implements IService {
             //------------------------------------------------------------------------//
             Map<String, String> output = new HashMap<>();
             StringBuilder sb = new StringBuilder();
-            String hospitalid = getEasyMapValueByName(extensionRequest, "hospitalid");
+
             try {
                 OkHttpUtil okHttpUtil = new OkHttpUtil();
                 okHttpUtil.init(true);
-                Request request = new Request.Builder().url(appProperties.getApiSpecialistbyHospital() + hospitalid).get().build();
+                Request request = new Request.Builder().url(appProperties.getApiSpecialistbyHospital() + hospitalid + "&high10=true").get().build();
                 Response response = okHttpUtil.getClient().newCall(request).execute();
                 JSONObject jsonobj = new JSONObject(response.body().string());
                 JSONArray data = jsonobj.getJSONArray("data");
@@ -1020,7 +1051,7 @@ public class ServiceImp implements IService {
             try {
                 OkHttpUtil okHttpUtil = new OkHttpUtil();
                 okHttpUtil.init(true);
-                Request request = new Request.Builder().url(appProperties.getApiSpecialistbyname() + spesial1).get().build();
+                Request request = new Request.Builder().url(appProperties.getApiSpecialistbyname() + spesialisid).get().build();
                 Response response = okHttpUtil.getClient().newCall(request).execute();
                 JSONObject jsonobj = new JSONObject(response.body().string());
                 if (jsonobj.getInt("code") == 200) {
@@ -1031,7 +1062,6 @@ public class ServiceImp implements IService {
                     String truecase = "Berikut Spesialis yang {bot_name} dapat temukan. Silahkan pilih Spesialis yang ingin kamu kunjungi.";
                     output.put(OUTPUT, truecase + ParamSdk.SPLIT_CHAT + sb.toString());
                 } else {
-                    String hospitalid = getEasyMapValueByName(extensionRequest, "hospitalid");
                     request = new Request.Builder().url(appProperties.getApiSpecialistbyHospital() + hospitalid).get().build();
                     // request = new Request.Builder().url(appProperties.getApiSpecialist()).get().build();
                     response = okHttpUtil.getClient().newCall(request).execute();
@@ -1040,8 +1070,8 @@ public class ServiceImp implements IService {
                     int leng;
                     leng = leng(code, data);
                     sb = carospec(sb, leng, data);
-                    String falsecase1 = "Maaf {bot_name} tidak dapat menemukan yang kamu cari.";
-                    String falsecase2 = "Silahkan pilih Spesialis yang ingin kamu tuju.";
+                    String falsecase1 = "Maaf {bot_name} tidak dapat menemukan spesialis yang kamu cari.";
+                    String falsecase2 = "Silahkan pilih Spesialis dibawah ini. Atau ketik kembali nama spesialis yang kamu inginkan dengan benar.";
                     output.put(OUTPUT, falsecase1 + ParamSdk.SPLIT_CHAT + falsecase2 + ParamSdk.SPLIT_CHAT + sb.toString());
                 }
             } catch (Exception e) {
@@ -1070,7 +1100,10 @@ public class ServiceImp implements IService {
 
         JSONArray results = GeneralExecuteAPI(apiGetDokter).getJSONArray("data");
         int leng = results.length();
-        for (int i = 0; i < 10; i++) {
+        if (leng > 10) {
+            leng = 10;
+        }
+        for (int i = 0; i < leng; i++) {
             JSONObject jObj = results.getJSONObject(i);
             String doctorId = jObj.getString("doctor_id");
             String doctorName = jObj.getString("doctor_name");
@@ -1080,7 +1113,7 @@ public class ServiceImp implements IService {
             //Buat Button
             ButtonTemplate button = new ButtonTemplate();
             button.setTitle(doctorName);
-            button.setSubTitle(doctorSpecialist + "  |  " + doctorHospitals);
+            button.setSubTitle(doctorSpecialist + "<br/>" + doctorHospitals);
             List<EasyMap> actions = new ArrayList<>();
 
             EasyMap LihatJadwal = new EasyMap();
@@ -1125,7 +1158,7 @@ public class ServiceImp implements IService {
             //Buat Button
             ButtonTemplate button = new ButtonTemplate();
             button.setTitle(doctorName);
-            button.setSubTitle(doctorSpecialist + "  |  " + doctorHospitals);
+            button.setSubTitle(doctorSpecialist + "<br/>" + doctorHospitals);
             List<EasyMap> actions = new ArrayList<>();
 
             EasyMap LihatJadwal = new EasyMap();
@@ -1336,7 +1369,7 @@ public class ServiceImp implements IService {
                 btnAction.setValue(String.format("pilih jam %02d:00", jamFlag));
                 actions.add(btnAction);
                 jamFlag++;
-                if (jamFlag >= jamFinish) {
+                if (jamFlag > jamFinish) {
                     break;
                 }
             }
@@ -1876,7 +1909,7 @@ public class ServiceImp implements IService {
                 //Buat Button
                 ButtonTemplate button = new ButtonTemplate();
                 button.setTitle(doctorName);
-                button.setSubTitle(doctorSpecialist + "  |  " + doctorHospitals);
+                button.setSubTitle(doctorSpecialist + "<br/>" + doctorHospitals);
                 List<EasyMap> actions = new ArrayList<>();
 
                 EasyMap LihatJadwal = new EasyMap();
@@ -2021,37 +2054,29 @@ public class ServiceImp implements IService {
         Map<String, String> output = new HashMap<>();
         StringBuilder sb = new StringBuilder();
         ExtensionResult extensionResult = new ExtensionResult();
-        String namaspesialis = getEasyMapValueByName(extensionRequest, "namaspesialis");
-        String counter = getEasyMapValueByName(extensionRequest, "counter");
-        int code = Integer.parseInt(counter);
+        int code = 0;
+
         try {
             OkHttpUtil okHttpUtil = new OkHttpUtil();
             okHttpUtil.init(true);
-            Request request = new Request.Builder().url(appProperties.getApiSpecialistbyname() + namaspesialis).get().build();
+            Request request = new Request.Builder().url(appProperties.getApiSpecialist() + "?top10=true").get().build();
             Response response = okHttpUtil.getClient().newCall(request).execute();
             JSONObject jsonobj = new JSONObject(response.body().string());
-            if (jsonobj.getInt("code") == 200) {
-                JSONArray data = jsonobj.getJSONArray("data");
-                int leng;
-                leng = data.length();
-                sb = carospec(sb, leng, data);
-                String truecase = "Berikut Spesialis yang {bot_name} dapat temukan. Silahkan pilih Spesialis yang ingin kamu kunjungi.";
-                output.put(OUTPUT, truecase + ParamSdk.SPLIT_CHAT + sb.toString());
-            } else {
-                request = new Request.Builder().url(appProperties.getApiSpecialist()).get().build();
-                response = okHttpUtil.getClient().newCall(request).execute();
-                jsonobj = new JSONObject(response.body().string());
-                JSONArray data = jsonobj.getJSONArray("data");
-                int leng;
-                leng = leng(code, data);
-                sb = carospec(sb, leng, data);
-                String falsecase1 = "Maaf {bot_name} tidak dapat menemukan yang kamu cari.";
-                String falsecase2 = "Silahkan pilih Spesialis yang ingin kamu tuju.";
-                output.put(OUTPUT, falsecase1 + ParamSdk.SPLIT_CHAT + falsecase2 + ParamSdk.SPLIT_CHAT + sb.toString());
-            }
-        } catch (IOException | JSONException e) {
+            JSONArray data = jsonobj.getJSONArray("data");
+            int leng;
+            leng = leng(code, data);
+            sb = carospec(sb, leng, data);
+
+        } catch (Exception e) {
         }
 
+        Map<String, String> clearEntities = new HashMap<>();
+
+        clearEntities.put("counter", "0");
+        extensionResult.setEntities(clearEntities);
+
+        String dialog1 = "Silahkan pilih atau ketikan nama Spesialis yang ingin kamu tuju.";
+        output.put(OUTPUT, dialog1 + ParamSdk.SPLIT_CHAT + sb.toString());
         extensionResult.setAgent(false);
         extensionResult.setRepeat(false);
         extensionResult.setSuccess(true);
@@ -2119,11 +2144,12 @@ public class ServiceImp implements IService {
             for (int i = leng - minus; i < leng; i++) {
                 JSONObject jObj = data.getJSONObject(i);
                 String id_spesialis = jObj.getString("specialization_id");
+                String nameEn = jObj.getString("name_en");
                 String name = jObj.getString("name_id");
                 //Buat Button 
                 ButtonTemplate button = new ButtonTemplate();
                 button.setTitle(name);
-                button.setSubTitle(name);
+                button.setSubTitle(nameEn);
                 List<EasyMap> actions = new ArrayList<>();
                 EasyMap bookAction = new EasyMap();
                 bookAction.setName(name);
@@ -2166,7 +2192,8 @@ public class ServiceImp implements IService {
 
         Map<String, String> clearEntities = new HashMap<>();
 
-        clearEntities.put("counter", "1");
+        clearEntities.put("namaspesialis", "set");
+        clearEntities.put("counter", "0");
         extensionResult.setEntities(clearEntities);
         return extensionResult;
     }
@@ -2182,20 +2209,23 @@ public class ServiceImp implements IService {
         Map<String, String> clearEntities = new HashMap<>();
         String konfirmasi = getEasyMapValueByName(extensionRequest, "spesialisid");
         String counter = getEasyMapValueByName(extensionRequest, "counter");
+
+        String[] splitspesialis = konfirmasi.split(" ");
+        String spesial1 = splitspesialis[0];
+
         int code = Integer.parseInt(counter);
         if (konfirmasi.equalsIgnoreCase("lainnya")) {
             code++;
-            clearEntities.put("counter", "" + code);
+            clearEntities.put("counter", code + "");
             clearEntities.put("spesialisid", "");
             extensionResult.setEntities(clearEntities);
             //------------------------------------------------------------------------//
             Map<String, String> output = new HashMap<>();
             StringBuilder sb = new StringBuilder();
-            String namaspesialis = getEasyMapValueByName(extensionRequest, "namaspesialis");
             try {
                 OkHttpUtil okHttpUtil = new OkHttpUtil();
                 okHttpUtil.init(true);
-                Request request = new Request.Builder().url(appProperties.getApiSpecialistbyname() + namaspesialis).get().build();
+                Request request = new Request.Builder().url(appProperties.getApiSpecialist()).get().build();
                 Response response = okHttpUtil.getClient().newCall(request).execute();
                 JSONObject jsonobj = new JSONObject(response.body().string());
                 JSONArray data = jsonobj.getJSONArray("data");
@@ -2203,13 +2233,11 @@ public class ServiceImp implements IService {
                 leng = leng(code, data);
                 sb = carospec(sb, leng, data);
             } catch (Exception e) {
-
             }
-
-            output.put(OUTPUT, sb.toString());
-            //-----------------------------------------------------------------------------
+            String dialog = "Silahkan pilih Spesialis yang ingin kamu tuju.";
+            output.put(OUTPUT, dialog + ParamSdk.SPLIT_CHAT + sb.toString());
             extensionResult.setValue(output);
-        } else {
+        } else if (spesial1.equalsIgnoreCase("id")) {
             clearEntities.put("konfirmasi", "yes");
             extensionResult.setEntities(clearEntities);
 
@@ -2218,12 +2246,44 @@ public class ServiceImp implements IService {
                     .add("Kirim Lokasi", "location").build();
             output.put(OUTPUT, quickReplyBuilder.string());
 
-            extensionResult.setAgent(false);
-            extensionResult.setRepeat(false);
-            extensionResult.setSuccess(true);
-            extensionResult.setNext(true);
             extensionResult.setValue(output);
-            return extensionResult;
+
+        } else {
+            clearEntities.put("spesialisid", "");
+            extensionResult.setEntities(clearEntities);
+
+            Map<String, String> output = new HashMap<>();
+            StringBuilder sb = new StringBuilder();
+            try {
+                OkHttpUtil okHttpUtil = new OkHttpUtil();
+                okHttpUtil.init(true);
+                Request request = new Request.Builder().url(appProperties.getApiSpecialistbyname() + konfirmasi).get().build();
+                Response response = okHttpUtil.getClient().newCall(request).execute();
+                JSONObject jsonobj = new JSONObject(response.body().string());
+                if (jsonobj.getInt("code") == 200) {
+                    JSONArray data = jsonobj.getJSONArray("data");
+                    int leng;
+                    leng = data.length();
+                    sb = carospec(sb, leng, data);
+                    String truecase = "Berikut Spesialis yang {bot_name} dapat temukan. Silahkan pilih Spesialis yang ingin kamu kunjungi.";
+                    output.put(OUTPUT, truecase + ParamSdk.SPLIT_CHAT + sb.toString());
+                } else {
+                    request = new Request.Builder().url(appProperties.getApiSpecialist() + "?top10=true").get().build();
+                    response = okHttpUtil.getClient().newCall(request).execute();
+                    jsonobj = new JSONObject(response.body().string());
+                    JSONArray data = jsonobj.getJSONArray("data");
+                    int leng;
+                    leng = leng(code, data);
+                    sb = carospec(sb, leng, data);
+                    String falsecase1 = "Maaf {bot_name} tidak dapat menemukan spesialis yang kamu cari.";
+                    String falsecase2 = "Silahkan pilih Spesialis dibawah ini. Atau ketik kembali nama spesialis yang kamu inginkan dengan benar.";
+                    output.put(OUTPUT, falsecase1 + ParamSdk.SPLIT_CHAT + falsecase2 + ParamSdk.SPLIT_CHAT + sb.toString());
+                }
+                extensionResult.setValue(output);
+            } catch (Exception e) {
+            }
+            //-----------------------------------------------------------------------------
+
         }
         return extensionResult;
     }
@@ -2332,7 +2392,7 @@ public class ServiceImp implements IService {
             //Buat Button
             ButtonTemplate button = new ButtonTemplate();
             button.setTitle(doctorName);
-            button.setSubTitle(doctorSpecialist + "  |  " + doctorHospitals);
+            button.setSubTitle(doctorSpecialist + "<br/>" + doctorHospitals);
             List<EasyMap> actions = new ArrayList<>();
 
             EasyMap LihatJadwal = new EasyMap();
