@@ -83,6 +83,9 @@ public class AppProperties {
 
     @Value("${siloam.api.hospitalbyarea}")
     String apiHospitalByArea;
+    
+    @Value("${siloam.api.hospitalliveappointment}")
+    String apiHospitalLive;
     //------------------//
 
     //API Get Specialization//
@@ -102,6 +105,9 @@ public class AppProperties {
 
     @Value("${siloam.api.doctorbydoctorid}")
     String apiDoctorbydoctorid;
+
+    @Value("${siloam.api.leavedoctor}")
+    String apiLeaveDoctor;
 
     @Value("${siloam.api.doctorbyhospitalid&spesialis}")
     String apiDoctorbyhospitalIdSpecialist;
@@ -435,4 +441,21 @@ public class AppProperties {
         this.apiHospitalbyId = apiHospitalbyId;
     }
 
+    public String getApiLeaveDoctor() {
+        return apiLeaveDoctor;
+    }
+
+    public void setApiLeaveDoctor(String apiLeaveDoctor) {
+        this.apiLeaveDoctor = apiLeaveDoctor;
+    }
+
+    public String getApiHospitalLive() {
+        return apiHospitalLive;
+    }
+
+    public void setApiHospitalLive(String apiHospitalLive) {
+        this.apiHospitalLive = apiHospitalLive;
+    }
+
+    
 }
