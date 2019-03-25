@@ -699,15 +699,16 @@ public class ServiceImp implements IService {
             latitud = jObj.getBigDecimal("latitude");
             String phonenumber = jObj.getString("phoneNumber");
 
-            hasil = distanceInKilometers((Double.valueOf(latitude)), (Double.valueOf(longitude)), latitud.doubleValue(), longitud.doubleValue());
-//            hasil = distanceInKilometers((Double.valueOf(latit)), (Double.valueOf(longi)), latitud.doubleValue(), longitud.doubleValue());
-            List<String> jarak = new ArrayList<>();
-            if (hasil < 30) {
-                jarak.add(hasil + "");
-                jarak.add(hospitalid);
-                jarak.add(hospitalname);
-                jarak.add(phonenumber);
-                data.add(jarak);
+            if (!longitud.equals("") && !latitud.equals("")) {
+                hasil = distanceInKilometers((Double.valueOf(latitude)), (Double.valueOf(longitude)), latitud.doubleValue(), longitud.doubleValue());
+                List<String> jarak = new ArrayList<>();
+                if (hasil < 30) {
+                    jarak.add(hasil + "");
+                    jarak.add(hospitalid);
+                    jarak.add(hospitalname);
+                    jarak.add(phonenumber);
+                    data.add(jarak);
+                }
             }
         }
         Collections.sort(data, new Comparator<List<String>>() {
@@ -917,12 +918,12 @@ public class ServiceImp implements IService {
                 JSONObject jObj = results.getJSONObject(i);
                 String hospitalId = jObj.getString("hospital_id");
                 String hospitalName = jObj.getString("hospital_name");
-                hospitalName = hospitalName.toLowerCase();
+                String hospitalName2 = hospitalName.toLowerCase();
                 if (hospital.equalsIgnoreCase(hospitalId)) {
                     stat = "hospital";
                     break;
                 }
-                if (hospital.equalsIgnoreCase(hospitalName)) {
+                if (hospital.equalsIgnoreCase(hospitalName2)) {
                     stat = "hospital";
                     hospital = hospitalId;
                     break;
@@ -2057,6 +2058,7 @@ public class ServiceImp implements IService {
         JSONArray results3 = GeneralExecuteAPI(getDoctorByDoctorId).getJSONArray("data");
         JSONObject jObj3 = results3.getJSONObject(0);
         String hospitalId = jObj3.getString("hospital_id");
+        String doctorName = jObj3.getString("doctor_name");
 
         String schedule = appProperties.getApiDoctorschedule() + dokid + "/" + hospitalId;
         JSONArray results = GeneralExecuteAPI(schedule).getJSONArray("data");
@@ -2158,9 +2160,13 @@ public class ServiceImp implements IService {
             extensionResult.setEntities(clearEntities);
             String StringOutput = "Maaf. {bot_name} tidak dapat menemukan Jadwal Dokter pilihan Kamu.";
             stringbuild = StringOutput;
+            output.put(OUTPUT, stringbuild);
+
+        } else {
+            String dialog1 = "Berikut adalah detail jadwal praktik " + doctorName + ". (Atau ketik Menu untuk kembali ke Menu Utama).";
+            output.put(OUTPUT, dialog1 + ParamSdk.SPLIT_CHAT + stringbuild);
 
         }
-        output.put(OUTPUT, stringbuild);
         output.put("extra", proctime.toString());
         extensionResult.setValue(output);
 
