@@ -616,7 +616,7 @@ public class ServiceImp implements IService {
     @Override
     public ExtensionResult doSendLocation(ExtensionRequest extensionRequest) {
         Map<String, String> output = new HashMap<>();
-        QuickReplyBuilder quickReplyBuilder = new QuickReplyBuilder.Builder("Silahkan kirim Lokasi kamu sekarang ya.")
+        QuickReplyBuilder quickReplyBuilder = new QuickReplyBuilder.Builder("Silakan kirim lokasi Anda sekarang.")
                 .add("Kirim Lokasi", "location").build();
         output.put(OUTPUT, quickReplyBuilder.string());
         ExtensionResult extensionResult = new ExtensionResult();
@@ -680,8 +680,8 @@ public class ServiceImp implements IService {
 
         double latitude = extensionRequest.getIntent().getTicket().getLatitude();
         double longitude = extensionRequest.getIntent().getTicket().getLongitude();
-//        String longi = getEasyMapValueByName(extensionRequest, "longitude");
-//        String latit = getEasyMapValueByName(extensionRequest, "latitude");
+//        String longitude = getEasyMapValueByName(extensionRequest, "longitude");
+//        String latitude = getEasyMapValueByName(extensionRequest, "latitude");
 
         String apiHospitalDummy = appProperties.getDummyHospital();
 //        String apiHospital = appProperties.getApiHospital();
@@ -720,7 +720,9 @@ public class ServiceImp implements IService {
             String idhospital = data.get(j).get(1);
             String namehospital = data.get(j).get(2);
             String phonenum = data.get(j).get(3);
-
+            if (phonenum.equalsIgnoreCase("")) {
+                phonenum = "000";
+            }
             ButtonTemplate button = new ButtonTemplate();
             button.setPictureLink(appProperties.getSiloamLogo());
 //            button.setPicturePath("");
@@ -738,7 +740,7 @@ public class ServiceImp implements IService {
             button.setButtonValues(actions);
 
             callAction.setName("Call Hospital");
-            callAction.setValue("call hospital nomor " + phonenum + " ya");
+            callAction.setValue("mau call hospital nomor " + phonenum + " ya");
             actions.add(callAction);
             button.setButtonValues(actions);
 
@@ -777,10 +779,10 @@ public class ServiceImp implements IService {
         Map<String, String> output = new HashMap<>();
         String callhospital = getEasyMapValueByName(extensionRequest, "callhospital");
         String dialog = "";
-        if (callhospital.equalsIgnoreCase("")) {
-            dialog = "Berikut nomor telepon Hospital tersebut yang dapat kamu hubungi " + callhospital;
-        } else {
+        if (callhospital.equalsIgnoreCase("000")) {
             dialog = "Maaf. nomor telepon Hospital tersebut belum tersedia.";
+        } else {
+            dialog = "Berikut nomor telepon Hospital tersebut yang dapat kamu hubungi " + callhospital;
         }
         output.put(OUTPUT, dialog);
 
@@ -934,11 +936,11 @@ public class ServiceImp implements IService {
                 OkHttpUtil okHttpUtil = new OkHttpUtil();
                 okHttpUtil.init(true);
 //                Request request = new Request.Builder().url(appProperties.getApiSpecialistbyHospital() + hospital).get().build();
-                Request request = new Request.Builder().url(appProperties.getApiSpecialistbyHospital() + hospital + "&high10=true").get().build();
+                Request request = new Request.Builder().url(appProperties.getApiSpecialistbyHospital() + hospital + "&top10=true").get().build();
                 Response response = okHttpUtil.getClient().newCall(request).execute();
                 JSONObject jsonobj = new JSONObject(response.body().string());
                 JSONArray data = jsonobj.getJSONArray("data");
-                code = code - 1;
+                //code = code - 1;
                 int leng;
                 leng = leng(code, data);
                 sb = carospec(sb, leng, data);
@@ -1036,7 +1038,7 @@ public class ServiceImp implements IService {
                 sb = carospec(sb, leng, data);
             } catch (Exception e) {
             }
-            String dialog = "Silahkan pilih Spesialis yang ingin kamu tuju.";
+            String dialog = "Silakan pilih spesialisasi yang ingin dituju.";
             output.put(OUTPUT, dialog + ParamSdk.SPLIT_CHAT + sb.toString());
             //-----------------------------------------------------------------------------
             extensionResult.setValue(output);
@@ -1059,7 +1061,7 @@ public class ServiceImp implements IService {
                     int leng;
                     leng = data.length();
                     sb = carospec(sb, leng, data);
-                    String truecase = "Berikut Spesialis yang {bot_name} dapat temukan. Silahkan pilih Spesialis yang ingin kamu kunjungi.";
+                    String truecase = "Berikut Spesialis yang {bot_name} dapat temukan. Silakan pilih spesialisasi yang ingin dituju.";
                     output.put(OUTPUT, truecase + ParamSdk.SPLIT_CHAT + sb.toString());
                 } else {
                     request = new Request.Builder().url(appProperties.getApiSpecialistbyHospital() + hospitalid).get().build();
@@ -1339,7 +1341,18 @@ public class ServiceImp implements IService {
         String tanggalpesan = getEasyMapValueByName(extensionRequest, "tanggalpesan");
         String[] jampilihan = tanggalpesan.split("=");
         String jam = jampilihan[0];
+        String tanggal = jampilihan[1];
+
+        String newsplit = "";
         String newjam = jam.replace(" ", ":");
+        if (newjam.contains("t")) {
+            String[] jamsplit = newjam.split("t");
+            String split1 = jamsplit[0];
+            String split2 = jamsplit[1];
+            newsplit = split2 + " & " + split1;
+        } else {
+            newsplit = newjam;
+        }
 
         String getLiveHospital = appProperties.getApiHospitalLive();
         JSONArray araylivehos = GeneralExecuteAPI(getLiveHospital).getJSONArray("data");
@@ -1354,12 +1367,20 @@ public class ServiceImp implements IService {
         JSONArray results2 = GeneralExecuteAPI(getNameHospital).getJSONArray("data");
         JSONObject jObj2 = results2.getJSONObject(0);
         String hospitalName = jObj2.getString("hospital_name");
+
+        String getSchedule = appProperties.getApiDoctorappointment() + hospitalId + "/doctorId/" + dokid + "/date/" + tanggal;
+        JSONArray arraySchedule = GeneralExecuteAPI(getSchedule).getJSONArray("data");
+
         //Cek Live Hospital
         String hasilcekhospital = CekHospital(hospitalId, araylivehos);
         if (hasilcekhospital.equalsIgnoreCase("ada")) {
-            String cb = CarouselJamDinamic(newjam);
-            String dialog = "Silahkan pilih waktu kunjungan antara " + newjam + " yang anda kehendaki.";
-            output.put(OUTPUT, dialog + ParamSdk.SPLIT_CHAT + cb);
+            Map<String, String> clearEntities = new HashMap<>();
+            clearEntities.put("jampraktek", "1");
+            extensionResult.setEntities(clearEntities);
+//            String cb = CarouselJamDinamic(newjam);
+            String carojam = CarouselJamPraktek(arraySchedule);
+            String dialog = "Silahkan pilih waktu kunjungan antara " + newsplit + " yang Anda kehendaki.";
+            output.put(OUTPUT, dialog + ParamSdk.SPLIT_CHAT + carojam);
         } else {
             Map<String, String> clearEntities = new HashMap<>();
             clearEntities.put("kategorijam", "1");
@@ -1408,6 +1429,54 @@ public class ServiceImp implements IService {
                     break;
                 }
             }
+
+            button.setButtonValues(actions);
+            ButtonBuilder buttonBuilder = new ButtonBuilder(button);
+            sb.append(buttonBuilder.build()).append(CONSTANT_SPLIT_SYNTAX);
+        }
+
+        return sb.toString();
+    }
+
+    private String CarouselJamPraktek(JSONArray jampraktek) {
+        int jampraktekleng = jampraktek.length();
+        int jumlahbagi = (jampraktekleng / 3);
+        int jumlahsisa = (jampraktekleng % 3);
+        if (jumlahsisa > 0) {
+            jumlahbagi++;
+        }
+
+//        int loopBtnAction = 0;
+        StringBuilder sb = new StringBuilder();
+        int index = 0;
+
+        String totime2 = "";
+        for (int x = 0; x < jumlahbagi; x++) {
+            ButtonTemplate button = new ButtonTemplate();
+            String titlejam = "";
+            List<EasyMap> actions = new ArrayList<>();
+            for (int y = 0; y < 3; y++) {
+                if (index == jampraktekleng) {
+                    titlejam += " - " + totime2;
+                    break;
+                }
+                JSONObject jsono = jampraktek.getJSONObject(index);
+                String fromtime = jsono.getString("from_time");
+                totime2 = jsono.getString("to_time");
+                EasyMap btnAction = new EasyMap();
+                btnAction.setName(fromtime + " - " + totime2);
+                btnAction.setValue(fromtime);
+                actions.add(btnAction);
+                if (y == 0) {
+                    titlejam = fromtime;
+                } else if (y == 2 || index == jampraktekleng) {
+                    titlejam += " - " + totime2;
+                }
+
+                index++;
+            }
+            button.setTitle(titlejam);
+            button.setSubTitle("Yang Tersedia :");
 
             button.setButtonValues(actions);
             ButtonBuilder buttonBuilder = new ButtonBuilder(button);
@@ -1661,19 +1730,20 @@ public class ServiceImp implements IService {
         String tanggallahir = getEasyMapValueByName(extensionRequest, "tanggallahir");
         String notelp = getEasyMapValueByName(extensionRequest, "notelp");
         String tanggalPesan = getEasyMapValueByName(extensionRequest, "tanggalpesan");
-        String jamPraktek = getEasyMapValueByName(extensionRequest, "jampraktek");
+        String jamPraktek = getEasyMapValueByName(extensionRequest, "kategorijam");
 
-        String[] splitjam = jamPraktek.split(" ");
-        String jam = splitjam[1];
-        String menit = splitjam[2];
-        String jammenit = jam + ":" + menit;
+        String jammenit = jamPraktek.replace(" ", ":");
+//        String[] splitjam = jamPraktek.split(" ");
+//        String jam = splitjam[1];
+//        String menit = splitjam[2];
+//        String jammenit = jam + ":" + menit;
 
         String[] iddokter = dokterid.split(" ");
         String dokid = iddokter[1];
 
         String[] tanggal = tanggalPesan.split("=");
-        String jamtanggal = tanggal[0];
-        String jampesan = jamtanggal.replace(" ", ":");
+//        String jamtanggal = tanggal[0];
+//        String jampesan = jamtanggal.replace(" ", ":");
         String date = tanggal[1];
 
         String getDoctorByDoctorId = appProperties.getApiDoctorbydoctorid() + dokid;
@@ -1689,11 +1759,8 @@ public class ServiceImp implements IService {
         String pasien = createPatient.build();
         String contactid = "";
         OkHttpUtil okHttpUtil = new OkHttpUtil();
-
-        okHttpUtil.init(
-                true);
+        okHttpUtil.init(true);
         try {
-
             String url = appProperties.getCreatePatient();
             RequestBody body = RequestBody.create(JSON, pasien);
             Request request = new Request.Builder().url(url).post(body).addHeader("Content-Type", "application/json").build();
@@ -1714,9 +1781,7 @@ public class ServiceImp implements IService {
         JSONArray results = GeneralExecuteAPI(getScheduleId).getJSONArray("data");
         int leng = results.length();
         String idschedule = "";
-        for (int i = 0;
-                i < leng;
-                i++) {
+        for (int i = 0; i < leng; i++) {
             JSONObject jObj = results.getJSONObject(i);
             String fromtime = jObj.getString("from_time");
             String scheduleid = jObj.getString("schedule_id");
@@ -1837,15 +1902,17 @@ public class ServiceImp implements IService {
                 String patient_name = jObj.optString("contact_name");
                 String doctor_name = jObj.getString("doctor_name");
 
-                String dialog1 = "Terima kasih. Appointment kamu berhasil {bot_name} buat. Berikut data informasi untuk Appointment kamu.";
-                sb.append("Name : " + patient_name + "\n");
-                sb.append("Phone : " + nophone + "\n");
-                sb.append("Doctor Name : " + doctor_name + "\n");
-                sb.append("Booking Date : " + booking_date + "\n");
-                sb.append("Booking Time : " + booking_time);
+                String dialog1 = "Terima kasih. \n"
+                        + "Silvia telah berhasil mendaftarkan perjanjian Anda.";
+                sb.append("Berikut ini data informasi untuk Anda. \n");
+                sb.append("Nama : " + patient_name + "\n");
+                sb.append("Nomor Telepon : " + nophone + "\n");
+                sb.append("Nama Dokter : " + doctor_name + "\n");
+                sb.append("Tanggal Pemesanan : " + booking_date + "\n");
+                sb.append("Waktu Pemesanan : " + booking_time);
                 output.put(OUTPUT, dialog1 + ParamSdk.SPLIT_CHAT + sb.toString());
             } else {
-                String dialog1 = "Mohon maaf {bot_name} belum bisa membuatkan Appointment kamu.";
+                String dialog1 = "Mohon maaf. {bot_name} belum bisa mendaftarkan perjanjian Anda.";
                 output.put(OUTPUT, dialog1);
             }
         } catch (Exception e) {
@@ -1982,6 +2049,7 @@ public class ServiceImp implements IService {
 
         String doctorId = getEasyMapValueByName(extensionRequest, "dokterid");
         Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DATE, +1);
         String[] iddokter = doctorId.split(" ");
         String dokid = iddokter[1];
 
@@ -1994,7 +2062,7 @@ public class ServiceImp implements IService {
         JSONArray results = GeneralExecuteAPI(schedule).getJSONArray("data");
         int leng = results.length();
         List<Integer> dayslist = new ArrayList<>();
-        for (int i = 0; i < leng;) {
+        for (int i = 0; i < 7;) {
             String datenow = calendar.getTime().toString();
             String hari = datenow.substring(0, 3);
             String tanggal = datenow.substring(8, 10);
@@ -2010,6 +2078,7 @@ public class ServiceImp implements IService {
             String hasilcekcuti = CekCuti(dokid, date);
             if (hasilcekcuti.equalsIgnoreCase("tidak")) {
                 String[] daypoint = new String[leng];
+                String[] daypoint2 = new String[leng];
 
                 //Cek Slot
                 String scheduleTime = appProperties.getApiDoctorappointment() + hospitalId + "/doctorId/" + dokid + "/date/" + date;
@@ -2042,13 +2111,15 @@ public class ServiceImp implements IService {
                         if (daysnumber == kodeHari) {
                             if (daypoint[x] == null) {
                                 daypoint[x] = jadwal;
+                                daypoint2[x] = jadwal;
                             } else {
-                                daypoint[x] = daypoint[x];
+                                daypoint[x] = jadwal + " / " + daypoint[x];
+                                daypoint2[x] = daypoint2[x] + "t" + jadwal;
                             }
                         }
                     }
+                    i++;
                 }
-                i++;
 
                 if (dayslist.contains(kodeHari)) {
                     //Buat Button
@@ -2059,7 +2130,7 @@ public class ServiceImp implements IService {
 
                     EasyMap bookAction = new EasyMap();
                     bookAction.setName("Pilih");
-                    bookAction.setValue(daypoint[x] + "=" + date);
+                    bookAction.setValue(daypoint2[x] + "=" + date);
                     actions.add(bookAction);
                     button.setButtonValues(actions);
                     ButtonBuilder buttonBuilder = new ButtonBuilder(button);
@@ -2327,7 +2398,7 @@ public class ServiceImp implements IService {
                 sb = carospec(sb, leng, data);
             } catch (Exception e) {
             }
-            String dialog = "Silahkan pilih Spesialis yang ingin kamu tuju.";
+            String dialog = "Silakan pilih spesialisasi yang ingin dituju.";
             output.put(OUTPUT, dialog + ParamSdk.SPLIT_CHAT + sb.toString());
             extensionResult.setValue(output);
         } else if (spesial1.equalsIgnoreCase("id")) {
