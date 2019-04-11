@@ -106,6 +106,12 @@ public class Controller {
         return svcService.MenuUtama(extensionRequest);
     }
 
+    @RequestMapping("/tipepencarian")
+    @PostMapping
+    public ExtensionResult TipePencarian(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.TipePencarian(extensionRequest);
+    }
+
     // Get Nearest Hospital //
     @RequestMapping("/sendlocation")
     @PostMapping
@@ -124,6 +130,7 @@ public class Controller {
     public ExtensionResult doGetHospitalTerdekat(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.doGetHospitalTerdekat(extensionRequest);
     }
+
     @RequestMapping("/callhospital")
     @PostMapping
     public ExtensionResult doCallHospital(@RequestBody ExtensionRequest extensionRequest) {
@@ -273,4 +280,19 @@ public class Controller {
     public ExtensionResult SiloamMenggunakanBPJS(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.siloamMenggunakanBPJS(extensionRequest);
     }
+    
+    // New Booking Flow
+    @RequestMapping("/setkonfirmasitipe")
+    @PostMapping
+    public ExtensionResult SetKonfirmasiTipe(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.SetKonfirmasiTipe(extensionRequest);
+    }
+    
+    @RequestMapping("/setstepdua")
+    @PostMapping
+    public ExtensionResult setStepDua(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.setStepDua(extensionRequest);
+    }
+    
+    
 }

@@ -70,6 +70,8 @@ public interface IService {
 
     ExtensionResult MenuUtama(ExtensionRequest extensionRequest);
 
+    ExtensionResult TipePencarian(ExtensionRequest extensionRequest);
+
     ExtensionResult doGetHospitalTerdekat(ExtensionRequest extensionRequest);
 
     ExtensionResult doCallHospital(ExtensionRequest extensionRequest);
@@ -99,4 +101,11 @@ public interface IService {
     ExtensionResult doClearDate(ExtensionRequest extensionRequest);
 
     ExtensionResult siloamMenggunakanBPJS(ExtensionRequest extensionRequest);
+
+    // New Booking Dokter
+    ExtensionResult SetKonfirmasiTipe(ExtensionRequest extensionRequest);
+
+    ExtensionResult setStepDua(ExtensionRequest extensionRequest);
+
+
 }

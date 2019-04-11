@@ -78,12 +78,15 @@ public class AppProperties {
     @Value("${siloam.api.hospital}")
     String apiHospital;
 
+    @Value("${siloam.api.hospitalname}")
+    String apiHospitalName;
+
     @Value("${siloam.api.hospitalbyid}")
     String apiHospitalbyId;
 
     @Value("${siloam.api.hospitalbyarea}")
     String apiHospitalByArea;
-    
+
     @Value("${siloam.api.hospitalliveappointment}")
     String apiHospitalLive;
     //------------------//
@@ -289,6 +292,14 @@ public class AppProperties {
         this.apiHospital = apiHospital;
     }
 
+    public String getApiHospitalName() {
+        return apiHospitalName;
+    }
+
+    public void setApiHospitalName(String apiHospitalName) {
+        this.apiHospitalName = apiHospitalName;
+    }
+
     public String getApiHospitalByArea() {
         return apiHospitalByArea;
     }
@@ -457,5 +468,4 @@ public class AppProperties {
         this.apiHospitalLive = apiHospitalLive;
     }
 
-    
 }
