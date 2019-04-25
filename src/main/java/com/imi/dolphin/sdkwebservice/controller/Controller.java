@@ -46,54 +46,6 @@ public class Controller {
         return "Hello Form, service port: " + appProperties.getServicePort() + ", " + appProperties.getFormId();
     }
 
-    @RequestMapping("/status/")
-    @PostMapping
-    public ExtensionResult doGetSrnResult(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.getSrnResult(extensionRequest);
-    }
-
-    @RequestMapping("/customers")
-    @PostMapping
-    public ExtensionResult doQueryCustomerInfo(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.getCustomerInfo(extensionRequest);
-    }
-
-    @RequestMapping("/modifycustomername")
-    @PostMapping
-    public ExtensionResult doClearCustomerName(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.modifyCustomerName(extensionRequest);
-    }
-
-    @RequestMapping("/productinfo")
-    @PostMapping
-    public ExtensionResult doQueryProductInfo(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.getProductInfo(extensionRequest);
-    }
-
-    @RequestMapping("/messages")
-    @PostMapping
-    public ExtensionResult doGetMessages(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.getMessageBody(extensionRequest);
-    }
-
-    @RequestMapping("/quickreplies")
-    @PostMapping
-    public ExtensionResult doBuildQuickReplies(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.getQuickReplies(extensionRequest);
-    }
-
-    @RequestMapping("/button")
-    @PostMapping
-    public ExtensionResult doBuildButton(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.getButtons(extensionRequest);
-    }
-
-    @RequestMapping("/carousel")
-    @PostMapping
-    public ExtensionResult doBuildCarousel(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.getCarousel(extensionRequest);
-    }
-
     @RequestMapping("/transferAgent")
     @PostMapping
     public ExtensionResult doTransferToAgent(@RequestBody ExtensionRequest extensionRequest) {
@@ -238,13 +190,13 @@ public class Controller {
     // ---------------------- //
 
     // Booking Doctor //
-    @RequestMapping("/kategorijam")
+    @RequestMapping("/jampraktek")
     @PostMapping
-    public ExtensionResult KategoriJam(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.KategoriJam(extensionRequest);
+    public ExtensionResult JamPraktek(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.JamPraktek(extensionRequest);
     }
 
-    @RequestMapping("/jampraktek")
+    @RequestMapping("/jampraktekdokter")
     @PostMapping
     public ExtensionResult doGetJamPraktekDokter(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.doGetJamPraktekDokter(extensionRequest);
@@ -280,7 +232,7 @@ public class Controller {
     public ExtensionResult SiloamMenggunakanBPJS(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.siloamMenggunakanBPJS(extensionRequest);
     }
-    
+
     // New Booking Flow
     @RequestMapping("/setkonfirmasitipe")
     @PostMapping
@@ -288,11 +240,52 @@ public class Controller {
         return svcService.SetKonfirmasiTipe(extensionRequest);
     }
     
+    @RequestMapping("/setnewkonfirmasispesialis")
+    @PostMapping
+    public ExtensionResult setNewKonfirmasiSpesialis(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.setNewKonfirmasiSpesialis(extensionRequest);
+    }
+
     @RequestMapping("/setstepdua")
     @PostMapping
     public ExtensionResult setStepDua(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.setStepDua(extensionRequest);
     }
+
+    @RequestMapping("/setsteptiga")
+    @PostMapping
+    public ExtensionResult setStepTiga(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.setStepTiga(extensionRequest);
+    }
+
+    @RequestMapping("/newgetdoctor")
+    @PostMapping
+    public ExtensionResult newGetDoctor(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.newGetDoctor(extensionRequest);
+    }
+
+    @RequestMapping("/newgetscheduledoctorid")
+    @PostMapping
+    public ExtensionResult newGetScheduleDoctorId(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.newGetScheduleDoctorId(extensionRequest);
+    }
     
+    @RequestMapping("/newgetjampraktek")
+    @PostMapping
+    public ExtensionResult newGetJamPraktek(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.newGetJamPraktek(extensionRequest);
+    }
     
+    @RequestMapping("/tanyanamapasien")
+    @PostMapping
+    public ExtensionResult tanyaNamaPasien(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.tanyaNamaPasien(extensionRequest);
+    }
+    
+    @RequestMapping("/validasinamapasien")
+    @PostMapping
+    public ExtensionResult validasiNamaPasien(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.validasiNamaPasien(extensionRequest);
+    }
+
 }

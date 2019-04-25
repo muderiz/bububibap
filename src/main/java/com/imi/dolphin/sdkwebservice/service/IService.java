@@ -22,29 +22,11 @@ import com.imi.dolphin.sdkwebservice.model.ExtensionResult;
  */
 public interface IService {
 
-    ExtensionResult getSrnResult(ExtensionRequest extensionRequest);
-
-    ExtensionResult getCustomerInfo(ExtensionRequest extensionRequest);
-
-    ExtensionResult modifyCustomerName(ExtensionRequest extensionRequest);
-
-    ExtensionResult getProductInfo(ExtensionRequest extensionRequest);
-
-    ExtensionResult getMessageBody(ExtensionRequest extensionRequest);
-
-    ExtensionResult getQuickReplies(ExtensionRequest extensionRequest);
-
-    ExtensionResult getButtons(ExtensionRequest extensionRequest);
-
-    ExtensionResult getCarousel(ExtensionRequest extensionRequest);
-
     ExtensionResult doTransferToAgent(ExtensionRequest extensionRequest);
 
     ExtensionResult doSendLocation(ExtensionRequest extensionRequest);
 
     ExtensionResult doSendLocationSpecialist(ExtensionRequest extensionRequest);
-
-    ExtensionResult getSplitConversation(ExtensionRequest extensionRequest);
 
     ExtensionResult doGetAreas(ExtensionRequest extensionRequest);
 
@@ -90,7 +72,7 @@ public interface IService {
     // ExtensionResult doPostCreatePatient(ExtensionRequest extensionRequest);
     ExtensionResult doPostCreateAppointment(ExtensionRequest extensionRequest);
 
-    ExtensionResult KategoriJam(ExtensionRequest extensionRequest);
+    ExtensionResult JamPraktek(ExtensionRequest extensionRequest);
 
     ExtensionResult doGetJamPraktekDokter(ExtensionRequest extensionRequest);
 
@@ -105,7 +87,20 @@ public interface IService {
     // New Booking Dokter
     ExtensionResult SetKonfirmasiTipe(ExtensionRequest extensionRequest);
 
+    ExtensionResult setNewKonfirmasiSpesialis(ExtensionRequest extensionRequest);
+
     ExtensionResult setStepDua(ExtensionRequest extensionRequest);
 
+    ExtensionResult setStepTiga(ExtensionRequest extensionRequest);
+
+    ExtensionResult newGetDoctor(ExtensionRequest extensionRequest);
+
+    ExtensionResult newGetScheduleDoctorId(ExtensionRequest extensionRequest);
+
+    ExtensionResult newGetJamPraktek(ExtensionRequest extensionRequest);
+
+    ExtensionResult tanyaNamaPasien(ExtensionRequest extensionRequest);
+
+    ExtensionResult validasiNamaPasien(ExtensionRequest extensionRequest);
 
 }
