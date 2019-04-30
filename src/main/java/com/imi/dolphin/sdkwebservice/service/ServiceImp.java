@@ -3671,7 +3671,6 @@ public class ServiceImp implements IService {
 
                 break;
         }
-        clearEntities.put("hospitalid", "yes");
         extensionResult.setEntities(clearEntities);
         extensionResult.setValue(output);
         return extensionResult;
