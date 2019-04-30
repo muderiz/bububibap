@@ -3416,7 +3416,7 @@ public class ServiceImp implements IService {
         extensionResult.setRepeat(false);
         extensionResult.setSuccess(true);
         extensionResult.setNext(true);
-        
+
         Map<String, String> output = new HashMap<>();
         StringBuilder sb = new StringBuilder();
         String konfirmtipe = getEasyMapValueByName(extensionRequest, "konfirmtipe");
@@ -3696,9 +3696,16 @@ public class ServiceImp implements IService {
         calendar.add(Calendar.DATE, +1);
         String[] iddokter = doctorId.split(" ");
         String dokid = iddokter[1];
-        String[] idhos = subHospital.split(" ");
-        String hosid = idhos[1];
 
+        String lowerSubHos = subHospital.toLowerCase();
+        String[] idhos = lowerSubHos.split(" ");
+        String hos = idhos[0];
+        String hosid = "";
+        if (hos.equalsIgnoreCase("hos")) {
+            hosid = idhos[1];
+        }else{
+            hosid = idhos[0];
+        }
         String getDoctorByDoctorId = appProperties.getApiDoctorbydoctorid() + dokid;
         JSONArray results3 = GeneralExecuteAPI(getDoctorByDoctorId).getJSONArray("data");
         JSONObject jObj3 = results3.getJSONObject(0);
