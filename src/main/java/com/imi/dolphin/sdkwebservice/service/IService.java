@@ -87,7 +87,7 @@ public interface IService {
     // New Booking Dokter
     ExtensionResult SetKonfirmasiTipe(ExtensionRequest extensionRequest);
 
-    ExtensionResult setNewKonfirmasiSpesialis(ExtensionRequest extensionRequest);
+//    ExtensionResult setNewKonfirmasiSpesialis(ExtensionRequest extensionRequest);
 
     ExtensionResult setStepDua(ExtensionRequest extensionRequest);
 

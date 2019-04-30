@@ -240,11 +240,11 @@ public class Controller {
         return svcService.SetKonfirmasiTipe(extensionRequest);
     }
     
-    @RequestMapping("/setnewkonfirmasispesialis")
-    @PostMapping
-    public ExtensionResult setNewKonfirmasiSpesialis(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.setNewKonfirmasiSpesialis(extensionRequest);
-    }
+//    @RequestMapping("/setnewkonfirmasispesialis")
+//    @PostMapping
+//    public ExtensionResult setNewKonfirmasiSpesialis(@RequestBody ExtensionRequest extensionRequest) {
+//        return svcService.setNewKonfirmasiSpesialis(extensionRequest);
+//    }
 
     @RequestMapping("/setstepdua")
     @PostMapping
