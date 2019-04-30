@@ -3689,23 +3689,27 @@ public class ServiceImp implements IService {
         ExtensionResult extensionResult = new ExtensionResult();
         StringBuilder sb = new StringBuilder();
 
+        String konfirmtipe = getEasyMapValueByName(extensionRequest, "konfirmtipe");
         String doctorId = getEasyMapValueByName(extensionRequest, "dokterid");
-        String subHospital = getEasyMapValueByName(extensionRequest, "step_dua");
+        String stepdua = getEasyMapValueByName(extensionRequest, "step_dua");
+        String steptiga = getEasyMapValueByName(extensionRequest, "step_tiga");
 
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DATE, +1);
         String[] iddokter = doctorId.split(" ");
         String dokid = iddokter[1];
 
-        String lowerSubHos = subHospital.toLowerCase();
-        String[] idhos = lowerSubHos.split(" ");
-        String hos = idhos[0];
         String hosid = "";
-        if (hos.equalsIgnoreCase("hos")) {
-            hosid = idhos[1];
-        }else{
+        if (konfirmtipe.equalsIgnoreCase("area")) {
+            String[] idhos = stepdua.split(" ");
             hosid = idhos[0];
+        }else if(konfirmtipe.equalsIgnoreCase("spesialis")){
+            String[] idhos = steptiga.split(" ");
+            hosid = idhos[0];
+        }else if(konfirmtipe.equalsIgnoreCase("nama")){
+            
         }
+        
         String getDoctorByDoctorId = appProperties.getApiDoctorbydoctorid() + dokid;
         JSONArray results3 = GeneralExecuteAPI(getDoctorByDoctorId).getJSONArray("data");
         JSONObject jObj3 = results3.getJSONObject(0);
