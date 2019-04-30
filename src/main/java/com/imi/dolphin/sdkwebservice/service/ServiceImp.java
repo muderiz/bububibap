@@ -3702,13 +3702,14 @@ public class ServiceImp implements IService {
         if (konfirmtipe.equalsIgnoreCase("area")) {
             String[] idhos = stepdua.split(" ");
             hosid = idhos[0];
-        }else if(konfirmtipe.equalsIgnoreCase("spesialis")){
+            if (hosid.equalsIgnoreCase("hos")) {
+                hosid = idhos[1];
+            }
+        } else if (konfirmtipe.equalsIgnoreCase("spesialis")) {
             String[] idhos = steptiga.split(" ");
             hosid = idhos[0];
-        }else if(konfirmtipe.equalsIgnoreCase("nama")){
-            
         }
-        
+
         String getDoctorByDoctorId = appProperties.getApiDoctorbydoctorid() + dokid;
         JSONArray results3 = GeneralExecuteAPI(getDoctorByDoctorId).getJSONArray("data");
         JSONObject jObj3 = results3.getJSONObject(0);
