@@ -2751,6 +2751,7 @@ public class ServiceImp implements IService {
         String konfirmtipe = getEasyMapValueByName(extensionRequest, "konfirmtipe");
         String counter = getEasyMapValueByName(extensionRequest, "counter");
         String stepsatu = getEasyMapValueByName(extensionRequest, "step_satu");
+        String steptiga = getEasyMapValueByName(extensionRequest, "step_tiga");
         Map<String, String> clearEntities = new HashMap<>();
         String imageUrl = "";
 
@@ -2786,6 +2787,7 @@ public class ServiceImp implements IService {
                         // Spesialis
                     } else if (tipe.equalsIgnoreCase("spesialis")) {
                         int code = 0;
+
                         String apiSpecialis = appProperties.getApiSpecialist() + "?top10=true";
                         JSONArray resultsSpec = GeneralExecuteAPI(apiSpecialis).getJSONArray("data");
                         int leng;
@@ -2866,6 +2868,11 @@ public class ServiceImp implements IService {
                 break;
             // Get Location by Spesialis
             case "spesialis":
+                if (stepsatu.equalsIgnoreCase("")) {
+                    if (!steptiga.equalsIgnoreCase("")) {
+                        stepsatu = steptiga;
+                    }
+                }
                 String apiSpecialisName = appProperties.getApiSpecialistbyname() + stepsatu;
                 JSONObject jsonobjSpecName = GeneralExecuteAPI(apiSpecialisName);
 
@@ -2901,6 +2908,7 @@ public class ServiceImp implements IService {
                         leng = leng(code, resultsSpec);
                         sb = carospec(sb, leng, resultsSpec);
                         String dialog1 = "Silahkan pilih atau ketikan nama Spesialis yang ingin Anda tuju.";
+
                         output.put(OUTPUT, dialog1 + ParamSdk.SPLIT_CHAT + sb.toString());
                         clearEntities.put("konfirmtipe", tipe);
 
@@ -3346,9 +3354,9 @@ public class ServiceImp implements IService {
                     double latitude = extensionRequest.getIntent().getTicket().getLatitude();
                     double longitude = extensionRequest.getIntent().getTicket().getLongitude();
 
-                    String apiHospitalDummy = appProperties.getDummyHospital();
-                    // String apiHospital = appProperties.getApiHospital();
-                    JSONArray results = GeneralExecuteAPI(apiHospitalDummy).getJSONArray("data");
+//                    String apiHospitalDummy = appProperties.getDummyHospital();
+                    String apiHospital = appProperties.getApiHospital();
+                    JSONArray results = GeneralExecuteAPI(apiHospital).getJSONArray("data");
                     int leng = results.length();
                     // BigDecimal longitud;
                     // BigDecimal latitud;
@@ -3708,6 +3716,12 @@ public class ServiceImp implements IService {
         } else if (konfirmtipe.equalsIgnoreCase("spesialis")) {
             String[] idhos = steptiga.split(" ");
             hosid = idhos[0];
+        } else {
+            String[] idhos = stepdua.split(" ");
+            hosid = idhos[0];
+            if (hosid.equalsIgnoreCase("hos")) {
+                hosid = idhos[1];
+            }
         }
 
         String getDoctorByDoctorId = appProperties.getApiDoctorbydoctorid() + dokid;
