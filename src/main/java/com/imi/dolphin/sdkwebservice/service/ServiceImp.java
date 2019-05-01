@@ -3359,16 +3359,18 @@ public class ServiceImp implements IService {
                     String apiHospital = appProperties.getApiHospital();
                     JSONArray results = GeneralExecuteAPI(apiHospital).getJSONArray("data");
                     int leng = results.length();
-                    // BigDecimal longitud;
-                    // BigDecimal latitud;
+                    BigDecimal longitud;
+                    BigDecimal latitud;
                     List<List<String>> data = new ArrayList<>();
                     double hasil;
                     for (int i = 0; i < leng; i++) {
                         JSONObject jObj = results.getJSONObject(i);
                         String hospitalid = jObj.getString("hospital_id");
                         String hospitalname = jObj.getString("hospital_name");
-                        String longitud = jObj.getString("longitude");
-                        String latitud = jObj.getString("latitude");
+                        longitud = jObj.getBigDecimal("longitude");
+                        latitud = jObj.getBigDecimal("latitude");
+//                        String longitud = jObj.getString("longitude");
+//                        String latitud = jObj.getString("latitude");
                         String phonenumber = jObj.getString("phoneNumber");
 
                         if (!jObj.optString("image_url").equalsIgnoreCase("")) {
@@ -3376,11 +3378,10 @@ public class ServiceImp implements IService {
                         } else {
                             imageUrl = appProperties.getSiloamLogo();
                         }
-                        if (!latitud.equalsIgnoreCase("") && !longitud.equalsIgnoreCase("")) {
+                        if (latitud != null && longitud != null) {
                             // hasil = distanceInKilometers((Double.valueOf(latitude)), (Double.valueOf(longitude)), latitud.doubleValue(), longitud.doubleValue());
                             // hasil = distanceInKilometers((Double.valueOf(latit)), (Double.valueOf(longi)), latitud.doubleValue(), longitud.doubleValue());
-                            hasil = distanceInKilometers((Double.valueOf(latitude)), (Double.valueOf(longitude)),
-                                    Double.valueOf(latitud), Double.valueOf(longitud));
+                            hasil = distanceInKilometers((Double.valueOf(latitude)), (Double.valueOf(longitude)), latitud.doubleValue(), longitud.doubleValue());
                             List<String> jarak = new ArrayList<>();
                             if (hasil < 30) {
                                 jarak.add(hasil + "");
