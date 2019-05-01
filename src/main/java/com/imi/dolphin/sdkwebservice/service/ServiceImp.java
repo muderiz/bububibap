@@ -2871,6 +2871,7 @@ public class ServiceImp implements IService {
                 if (stepsatu.equalsIgnoreCase("")) {
                     if (!steptiga.equalsIgnoreCase("")) {
                         stepsatu = steptiga;
+                        clearEntities.put("step_satu", steptiga);
                     }
                 }
                 String apiSpecialisName = appProperties.getApiSpecialistbyname() + stepsatu;
