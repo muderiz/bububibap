@@ -1113,7 +1113,7 @@ public class ServiceImp implements IService {
                             button.setPictureLink(imageUrl);
                             button.setPicturePath(imageUrl);
                             button.setTitle(doctorName);
-                            button.setSubTitle(doctorSpecialist + "\n" + doctorHospitals);
+                            button.setSubTitle(doctorSpecialist + "<br/>" + doctorHospitals);
                             List<EasyMap> actions = new ArrayList<>();
                             EasyMap bookAction = new EasyMap();
                             bookAction.setName(doctorName);
