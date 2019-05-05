@@ -26,7 +26,7 @@ import com.imi.dolphin.sdkwebservice.service.IService;
 
 /**
  *
- * @author reja
+ * @author Deka
  *
  */
 @RestController
@@ -71,12 +71,6 @@ public class Controller {
         return svcService.doSendLocation(extensionRequest);
     }
 
-    @RequestMapping("/sendlocationspecialist")
-    @PostMapping
-    public ExtensionResult doSendLocationSpecialist(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.doSendLocationSpecialist(extensionRequest);
-    }
-
     @RequestMapping("/nearesthospital")
     @PostMapping
     public ExtensionResult doGetHospitalTerdekat(@RequestBody ExtensionRequest extensionRequest) {
@@ -88,120 +82,7 @@ public class Controller {
     public ExtensionResult doCallHospital(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.doCallHospital(extensionRequest);
     }
-    // ----------------------- //
-
-    // Get Doctor by Area //
-    @RequestMapping("/getareas")
-    @PostMapping
-    public ExtensionResult doGetAreas(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.doGetAreas(extensionRequest);
-    }
-
-    @RequestMapping("/gethospital")
-    @PostMapping
-    public ExtensionResult doGetHospitalByArea(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.doGetHospitalByArea(extensionRequest);
-    }
-
-    @RequestMapping("/getspecialist/hospital")
-    @PostMapping
-    public ExtensionResult SiloamGetSpecialistByHospital(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.SiloamGetSpecialistByHospital(extensionRequest);
-    }
-
-    @RequestMapping("/setkonfirmasispecbyhospital")
-    @PostMapping
-    public ExtensionResult SetKonfirmasiSpesialisbyHospital(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.SetKonfirmasiSpesialisbyHospital(extensionRequest);
-    }
-
-    @RequestMapping("/getdoctor/hospital/specialist")
-    @PostMapping
-    public ExtensionResult SiloamGetDoctorByHospitalAndSpecialist(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.SiloamGetDoctorByHospitalAndSpecialist(extensionRequest);
-    }
-
-    //----------------//
-    //p//
-    @RequestMapping("/getdoctorschedule")
-    @PostMapping
-    public ExtensionResult doGetDoctorSchedule(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.doGetDoctorSchedule(extensionRequest);
-    }
-
-    // Get Doctor by Name //
-    @RequestMapping("/tanyanama")
-    @PostMapping
-    public ExtensionResult tanyaNama(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.tanyaNama(extensionRequest);
-    }
-
-    @RequestMapping("/validasinama")
-    @PostMapping
-    public ExtensionResult validasiNama(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.validasiNama(extensionRequest);
-    }
-
-    @RequestMapping("/getdoctor/name")
-    @PostMapping
-    public ExtensionResult doGetDoctorByName(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.doGetDoctorByName(extensionRequest);
-    }
-
-    //---------------------//
-    // Get Schdule by DoctorId //
-    @RequestMapping("/getschedule/doctorid")
-    @PostMapping
-    public ExtensionResult doGetScheduleByDoctorId(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.doGetScheduleByDoctorId(extensionRequest);
-    }
-
-    // ------------------- //
-    // Get Doctor by Specialist //
-    @RequestMapping("/getspecialist/name")
-    @PostMapping
-    public ExtensionResult SiloamGetSpecialistbyName(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.SiloamGetSpecialistbyName(extensionRequest);
-    }
-
-    @RequestMapping("/setcounterspecialist")
-    @PostMapping
-    public ExtensionResult SetCounterSpecialist(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.SetCounterSpecialist(extensionRequest);
-    }
-
-    @RequestMapping("/setkonfirmasi")
-    @PostMapping
-    public ExtensionResult SetKonfirmasiSpesialis(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.SetKonfirmasiSpesialis(extensionRequest);
-    }
-
-    @RequestMapping("/specialisthospitalterdekat")
-    @PostMapping
-    public ExtensionResult SpecialistHospitalTerdekat(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.SpecialistHospitalTerdekat(extensionRequest);
-    }
-
-    @RequestMapping("/getdoctor/specialist")
-    @PostMapping
-    public ExtensionResult doGetDoctorBySpecialist(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.doGetDoctorBySpecialist(extensionRequest);
-    }
-    // ---------------------- //
-
-    // Booking Doctor //
-    @RequestMapping("/jampraktek")
-    @PostMapping
-    public ExtensionResult JamPraktek(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.JamPraktek(extensionRequest);
-    }
-
-    @RequestMapping("/jampraktekdokter")
-    @PostMapping
-    public ExtensionResult doGetJamPraktekDokter(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.doGetJamPraktekDokter(extensionRequest);
-    }
-
+   
     @RequestMapping("/createappointment")
     @PostMapping
     public ExtensionResult doPostCreateAppointment(@RequestBody ExtensionRequest extensionRequest) {
@@ -221,12 +102,6 @@ public class Controller {
         return svcService.doValidateDate(extensionRequest);
     }
 
-    @RequestMapping("/cleardate")
-    @PostMapping
-    public ExtensionResult doClearDate(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.doClearDate(extensionRequest);
-    }
-
     @RequestMapping("/SiloammenggunakanBPJS")
     @PostMapping
     public ExtensionResult SiloamMenggunakanBPJS(@RequestBody ExtensionRequest extensionRequest) {
@@ -239,12 +114,6 @@ public class Controller {
     public ExtensionResult SetKonfirmasiTipe(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.SetKonfirmasiTipe(extensionRequest);
     }
-    
-//    @RequestMapping("/setnewkonfirmasispesialis")
-//    @PostMapping
-//    public ExtensionResult setNewKonfirmasiSpesialis(@RequestBody ExtensionRequest extensionRequest) {
-//        return svcService.setNewKonfirmasiSpesialis(extensionRequest);
-//    }
 
     @RequestMapping("/setstepdua")
     @PostMapping

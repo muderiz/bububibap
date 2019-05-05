@@ -26,30 +26,6 @@ public interface IService {
 
     ExtensionResult doSendLocation(ExtensionRequest extensionRequest);
 
-    ExtensionResult doSendLocationSpecialist(ExtensionRequest extensionRequest);
-
-    ExtensionResult doGetAreas(ExtensionRequest extensionRequest);
-
-    ExtensionResult doGetHospitalByArea(ExtensionRequest extensionRequest);
-
-    ExtensionResult SetKonfirmasiSpesialisbyHospital(ExtensionRequest extensionRequest);
-
-    ExtensionResult SiloamGetDoctorByHospitalAndSpecialist(ExtensionRequest extensionRequest);
-
-    ExtensionResult doGetDoctorBySpecialist(ExtensionRequest extensionRequest);
-
-    ExtensionResult doGetDoctorSchedule(ExtensionRequest extensionRequest);
-
-    // get Dokter by Nama
-    ExtensionResult tanyaNama(ExtensionRequest extensionRequest);
-
-    ExtensionResult validasiNama(ExtensionRequest extensionRequest);
-
-    ExtensionResult doGetDoctorByName(ExtensionRequest extensionRequest);
-
-    //
-    ExtensionResult doGetScheduleByDoctorId(ExtensionRequest extensionRequest);
-
     ExtensionResult MenuUtama(ExtensionRequest extensionRequest);
 
     ExtensionResult TipePencarian(ExtensionRequest extensionRequest);
@@ -58,36 +34,13 @@ public interface IService {
 
     ExtensionResult doCallHospital(ExtensionRequest extensionRequest);
 
-    // get Dokter by Spesialis
-    ExtensionResult SiloamGetSpecialistByHospital(ExtensionRequest extensionRequest);
-
-    ExtensionResult SiloamGetSpecialistbyName(ExtensionRequest extensionRequest);
-
-    ExtensionResult SetCounterSpecialist(ExtensionRequest extensionRequest);
-
-    ExtensionResult SetKonfirmasiSpesialis(ExtensionRequest extensionRequest);
-
-    ExtensionResult SpecialistHospitalTerdekat(ExtensionRequest extensionRequest);
-
-    // ExtensionResult doPostCreatePatient(ExtensionRequest extensionRequest);
-    ExtensionResult doPostCreateAppointment(ExtensionRequest extensionRequest);
-
-    ExtensionResult JamPraktek(ExtensionRequest extensionRequest);
-
-    ExtensionResult doGetJamPraktekDokter(ExtensionRequest extensionRequest);
-
     ExtensionResult doValidatePhone(ExtensionRequest extensionRequest);
 
     ExtensionResult doValidateDate(ExtensionRequest extensionRequest);
 
-    ExtensionResult doClearDate(ExtensionRequest extensionRequest);
-
     ExtensionResult siloamMenggunakanBPJS(ExtensionRequest extensionRequest);
 
-    // New Booking Dokter
     ExtensionResult SetKonfirmasiTipe(ExtensionRequest extensionRequest);
-
-//    ExtensionResult setNewKonfirmasiSpesialis(ExtensionRequest extensionRequest);
 
     ExtensionResult setStepDua(ExtensionRequest extensionRequest);
 
@@ -103,4 +56,5 @@ public interface IService {
 
     ExtensionResult validasiNamaPasien(ExtensionRequest extensionRequest);
 
+    ExtensionResult doPostCreateAppointment(ExtensionRequest extensionRequest);
 }
