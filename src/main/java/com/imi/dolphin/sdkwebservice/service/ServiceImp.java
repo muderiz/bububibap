@@ -1047,7 +1047,7 @@ public class ServiceImp implements IService {
                     break;
                 case 2:
                     clearEntities.put("konfirmtipe", konfirmtipe);
-
+                    imageUrl = appProperties.getSiloamLogo();
                     JSONArray resultsSpesialis = jobj2.getJSONArray("data");
                     int leng2 = resultsSpesialis.length();
                     if (leng2 > 1) {
@@ -1084,7 +1084,7 @@ public class ServiceImp implements IService {
                     clearEntities.put("step_satu", "1");
                     clearEntities.put("step_dua", "2");
                     clearEntities.put("step_tiga", "3");
-
+                    imageUrl = appProperties.getSiloamLogo();
                     JSONArray resultsNama = jobj3.getJSONArray("data");
                     int leng3 = resultsNama.length();
                     for (int i = 0; i < leng3; i++) {
@@ -1117,7 +1117,7 @@ public class ServiceImp implements IService {
                             actions.add(bookAction);
                             button.setButtonValues(actions);
                             ButtonBuilder buttonBuilder = new ButtonBuilder(button);
-                            
+
 //                            String value = "dokter id " + doctorid + " di hos " + hospitalId;
 //                            ButtonBuilder buatBtnBuilder = btnbuilderGeneral(imageUrl, doctorName, doctorSpecialist + "<br/>" + doctorHospitals, doctorName, value);
                             String btnBuilder = buttonBuilder.build().toString();
