@@ -1121,7 +1121,7 @@ public class ServiceImp implements IService {
                             actions.add(bookAction);
                             button.setButtonValues(actions);
                             ButtonBuilder buttonBuilder = new ButtonBuilder(button);
-
+ 
 //                            String value = "dokter id " + doctorid + " di hos " + hospitalId;
 //                            ButtonBuilder buatBtnBuilder = btnbuilderGeneral(imageUrl, doctorName, doctorSpecialist + "<br/>" + doctorHospitals, doctorName, value);
                             String btnBuilder = buttonBuilder.build().toString();
