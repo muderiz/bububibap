@@ -1047,7 +1047,6 @@ public class ServiceImp implements IService {
                     break;
                 case 2:
                     clearEntities.put("konfirmtipe", konfirmtipe);
-                    imageUrl = appProperties.getSiloamLogo();
                     JSONArray resultsSpesialis = jobj2.getJSONArray("data");
                     int leng2 = resultsSpesialis.length();
                     if (leng2 > 1) {
@@ -1057,6 +1056,11 @@ public class ServiceImp implements IService {
                             String nameEn = jObj.getString("name_en");
                             String nameId = jObj.getString("name_id");
                             // Buat Button 
+                            if (!jObj.optString("image_url").equalsIgnoreCase("")) {
+                                imageUrl = jObj.getString("image_url");
+                            } else {
+                                imageUrl = appProperties.getSiloamLogo();
+                            }
                             String value = "spesialis id " + id_spesialis;
                             ButtonBuilder buatBtnBuilder = btnbuilderGeneral(imageUrl, nameId, nameEn, nameId, value);
                             String btnBuilder = buatBtnBuilder.build().toString();
