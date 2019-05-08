@@ -976,7 +976,7 @@ public class ServiceImp implements IService {
 
                 //Buat Button
                 String value = areaId;
-                ButtonBuilder buatBtnBuilder = btnbuilderGeneral(imageUrl, areaName, "", areaName, value);
+                ButtonBuilder buatBtnBuilder = btnbuilderGeneral("", areaName, "", areaName, value);
 
                 String btnBuilder = buatBtnBuilder.build().toString();
                 sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
