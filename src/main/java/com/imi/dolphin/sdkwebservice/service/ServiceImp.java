@@ -645,7 +645,7 @@ public class ServiceImp implements IService {
                     imageUrl = appProperties.getSiloamLogo();
                 }
                 //Buat Button 
-                String value = "pilih " + id_spesialis;
+                String value = id_spesialis;
                 ButtonBuilder buatBtnBuilder = btnbuilderGeneral(imageUrl, name, nameEn, name, value);
                 String btnBuilder = buatBtnBuilder.build().toString();
                 sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
@@ -667,7 +667,7 @@ public class ServiceImp implements IService {
                     imageUrl = appProperties.getSiloamLogo();
                 }
                 //Buat Button 
-                String value = "pilih " + id_spesialis;
+                String value = id_spesialis;
                 ButtonBuilder buatBtnBuilder = btnbuilderGeneral(imageUrl, name, nameEn, name, value);
                 String btnBuilder = buatBtnBuilder.build().toString();
                 sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
@@ -965,20 +965,32 @@ public class ServiceImp implements IService {
 
         // Area
         if (tipe.equalsIgnoreCase("area")) {
-            String imageUrl = appProperties.getSiloamLogo();
             String apiArea = appProperties.getApiArea();
             JSONArray results = GeneralExecuteAPI(apiArea).getJSONArray("data");
             int leng = results.length();
+            String imageUrl = appProperties.getSiloamLogo();
             for (int i = 0; i < leng; i++) {
                 JSONObject jObj = results.getJSONObject(i);
                 String areaId = jObj.getString("area_id");
                 String areaName = jObj.getString("area_name");
 
                 //Buat Button
-                String value = areaId;
-                ButtonBuilder buatBtnBuilder = btnbuilderGeneral("", areaName, "", areaName, value);
+                ButtonTemplate button = new ButtonTemplate();
+                button.setPictureLink(imageUrl);
+                button.setPicturePath(imageUrl);
+                button.setTitle("");
+                button.setSubTitle("");
+                List<EasyMap> actions = new ArrayList<>();
+                EasyMap bookAction = new EasyMap();
+                bookAction.setName(areaName);
+                bookAction.setValue(areaId);
+                actions.add(bookAction);
+                button.setButtonValues(actions);
+                ButtonBuilder buttonBuilder = new ButtonBuilder(button);
+//                String value = areaId;
+//                ButtonBuilder buatBtnBuilder = btnbuilderGeneral("", areaName, "", areaName, value);
 
-                String btnBuilder = buatBtnBuilder.build().toString();
+                String btnBuilder = buttonBuilder.build().toString();
                 sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
             }
             String dialog = "Silahkan pilih area yang ingin Anda tuju.";
@@ -1182,7 +1194,54 @@ public class ServiceImp implements IService {
 
         String lowerstepsatu = stepsatu.toLowerCase();
 
-        // Cek Apakah Entitas Tipe Pencarian
+        String apiHospitalName = appProperties.getApiHospitalName() + lowerstepsatu;
+        JSONObject jobjHospitalName = GeneralExecuteAPI(apiHospitalName);
+        String stat = "";
+        String newstepdua = "";
+
+        if (jobjHospitalName.getInt("code") == 200) {
+            JSONArray resultsHospitalName = jobjHospitalName.getJSONArray("data");
+            JSONObject jObj;
+            if (stepsatu.equalsIgnoreCase("lippo village")) {
+                jObj = resultsHospitalName.getJSONObject(1);
+            } else {
+                jObj = resultsHospitalName.getJSONObject(0);
+            }
+            String hospitalId = jObj.getString("hospital_id");
+            stat = "hospital";
+            newstepdua = hospitalId;
+        } else {
+//                        String apiHospital = appProperties.getApiHospitalByArea() + stepsatu;
+            String apiHospital = appProperties.getApiHospital();
+            JSONArray results = GeneralExecuteAPI(apiHospital).getJSONArray("data");
+            int lenghospital = results.length();
+            for (int i = 0; i < lenghospital; i++) {
+                JSONObject jObj = results.getJSONObject(i);
+                String hospitalId = jObj.getString("hospital_id");
+                String hospitalName = jObj.getString("hospital_name");
+                String hospitalName2 = hospitalName.toLowerCase();
+                if (stepsatu.equalsIgnoreCase(hospitalId) || stepsatu.equalsIgnoreCase(hospitalName2)) {
+                    stat = "hospital";
+                    newstepdua = hospitalId;
+                    break;
+                }
+            }
+        }
+        if (stat.equalsIgnoreCase("hospital")) {
+            int code = Integer.parseInt(counter);
+            String apiSpec = appProperties.getApiSpecialistbyHospital() + newstepdua + "&top10=true";
+            JSONArray resultsSpec = GeneralExecuteAPI(apiSpec).getJSONArray("data");
+            int leng;
+            leng = leng(code, resultsSpec);
+            sb = carospec(sb, leng, resultsSpec);
+
+            String dialog1 = "Silahkan pilih atau ketikan nama Spesialis yang ingin Anda tuju.";
+            output.put(OUTPUT, dialog1 + ParamSdk.SPLIT_CHAT + sb.toString());
+
+            clearEntities.put("step_dua", newstepdua);
+            extensionResult.setEntities(clearEntities);
+
+        } else // Cek Apakah Entitas Tipe Pencarian
         if (stepsatu.equalsIgnoreCase("area") || stepsatu.equalsIgnoreCase("spesialis") || stepsatu.equalsIgnoreCase("nama")) {
             String tipe = stepsatu;
             if (tipe.equalsIgnoreCase("area")) {
@@ -1197,7 +1256,7 @@ public class ServiceImp implements IService {
 
                     //Buat Button
                     String value = areaId;
-                    ButtonBuilder buatBtnBuilder = btnbuilderGeneral(imageUrl, areaName, areaName, areaName, value);
+                    ButtonBuilder buatBtnBuilder = btnbuilderGeneral(imageUrl, areaName, "", areaName, value);
                     String btnBuilder = buatBtnBuilder.build().toString();
                     sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
                 }
@@ -1720,14 +1779,27 @@ public class ServiceImp implements IService {
                             String doctorHospitals = jObj.getString("doctor_hospitals_unit");
                             imageUrl = "";
                             //Buat Button
-                            String value = "dokter id " + doctorId + " di hos " + hospitalId;
-                            ButtonBuilder buatBtnBuilder = btnbuilderGeneral(imageUrl, doctorName, doctorSpecialist + "<br/>" + doctorHospitals,
-                                    doctorName, value);
-                            String btnBuilder = buatBtnBuilder.build().toString();
+                            ButtonTemplate button = new ButtonTemplate();
+//                            button.setPictureLink("");
+//                            button.setPicturePath("");
+                            button.setTitle(doctorName);
+                            button.setSubTitle(doctorSpecialist + "<br/>" + doctorHospitals);
+                            List<EasyMap> actions = new ArrayList<>();
+                            EasyMap bookAction = new EasyMap();
+                            bookAction.setName(doctorName);
+                            bookAction.setValue("dokter id " + doctorId + " di hos " + hospitalId);
+                            actions.add(bookAction);
+                            button.setButtonValues(actions);
+                            ButtonBuilder buttonBuilder = new ButtonBuilder(button);
+//                            String value = "dokter id " + doctorId + " di hos " + hospitalId;
+//                            ButtonBuilder buatBtnBuilder = btnbuilderGeneral(imageUrl, doctorName, doctorSpecialist + "<br/>" + doctorHospitals,
+//                                    doctorName, value);
+                            String btnBuilder = buttonBuilder.build().toString();
                             sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
                         }
                         String dialog = "Berikut adalah daftar dokter yang dapat Anda pilih di " + hospitalName + ". (Atau ketik Menu untuk kembali ke Menu Utama)";
                         output.put(OUTPUT, dialog + ParamSdk.SPLIT_CHAT + sb.toString());
+
                         clearEntities.put("step_dua", lowerstepdua);
                         clearEntities.put("step_tiga", idhos);
                         extensionResult.setEntities(clearEntities);
@@ -1784,7 +1856,7 @@ public class ServiceImp implements IService {
 
                             //Buat Button
                             String value = idhospital;
-                            ButtonBuilder buatBtnBuilder = btnbuilderGeneral(image, namehospital, namehospital, namehospital, value);
+                            ButtonBuilder buatBtnBuilder = btnbuilderGeneral(image, namehospital, "", namehospital, value);
                             String btnBuilder = buatBtnBuilder.build().toString();
                             sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
 
