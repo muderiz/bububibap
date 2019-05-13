@@ -645,6 +645,7 @@ public class ServiceImp implements IService {
                     imageUrl = appProperties.getSiloamLogo();
                 }
                 //Buat Button 
+
                 String value = id_spesialis;
                 ButtonBuilder buatBtnBuilder = btnbuilderGeneral(imageUrl, name, nameEn, name, value);
                 String btnBuilder = buatBtnBuilder.build().toString();
@@ -968,7 +969,7 @@ public class ServiceImp implements IService {
             String apiArea = appProperties.getApiArea();
             JSONArray results = GeneralExecuteAPI(apiArea).getJSONArray("data");
             int leng = results.length();
-            String imageUrl = appProperties.getSiloamLogo();
+//            String imageUrl = appProperties.getSiloamLogo();
             for (int i = 0; i < leng; i++) {
                 JSONObject jObj = results.getJSONObject(i);
                 String areaId = jObj.getString("area_id");
@@ -976,9 +977,9 @@ public class ServiceImp implements IService {
 
                 //Buat Button
                 ButtonTemplate button = new ButtonTemplate();
-                button.setPictureLink(imageUrl);
-                button.setPicturePath(imageUrl);
-                button.setTitle("");
+//                button.setPictureLink("");
+//                button.setPicturePath("");
+                button.setTitle(areaName);
                 button.setSubTitle("");
                 List<EasyMap> actions = new ArrayList<>();
                 EasyMap bookAction = new EasyMap();
@@ -2058,8 +2059,8 @@ public class ServiceImp implements IService {
                                 imageUrl = "";
                                 //Buat Button
                                 ButtonTemplate button = new ButtonTemplate();
-                                button.setPictureLink("");
-                                button.setPicturePath("");
+//                                button.setPictureLink("");
+//                                button.setPicturePath("");
                                 button.setTitle(doctorName);
                                 button.setSubTitle(doctorSpecialist + "<br/>" + doctorHospitals);
                                 List<EasyMap> actions = new ArrayList<>();
@@ -2079,6 +2080,12 @@ public class ServiceImp implements IService {
                         } else {
                             String dialog = "Maaf {bot_name} tidak menemukan daftar dokter yang anda cari. Mohon hubungi Contact Center +1500181";
                             output.put(OUTPUT, dialog);
+                            clearEntities.put("tanggalpesan", "1");
+                            clearEntities.put("jampraktek", "10");
+                            clearEntities.put("namapasien", "Deka");
+                            clearEntities.put("tanggallahir", "1995-01-01");
+                            clearEntities.put("notelp", "081318151403");
+                            clearEntities.put("confirm", "6");
                         }
                     }
                     break;
@@ -2144,6 +2151,7 @@ public class ServiceImp implements IService {
      */
     @Override
     public ExtensionResult newGetScheduleDoctorId(ExtensionRequest extensionRequest) {
+        Map<String, String> clearEntities = new HashMap<>();
         StringBuilder proctime = new StringBuilder();
         Date dnow = new Date();
         SimpleDateFormat ft = new SimpleDateFormat("hh:mm:ss SSS");
@@ -2153,7 +2161,7 @@ public class ServiceImp implements IService {
         ExtensionResult extensionResult = new ExtensionResult();
         StringBuilder sb = new StringBuilder();
 
-        String konfirmtipe = getEasyMapValueByName(extensionRequest, "konfirmtipe");
+//        String konfirmtipe = getEasyMapValueByName(extensionRequest, "konfirmtipe");
         String doctorId = getEasyMapValueByName(extensionRequest, "dokterid");
         String stepdua = getEasyMapValueByName(extensionRequest, "step_dua");
         String steptiga = getEasyMapValueByName(extensionRequest, "step_tiga");
@@ -2163,39 +2171,22 @@ public class ServiceImp implements IService {
         String[] iddokter = doctorId.split(" ");
         String dokid = iddokter[1];
 
+//        String apiDokterName = appProperties.getApiDoctorbyname() + doctorId;
+//        JSONObject jobj3 = GeneralExecuteAPI(apiDokterName);
+//        if (jobj3.getInt("code") == 200) {
+//
+//        }
         String hosid = "";
-        String apiDokterName = appProperties.getApiDoctorbyname() + doctorId;
-        JSONObject jobj3 = GeneralExecuteAPI(apiDokterName);
-        if (jobj3.getInt("code") == 200) {
-
-        }
-
-        if (konfirmtipe.equalsIgnoreCase("area")) {
-            String[] idhos = stepdua.split(" ");
-            hosid = idhos[0];
-            if (hosid.equalsIgnoreCase("hos")) {
-                hosid = idhos[1];
-            }
-        } else if (konfirmtipe.equalsIgnoreCase("spesialis")) {
-            String[] idhos = steptiga.split(" ");
-            hosid = idhos[0];
-        } else {
-            String[] idhos = stepdua.split(" ");
-            hosid = idhos[0];
-            if (hosid.equalsIgnoreCase("hos")) {
-                hosid = idhos[1];
-            }
-        }
-
-        String getDoctorByDoctorId = appProperties.getApiDoctorbydoctorid() + dokid;
-        JSONArray results3 = GeneralExecuteAPI(getDoctorByDoctorId).getJSONArray("data");
-        JSONObject jObj3 = results3.getJSONObject(0);
-        String doctorName = jObj3.getString("doctor_name");
+        String[] idhos = stepdua.split(" ");
+//        hosid = idhos[0];
+//        if (hosid.equalsIgnoreCase("hos")) {
+        hosid = idhos[1];
+//        }
 
         String schedule = appProperties.getApiDoctorschedule() + dokid + "/" + hosid;
         JSONObject jobjSchedule = GeneralExecuteAPI(schedule);
-
-        if (jobjSchedule.getInt("code") == 200) {
+        int code = jobjSchedule.getInt("code");
+        if (code == 200) {
             JSONArray results = jobjSchedule.getJSONArray("data");
             int leng = results.length();
             List<Integer> dayslist = new ArrayList<>();
@@ -2257,17 +2248,16 @@ public class ServiceImp implements IService {
                         }
                         i++;
                     }
-                    String tanggalttitle = hari + ", " + tanggal + " " + bulan + " " + tahun;
+                    String tanggaltitle = hari + ", " + tanggal + " " + bulan + " " + tahun;
                     if (dayslist.contains(kodeHari)) {
                         //Buat Button
                         ButtonTemplate button = new ButtonTemplate();
 //                        button.setPictureLink(appProperties.getSiloamLogo());
-                        button.setTitle(tanggalttitle);
+                        button.setTitle(tanggaltitle);
                         button.setSubTitle(daypoint[x] + " | " + available);
                         List<EasyMap> actions = new ArrayList<>();
-
                         EasyMap bookAction = new EasyMap();
-                        bookAction.setName(tanggalttitle);
+                        bookAction.setName(tanggaltitle);
                         bookAction.setValue(daypoint2[x] + "=" + date);
                         actions.add(bookAction);
                         button.setButtonValues(actions);
@@ -2284,37 +2274,44 @@ public class ServiceImp implements IService {
             proctime.append(ft.format(dnow));
             String stringbuild = sb.toString();
             if (sb.toString().isEmpty() || sb.toString().equalsIgnoreCase("")) {
-                Map<String, String> clearEntities = new HashMap<>();
-                clearEntities.put("tanggalpesan", "1");
-                clearEntities.put("jampraktek", "2");
-                clearEntities.put("namapasien", "3");
-                clearEntities.put("tanggallahir", "4");
-                clearEntities.put("notelp", "5");
-                clearEntities.put("confirm", "6");
-                extensionResult.setEntities(clearEntities);
+                clearEntities.put("tanggalpesan", "13 00-16 00=2019-03-28");
+                clearEntities.put("jampraktek", "10 00");
+                clearEntities.put("namapasien", "Admin");
+//                clearEntities.put("konfirmasinamapasien", "benar");
+                clearEntities.put("tanggallahir", "1995-01-01");
+                clearEntities.put("notelp", "081318151400");
+                clearEntities.put("confirm", "yes");
+
                 String StringOutput = "Maaf. {bot_name} tidak dapat menemukan Jadwal Dokter pilihan Anda.";
                 stringbuild = StringOutput;
                 output.put(OUTPUT, stringbuild);
 
             } else {
+                String getDoctorByDoctorId = appProperties.getApiDoctorbydoctorid() + dokid;
+                JSONArray results3 = GeneralExecuteAPI(getDoctorByDoctorId).getJSONArray("data");
+                JSONObject jObj3 = results3.getJSONObject(0);
+                String doctorName = jObj3.getString("doctor_name");
                 String dialog1 = "Berikut adalah detail jadwal praktik " + doctorName + ". (Atau ketik Menu untuk kembali ke Menu Utama).";
                 output.put(OUTPUT, dialog1 + ParamSdk.SPLIT_CHAT + stringbuild);
 
             }
         } else {
-            Map<String, String> clearEntities = new HashMap<>();
-            clearEntities.put("tanggalpesan", "1");
-            clearEntities.put("jampraktek", "");
-            clearEntities.put("namapasien", "Deka");
+            clearEntities.put("step_tiga", steptiga);
+            clearEntities.put("tanggalpesan", "13 00-16 00=2019-03-28");
+            clearEntities.put("jampraktek", "10 00");
+            clearEntities.put("namapasien", "Admin");
+//            clearEntities.put("konfirmasinamapasien", "benar");
             clearEntities.put("tanggallahir", "1995-01-01");
-            clearEntities.put("notelp", "081318151403");
-            clearEntities.put("confirm", "6");
-            extensionResult.setEntities(clearEntities);
-            String dialog1 = "Maaf Silvia tidak menemukan jadwal dokter yang anda cari. Mohon hubungi Siloam Hospital yang di tuju.";
+            clearEntities.put("notelp", "081318151400");
+            clearEntities.put("confirm", "yes");
+
+            String dialog1 = "Maaf Silvia tidak menemukan jadwal dokter yang anda cari. Mohon hubungi Siloam Hospital yang dituju.";
+//            sb.append(dialog1).append(CONSTANT_SPLIT_SYNTAX);
             output.put(OUTPUT, dialog1);
         }
 
-        output.put("extra", proctime.toString());
+//        output.put("extra", proctime.toString());
+        extensionResult.setEntities(clearEntities);
         extensionResult.setValue(output);
         extensionResult.setAgent(false);
         extensionResult.setRepeat(false);
@@ -2331,8 +2328,7 @@ public class ServiceImp implements IService {
      * @return
      */
     @Override
-    public ExtensionResult newGetJamPraktek(ExtensionRequest extensionRequest
-    ) {
+    public ExtensionResult newGetJamPraktek(ExtensionRequest extensionRequest) {
         ExtensionResult extensionResult = new ExtensionResult();
         extensionResult.setAgent(false);
         extensionResult.setRepeat(false);
@@ -2391,7 +2387,7 @@ public class ServiceImp implements IService {
             Map<String, String> clearEntities = new HashMap<>();
             clearEntities.put("jampraktek", "10 00");
             clearEntities.put("namapasien", "admin");
-            clearEntities.put("konfirmasinamapasien", "benar");
+//            clearEntities.put("konfirmasinamapasien", "benar");
             clearEntities.put("tanggallahir", "1999-01-01");
             clearEntities.put("notelp", "081318141513");
             clearEntities.put("confirm", "yes");
@@ -2411,8 +2407,7 @@ public class ServiceImp implements IService {
      * @return
      */
     @Override
-    public ExtensionResult tanyaNamaPasien(ExtensionRequest extensionRequest
-    ) {
+    public ExtensionResult tanyaNamaPasien(ExtensionRequest extensionRequest) {
         Map<String, String> output = new HashMap<>();
         ExtensionResult extensionResult = new ExtensionResult();
 
@@ -2435,39 +2430,38 @@ public class ServiceImp implements IService {
      * @return
      */
     @Override
-    public ExtensionResult validasiNamaPasien(ExtensionRequest extensionRequest
-    ) {
+    public ExtensionResult validasiNamaPasien(ExtensionRequest extensionRequest) {
         Map<String, String> output = new HashMap<>();
         ExtensionResult extensionResult = new ExtensionResult();
         String namapasien = getEasyMapValueByName(extensionRequest, "namapasien");
-        String konfirmasinama = getEasyMapValueByName(extensionRequest, "konfirmasinamapasien");
-        if (konfirmasinama.equalsIgnoreCase("benar")) {
-            if (namapasien.matches("[\\d].*")) {
-                Map<String, String> clearEntities = new HashMap<>();
-                clearEntities.put("namapasien", "");
-                clearEntities.put("konfirmasinamapasien", "");
-                extensionResult.setEntities(clearEntities);
-
-                String dialog1 = "Maaf, Nama yang anda ketik mengandung Angka atau Karakter. Silahkan ketik kembali Nama lengkap anda.";
-                output.put(OUTPUT, dialog1);
-                extensionResult.setValue(output);
-            } else {
-                String dialog1 = "Silakan ketik tanggal lahir Anda dengan format (tanggal/bulan/tahun)";
-                output.put(OUTPUT, dialog1);
-
-                extensionResult.setValue(output);
-
-            }
-        } else {
+//        String konfirmasinama = getEasyMapValueByName(extensionRequest, "konfirmasinamapasien");
+//        if (konfirmasinama.equalsIgnoreCase("benar")) {
+        if (namapasien.matches("[\\d].*")) {
             Map<String, String> clearEntities = new HashMap<>();
             clearEntities.put("namapasien", "");
-            clearEntities.put("konfirmasinamapasien", "");
+//            clearEntities.put("konfirmasinamapasien", "");
             extensionResult.setEntities(clearEntities);
 
-            String dialog1 = "Baiklah, silahkan ketikan kembali nama lengkap Anda.";
+            String dialog1 = "Maaf, Nama yang anda ketik mengandung Angka atau Karakter. Silahkan ketik kembali Nama lengkap anda.";
             output.put(OUTPUT, dialog1);
             extensionResult.setValue(output);
+        } else {
+            String dialog1 = "Silakan ketik tanggal lahir Anda dengan format (tanggal/bulan/tahun)";
+            output.put(OUTPUT, dialog1);
+
+            extensionResult.setValue(output);
+
         }
+//        } else {
+//            Map<String, String> clearEntities = new HashMap<>();
+//            clearEntities.put("namapasien", "");
+//            clearEntities.put("konfirmasinamapasien", "");
+//            extensionResult.setEntities(clearEntities);
+//
+//            String dialog1 = "Baiklah, silahkan ketikan kembali nama lengkap Anda.";
+//            output.put(OUTPUT, dialog1);
+//            extensionResult.setValue(output);
+//        }
 
         extensionResult.setAgent(false);
         extensionResult.setRepeat(false);
