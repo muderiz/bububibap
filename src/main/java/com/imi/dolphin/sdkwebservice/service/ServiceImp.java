@@ -36,6 +36,7 @@ import com.imi.dolphin.sdkwebservice.model.MonthBuilder;
 import com.imi.dolphin.sdkwebservice.param.ParamSdk;
 import com.imi.dolphin.sdkwebservice.property.AppProperties;
 import com.imi.dolphin.sdkwebservice.util.OkHttpUtil;
+import static com.sun.corba.se.impl.util.Utility.printStackTrace;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -513,7 +514,29 @@ public class ServiceImp implements IService {
                 String todate = jobjcuti.getString("to_date");
                 String[] splittodate = todate.split("T");
                 String akhircuti = splittodate[0];
-                if (tanggal.equalsIgnoreCase(awalcuti) || tanggal.equalsIgnoreCase(awalcuti)) {
+                int datenowFromdate = 0;
+                int datenowTodate = 0;
+                try {
+                    //get last date of the month
+                    Date awalcut = new SimpleDateFormat("yyyy-MM-dd").parse(awalcuti);
+                    Date akhircut = new SimpleDateFormat("yyyy-MM-dd").parse(akhircuti);
+                    Date nowdat = new SimpleDateFormat("yyyy-MM-dd").parse(tanggal);
+
+//                    Calendar calfrom = Calendar.getInstance();
+//                    Calendar calto = Calendar.getInstance();
+//                    calfrom.setTime(fromdat);
+//                    calto.setTime(todat);
+//                    calfrom.add(Calendar.DATE, -1);
+//                    calto.add(Calendar.DATE, -1);
+                    //cek last date dgn tanggal yg diinputkan
+                    datenowFromdate = nowdat.compareTo(awalcut);
+                    datenowTodate = nowdat.compareTo(akhircut);
+
+                } catch (Exception e) {
+                    printStackTrace();
+                }
+
+                if ((datenowFromdate != 1 && datenowTodate != 1) || (datenowFromdate != -1 && datenowTodate != -1)) {
                     cuti = "iya";
                     break;
                 } else {
@@ -983,7 +1006,7 @@ public class ServiceImp implements IService {
             int leng;
             leng = leng(code, resultsSpec);
             sb = carospec(sb, leng, resultsSpec);
-            String dialog1 = "Silahkan pilih atau ketikan nama Spesialis yang ingin Anda tuju.";
+            String dialog1 = "Silahkan pilih atau ketik nama Spesialis yang ingin Anda tuju.";
             output.put(OUTPUT, dialog1 + ParamSdk.SPLIT_CHAT + sb.toString());
             clearEntities.put("konfirmtipe", konfirmtipe);
 
@@ -1229,7 +1252,7 @@ public class ServiceImp implements IService {
             leng = leng(code, resultsSpec);
             sb = carospec(sb, leng, resultsSpec);
 
-            String dialog1 = "Silahkan pilih atau ketikan nama Spesialis yang ingin Anda tuju.";
+            String dialog1 = "Silahkan pilih atau ketik nama Spesialis yang ingin Anda tuju.";
             output.put(OUTPUT, dialog1 + ParamSdk.SPLIT_CHAT + sb.toString());
 
             clearEntities.put("step_dua", newstepdua);
@@ -1268,7 +1291,7 @@ public class ServiceImp implements IService {
                 int leng;
                 leng = leng(code, resultsSpec);
                 sb = carospec(sb, leng, resultsSpec);
-                String dialog1 = "Silahkan pilih atau ketikan nama Spesialis yang ingin Anda tuju.";
+                String dialog1 = "Silahkan pilih atau ketik nama Spesialis yang ingin Anda tuju.";
                 output.put(OUTPUT, dialog1 + ParamSdk.SPLIT_CHAT + sb.toString());
                 clearEntities.put("konfirmtipe", tipe);
 
@@ -1342,8 +1365,8 @@ public class ServiceImp implements IService {
                             sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
                         }
 
-                        String dialog = "Maaf. {bot_name} tidak dapat menemukan Rumah Sakit Siloam berdasarkan Area yang Anda pilih atau ketikan. "
-                                + "Silahkan pilih atau ketikan kembali Area yang ingin Anda tuju.";
+                        String dialog = "Maaf. {bot_name} tidak dapat menemukan Rumah Sakit Siloam berdasarkan Area yang Anda pilih atau ketik. "
+                                + "Silahkan pilih atau ketik kembali Area yang ingin Anda tuju.";
                         output.put(OUTPUT, dialog + ParamSdk.SPLIT_CHAT + sb.toString());
                     }
 
@@ -1468,44 +1491,50 @@ public class ServiceImp implements IService {
                     stepsatu = stepsatu.toLowerCase().replace("dr. ", "").replace("dr ", "").replace("prof. ", "").replace("prof ", "").replace("profesor ", "").replace("professor ", "");
                     String apiDokterName = appProperties.getApiDoctorbyname() + stepsatu;
                     JSONObject jobj3 = GeneralExecuteAPI(apiDokterName);
-                    JSONArray resultsNama = jobj3.getJSONArray("data");
-                    int leng3 = resultsNama.length();
-                    for (int i = 0; i < leng3; i++) {
-                        JSONObject jObj = resultsNama.getJSONObject(i);
-                        String doctorId = jObj.getString("doctor_id");
+                    if (jobj3.getInt("code") == 200) {
+                        JSONArray resultsNama = jobj3.getJSONArray("data");
+                        int leng3 = resultsNama.length();
+                        for (int i = 0; i < leng3; i++) {
+                            JSONObject jObj = resultsNama.getJSONObject(i);
+                            String doctorId = jObj.getString("doctor_id");
 
-                        String apiGetDokter = appProperties.getApiDoctorbydoctorid() + doctorId;
-                        JSONArray resultsDoctor = GeneralExecuteAPI(apiGetDokter).getJSONArray("data");
-                        int lengDoctor = resultsDoctor.length();
-                        for (int j = 0; j < lengDoctor; j++) {
-                            JSONObject jObj2 = resultsDoctor.getJSONObject(j);
-                            String doctorName = jObj2.getString("doctor_name");
-                            String hospitalId = jObj2.getString("hospital_id");
-                            String doctorSpecialist = jObj2.getString("doctor_specialist");
-                            String doctorHospitals = jObj2.getString("doctor_hospitals_unit");
+                            String apiGetDokter = appProperties.getApiDoctorbydoctorid() + doctorId;
+                            JSONArray resultsDoctor = GeneralExecuteAPI(apiGetDokter).getJSONArray("data");
+                            int lengDoctor = resultsDoctor.length();
+                            for (int j = 0; j < lengDoctor; j++) {
+                                JSONObject jObj2 = resultsDoctor.getJSONObject(j);
+                                String doctorName = jObj2.getString("doctor_name");
+                                String hospitalId = jObj2.getString("hospital_id");
+                                String doctorSpecialist = jObj2.getString("doctor_specialist");
+                                String doctorHospitals = jObj2.getString("doctor_hospitals_unit");
 
-                            //Buat Button
-                            ButtonTemplate button = new ButtonTemplate();
-                            button.setTitle(doctorName);
-                            button.setSubTitle(doctorSpecialist + "<br/>" + doctorHospitals);
-                            List<EasyMap> actions = new ArrayList<>();
+                                //Buat Button
+                                ButtonTemplate button = new ButtonTemplate();
+                                button.setTitle(doctorName);
+                                button.setSubTitle(doctorSpecialist + "<br/>" + doctorHospitals);
+                                List<EasyMap> actions = new ArrayList<>();
 
-                            EasyMap LihatJadwal = new EasyMap();
-                            LihatJadwal.setName(doctorName);
-                            LihatJadwal.setValue("dokter id " + doctorId + " di hos " + hospitalId);
-                            actions.add(LihatJadwal);
-                            button.setButtonValues(actions);
-                            ButtonBuilder buttonBuilder = new ButtonBuilder(button);
+                                EasyMap LihatJadwal = new EasyMap();
+                                LihatJadwal.setName(doctorName);
+                                LihatJadwal.setValue("dokter id " + doctorId + " di hos " + hospitalId);
+                                actions.add(LihatJadwal);
+                                button.setButtonValues(actions);
+                                ButtonBuilder buttonBuilder = new ButtonBuilder(button);
 
-                            String btnBuilder = buttonBuilder.build().toString();
-                            sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
+                                String btnBuilder = buttonBuilder.build().toString();
+                                sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
+                            }
                         }
-                    }
-                    String dialog = "Berikut pilihan Dokter yang {bot_name} temukan. Silahkan pilih Dokter yang Anda ingin kunjungi.";
-                    output.put(OUTPUT, dialog + ParamSdk.SPLIT_CHAT + sb.toString());
+                        String dialog = "Berikut pilihan Dokter yang {bot_name} temukan. Silahkan pilih Dokter yang Anda ingin kunjungi.";
+                        output.put(OUTPUT, dialog + ParamSdk.SPLIT_CHAT + sb.toString());
 
-                    clearEntities.put("step_dua", "2");
-                    clearEntities.put("step_tiga", "3");
+                        clearEntities.put("step_dua", "2");
+                        clearEntities.put("step_tiga", "3");
+                    } else {
+                        sb.append("Maaf, {bot_name} tidak menemukan Dokter berdasarkan Nama Dokter yang Anda ketik. Silahkan ketik kembali Nama Dokter yang ingin Anda kunjungi.");
+                        output.put(OUTPUT, sb.toString());
+                        clearEntities.put("step_satu", "");
+                    }
 
                     break;
             }
@@ -1626,7 +1655,7 @@ public class ServiceImp implements IService {
                 int leng;
                 leng = leng(code, resultsSpec);
                 sb = carospec(sb, leng, resultsSpec);
-                String dialog1 = "Silahkan pilih atau ketikan nama Spesialis yang ingin Anda tuju.";
+                String dialog1 = "Silahkan pilih atau ketik nama Spesialis yang ingin Anda tuju.";
                 output.put(OUTPUT, dialog1 + ParamSdk.SPLIT_CHAT + sb.toString());
                 clearEntities.put("konfirmtipe", tipe);
 
@@ -1686,7 +1715,7 @@ public class ServiceImp implements IService {
                         leng = leng(code, resultsSpec);
                         sb = carospec(sb, leng, resultsSpec);
 
-                        String dialog1 = "Silahkan pilih atau ketikan nama Spesialis yang ingin Anda tuju.";
+                        String dialog1 = "Silahkan pilih atau ketik nama Spesialis yang ingin Anda tuju.";
                         output.put(OUTPUT, dialog1 + ParamSdk.SPLIT_CHAT + sb.toString());
 
                         clearEntities.put("step_dua", newstepdua);
@@ -1723,7 +1752,7 @@ public class ServiceImp implements IService {
                             String btnBuilder = buttonBuilder.build().toString();
                             sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
                         }
-                        String dialog = "Maaf {bot_name} tidak dapat menemukan rumah sakit yang anda cari. Silahkan pilih atau ketikan kembali rumah sakit yang ingin anda tuju.";
+                        String dialog = "Maaf {bot_name} tidak dapat menemukan rumah sakit yang anda cari. Silahkan pilih atau ketik kembali rumah sakit yang ingin anda tuju.";
                         output.put(OUTPUT, dialog + ParamSdk.SPLIT_CHAT + sb.toString());
                         extensionResult.setEntities(clearEntities);
                     }
@@ -1920,7 +1949,7 @@ public class ServiceImp implements IService {
                 int leng;
                 leng = leng(code, resultsSpec);
                 sb = carospec(sb, leng, resultsSpec);
-                String dialog1 = "Silahkan pilih atau ketikan nama Spesialis yang ingin Anda tuju.";
+                String dialog1 = "Silahkan pilih atau ketik nama Spesialis yang ingin Anda tuju.";
                 output.put(OUTPUT, dialog1 + ParamSdk.SPLIT_CHAT + sb.toString());
                 clearEntities.put("konfirmtipe", tipe);
 
@@ -1997,7 +2026,7 @@ public class ServiceImp implements IService {
                         leng = leng(code, resultsSpec);
                         sb = carospec(sb, leng, resultsSpec);
 
-                        String dialog1 = "Silahkan pilih atau ketikan nama Spesialis yang ingin Anda tuju.";
+                        String dialog1 = "Silahkan pilih atau ketik nama Spesialis yang ingin Anda tuju.";
                         output.put(OUTPUT, dialog1 + ParamSdk.SPLIT_CHAT + sb.toString());
 
                         clearEntities.put("step_dua", spesial1);
