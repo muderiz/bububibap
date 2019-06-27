@@ -2177,7 +2177,7 @@ public class ServiceImp implements IService {
         String doctorId = getEasyMapValueByName(extensionRequest, "dokterid");
         String stepdua = getEasyMapValueByName(extensionRequest, "step_dua");
         String steptiga = getEasyMapValueByName(extensionRequest, "step_tiga");
-        String testdate = getEasyMapValueByName(extensionRequest, "testdate");
+//        String testdate = getEasyMapValueByName(extensionRequest, "testdate");
 
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DATE, +1);
@@ -2214,7 +2214,7 @@ public class ServiceImp implements IService {
                 String available = "";
 
                 //Cek Cuti
-                String hasilcekcuti = CekCuti(dokid, testdate);
+                String hasilcekcuti = CekCuti(dokid, date);
                 if (hasilcekcuti.equalsIgnoreCase("tidak")) {
                     String[] daypoint = new String[leng];
                     String[] daypoint2 = new String[leng];
