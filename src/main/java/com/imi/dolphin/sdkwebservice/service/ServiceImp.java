@@ -1488,7 +1488,7 @@ public class ServiceImp implements IService {
                 // Get Doctor By Nama
 
                 case "nama":
-                    stepsatu = stepsatu.toLowerCase().replace("dr. ", "").replace("dr ", "").replace("prof. ", "").replace("prof ", "").replace("profesor ", "").replace("professor ", "");
+                    stepsatu = stepsatu.toLowerCase().replace("drg. ", "").replace("drg ", "").replace("dr. ", "").replace("dr ", "").replace("prof. ", "").replace("prof ", "").replace("profesor ", "").replace("professor ", "");
                     String apiDokterName = appProperties.getApiDoctorbyname() + stepsatu;
                     JSONObject jobj3 = GeneralExecuteAPI(apiDokterName);
                     if (jobj3.getInt("code") == 200) {
@@ -2177,7 +2177,7 @@ public class ServiceImp implements IService {
         String doctorId = getEasyMapValueByName(extensionRequest, "dokterid");
         String stepdua = getEasyMapValueByName(extensionRequest, "step_dua");
         String steptiga = getEasyMapValueByName(extensionRequest, "step_tiga");
-//        String testdate = getEasyMapValueByName(extensionRequest, "testdate");
+        String testdate = getEasyMapValueByName(extensionRequest, "testdate");
 
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DATE, +1);
@@ -2215,6 +2215,7 @@ public class ServiceImp implements IService {
 
                 //Cek Cuti
                 String hasilcekcuti = CekCuti(dokid, date);
+//                String hasilcekcuti = CekCuti(dokid, testdate);
                 if (hasilcekcuti.equalsIgnoreCase("tidak")) {
                     String[] daypoint = new String[leng];
                     String[] daypoint2 = new String[leng];
@@ -2257,10 +2258,10 @@ public class ServiceImp implements IService {
                                 }
                             }
                         }
-                        i++;
+
                     }
                     String tanggaltitle = hari + ", " + tanggal + " " + bulan + " " + tahun;
-                    if (dayslist.contains(kodeHari)) {
+                    if (dayslist.contains(kodeHari) && available.equalsIgnoreCase("Available")) {
                         //Buat Button
                         ButtonTemplate button = new ButtonTemplate();
                         button.setTitle(tanggaltitle);
@@ -2275,6 +2276,7 @@ public class ServiceImp implements IService {
 
                         String btnBuilder = buttonBuilder.build().toString();
                         sb.append(btnBuilder).append(CONSTANT_SPLIT_SYNTAX);
+                        i++;
                     }
                 }
                 x++;
@@ -2522,7 +2524,7 @@ public class ServiceImp implements IService {
             output.put(OUTPUT, dialog1);
             extensionResult.setValue(output);
         } else {
-            String dialog1 = "Silakan ketik tanggal lahir Anda dengan format (tanggal/bulan/tahun)";
+            String dialog1 = "Silakan ketik tanggal lahir Anda dengan format (dd/mm/yyyy)";
             output.put(OUTPUT, dialog1);
 
             extensionResult.setValue(output);
