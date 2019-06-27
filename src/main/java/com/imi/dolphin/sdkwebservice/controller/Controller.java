@@ -52,12 +52,6 @@ public class Controller {
         return svcService.doTransferToAgent(extensionRequest);
     }
 
-    @RequestMapping("/menuutama")
-    @PostMapping
-    public ExtensionResult MenuUtama(@RequestBody ExtensionRequest extensionRequest) {
-        return svcService.MenuUtama(extensionRequest);
-    }
-
     @RequestMapping("/tipepencarian")
     @PostMapping
     public ExtensionResult TipePencarian(@RequestBody ExtensionRequest extensionRequest) {
@@ -82,7 +76,7 @@ public class Controller {
     public ExtensionResult doCallHospital(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.doCallHospital(extensionRequest);
     }
-   
+
     @RequestMapping("/createappointment")
     @PostMapping
     public ExtensionResult doPostCreateAppointment(@RequestBody ExtensionRequest extensionRequest) {
@@ -138,19 +132,19 @@ public class Controller {
     public ExtensionResult newGetScheduleDoctorId(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.newGetScheduleDoctorId(extensionRequest);
     }
-    
+
     @RequestMapping("/newgetjampraktek")
     @PostMapping
     public ExtensionResult newGetJamPraktek(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.newGetJamPraktek(extensionRequest);
     }
-    
+
     @RequestMapping("/tanyanamapasien")
     @PostMapping
     public ExtensionResult tanyaNamaPasien(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.tanyaNamaPasien(extensionRequest);
     }
-    
+
     @RequestMapping("/validasinamapasien")
     @PostMapping
     public ExtensionResult validasiNamaPasien(@RequestBody ExtensionRequest extensionRequest) {

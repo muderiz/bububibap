@@ -98,6 +98,9 @@ public class AppProperties {
     @Value("${siloam.api.specialistbyname}")
     String apiSpecialistbyname;
 
+    @Value("${siloam.api.specialistbyid}")
+    String apiSpecialistbyId;
+
     @Value("${siloam.api.specialist}")
     String apiSpecialist;
     //------------------//
@@ -180,38 +183,6 @@ public class AppProperties {
         this.apiForm = apiForm;
     }
 
-    public String getNamerecipient1() {
-        return namerecipient1;
-    }
-
-    public void setNamerecipient1(String namerecipient1) {
-        this.namerecipient1 = namerecipient1;
-    }
-
-    public String getEmailrecipient1() {
-        return emailrecipient1;
-    }
-
-    public void setEmailrecipient1(String emailrecipient1) {
-        this.emailrecipient1 = emailrecipient1;
-    }
-
-    public String getEmailrecipient2() {
-        return emailrecipient2;
-    }
-
-    public void setEmailrecipient2(String emailrecipient2) {
-        this.emailrecipient2 = emailrecipient2;
-    }
-
-    public String getNamerecipient2() {
-        return namerecipient2;
-    }
-
-    public void setNamerecipient2(String namerecipient2) {
-        this.namerecipient2 = namerecipient2;
-    }
-
     public String getServicePort() {
         return servicePort;
     }
@@ -276,6 +247,38 @@ public class AppProperties {
         this.mailSmtpPort = mailSmtpPort;
     }
 
+    public String getEmailrecipient1() {
+        return emailrecipient1;
+    }
+
+    public void setEmailrecipient1(String emailrecipient1) {
+        this.emailrecipient1 = emailrecipient1;
+    }
+
+    public String getEmailrecipient2() {
+        return emailrecipient2;
+    }
+
+    public void setEmailrecipient2(String emailrecipient2) {
+        this.emailrecipient2 = emailrecipient2;
+    }
+
+    public String getNamerecipient1() {
+        return namerecipient1;
+    }
+
+    public void setNamerecipient1(String namerecipient1) {
+        this.namerecipient1 = namerecipient1;
+    }
+
+    public String getNamerecipient2() {
+        return namerecipient2;
+    }
+
+    public void setNamerecipient2(String namerecipient2) {
+        this.namerecipient2 = namerecipient2;
+    }
+
     public String getApiArea() {
         return apiArea;
     }
@@ -330,6 +333,14 @@ public class AppProperties {
 
     public void setApiSpecialistbyname(String apiSpecialistbyname) {
         this.apiSpecialistbyname = apiSpecialistbyname;
+    }
+
+    public String getApiSpecialistbyId() {
+        return apiSpecialistbyId;
+    }
+
+    public void setApiSpecialistbyId(String apiSpecialistbyId) {
+        this.apiSpecialistbyId = apiSpecialistbyId;
     }
 
     public String getApiDoctorbyname() {

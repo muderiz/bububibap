@@ -26,8 +26,6 @@ public interface IService {
 
     ExtensionResult doSendLocation(ExtensionRequest extensionRequest);
 
-    ExtensionResult MenuUtama(ExtensionRequest extensionRequest);
-
     ExtensionResult TipePencarian(ExtensionRequest extensionRequest);
 
     ExtensionResult doGetHospitalTerdekat(ExtensionRequest extensionRequest);
