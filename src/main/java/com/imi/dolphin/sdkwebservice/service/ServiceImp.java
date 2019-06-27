@@ -536,11 +536,11 @@ public class ServiceImp implements IService {
                     printStackTrace();
                 }
 
-                if ((datenowFromdate != 1 && datenowTodate != 1) || (datenowFromdate != -1 && datenowTodate != -1)) {
+                if ((datenowFromdate == 1 && datenowTodate == 1) || (datenowFromdate == -1 && datenowTodate == -1)) {
+                    cuti = "tidak";
+                } else {
                     cuti = "iya";
                     break;
-                } else {
-                    cuti = "tidak";
                 }
             }
         }
@@ -2177,6 +2177,7 @@ public class ServiceImp implements IService {
         String doctorId = getEasyMapValueByName(extensionRequest, "dokterid");
         String stepdua = getEasyMapValueByName(extensionRequest, "step_dua");
         String steptiga = getEasyMapValueByName(extensionRequest, "step_tiga");
+        String testdate = getEasyMapValueByName(extensionRequest, "testdate");
 
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DATE, +1);
@@ -2213,7 +2214,7 @@ public class ServiceImp implements IService {
                 String available = "";
 
                 //Cek Cuti
-                String hasilcekcuti = CekCuti(dokid, date);
+                String hasilcekcuti = CekCuti(dokid, testdate);
                 if (hasilcekcuti.equalsIgnoreCase("tidak")) {
                     String[] daypoint = new String[leng];
                     String[] daypoint2 = new String[leng];
