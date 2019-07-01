@@ -1460,8 +1460,7 @@ public class ServiceImp implements IService {
 
                         } else if (spesialis1.equalsIgnoreCase("id")) {
 
-                            QuickReplyBuilder quickReplyBuilder = new QuickReplyBuilder.Builder("Baiklah anda telah memilih " + nameId + ". Silahkan kirim lokasi anda untuk pencarian Siloam terdekat "
-                                    + "atau silahkan ketik nama Siloam hospitals yang ingin dituju.")
+                            QuickReplyBuilder quickReplyBuilder = new QuickReplyBuilder.Builder("Baiklah anda telah memilih Spesialis " + nameId + ". Silahkan ketik nama Siloam hospitals yang ingin dituju.")
                                     .add("Kirim Lokasi", "location").build();
                             output.put(OUTPUT, quickReplyBuilder.string());
 
