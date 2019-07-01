@@ -178,7 +178,7 @@ public class ServiceImp implements IService {
     public ExtensionResult doSendLocation(ExtensionRequest extensionRequest) {
         Map<String, String> output = new HashMap<>();
         QuickReplyBuilder quickReplyBuilder = new QuickReplyBuilder.Builder("Silakan kirim lokasi Anda sekarang.")
-                .add("Kirim Lokasi", "location").build();
+                .add("Kirim Lokasi", "location").add("Area", "jadwal dokter via booknow").build();
         output.put(OUTPUT, quickReplyBuilder.string());
         ExtensionResult extensionResult = new ExtensionResult();
         extensionResult.setAgent(false);
@@ -977,8 +977,9 @@ public class ServiceImp implements IService {
         clearEntities.put("counter", "0");
 
         // Area
-        if (tipe.equalsIgnoreCase("area")) {
+        if (tipe.equalsIgnoreCase("area") || tipe.equalsIgnoreCase("booknow")) {
             String apiArea = appProperties.getApiArea();
+            konfirmtipe = "area";
             JSONArray results = GeneralExecuteAPI(apiArea).getJSONArray("data");
             int leng = results.length();
             for (int i = 0; i < leng; i++) {
@@ -1422,7 +1423,7 @@ public class ServiceImp implements IService {
 //                                    + "atau silahkan ketik nama Siloam hospitals yang ingin dituju.")
 //                                    .add("Kirim Lokasi", "location").build();
                             QuickReplyBuilder quickReplyBuilder = new QuickReplyBuilder.Builder("Baiklah anda telah memilih Spesialis " + nameId + ". Silahkan ketik nama Siloam hospitals yang ingin dituju.")
-                                .add("Kirim Lokasi", "location").build();
+                                    .add("Kirim Lokasi", "location").build();
                             output.put(OUTPUT, quickReplyBuilder.string());
                         }
                     } else {
