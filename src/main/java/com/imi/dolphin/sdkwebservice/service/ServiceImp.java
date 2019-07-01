@@ -12,6 +12,7 @@
  */
 package com.imi.dolphin.sdkwebservice.service;
 
+import com.google.gson.Gson;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,7 +42,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.logging.Level;
-import java.util.logging.Logger;
+//import java.util.logging.Logger;
 
 import okhttp3.MediaType;
 import okhttp3.Request;
@@ -50,6 +51,8 @@ import okhttp3.Response;
 import org.json.JSONException;
 import java.util.Collections;
 import java.util.Comparator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -72,6 +75,8 @@ public class ServiceImp implements IService {
     private static final String QUICK_REPLY_SYNTAX = "{replies:title=";
     private static final String COMMA = ",";
     private static final String QUICK_REPLY_SYNTAX_SUFFIX = "}";
+
+    private static final Logger log = LogManager.getLogger(ServiceImp.class);
     @Autowired
     AppProperties appProperties;
 
@@ -121,6 +126,7 @@ public class ServiceImp implements IService {
      */
     @Override
     public ExtensionResult TipePencarian(ExtensionRequest extensionRequest) {
+        log.debug("TipePencarian() extension request: {}", new Gson().toJson(extensionRequest, ExtensionRequest.class));
         Map<String, String> output = new HashMap<>();
 
         //Button 1
@@ -198,7 +204,7 @@ public class ServiceImp implements IService {
             Response response = okHttpUtil.getClient().newCall(request).execute();
             jsonobj = new JSONObject(response.body().string());
         } catch (IOException ex) {
-            Logger.getLogger(ServiceImp.class.getName()).log(Level.SEVERE, null, ex);
+//            Logger.getLogger(ServiceImp.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return jsonobj;
@@ -280,7 +286,7 @@ public class ServiceImp implements IService {
             EasyMap booknow = new EasyMap();
 
             booknow.setName("Book Now");
-            booknow.setValue("jadwal dokter via booknow di area konter 0 di dummyarea di " + idhospital);
+            booknow.setValue("jadwal dokter via booknow di area konter 0 di 33334444-5555-6666-7777-888888999999 di " + idhospital);
             actions.add(booknow);
             button.setButtonValues(actions);
 
@@ -956,6 +962,7 @@ public class ServiceImp implements IService {
      */
     @Override
     public ExtensionResult SetKonfirmasiTipe(ExtensionRequest extensionRequest) {
+        log.debug("SetKonfirmasiTipe() extension request: {}", new Gson().toJson(extensionRequest, ExtensionRequest.class));
         ExtensionResult extensionResult = new ExtensionResult();
         extensionResult.setAgent(false);
         extensionResult.setRepeat(false);
@@ -1019,6 +1026,7 @@ public class ServiceImp implements IService {
             // Cek Free Typing
         } else {
             int kode = 0;
+            tipe = tipe.toLowerCase().replace("drg. ", "").replace("drg ", "").replace("dr. ", "").replace("dr ", "").replace("prof. ", "").replace("prof ", "").replace("profesor ", "").replace("professor ", "");
             String apiHospitalName = appProperties.getApiHospitalName() + tipe;
             JSONObject jobj1 = GeneralExecuteAPI(apiHospitalName);
             String apiSpesilisName = appProperties.getApiSpecialistbyname() + tipe;
@@ -2752,7 +2760,16 @@ public class ServiceImp implements IService {
                     sb.append("Nama Dokter : " + doctor_name + "\n");
                     sb.append("Tanggal Pemesanan : " + booking_date + "\n");
                     sb.append("Waktu Pemesanan : " + booking_time);
-                    output.put(OUTPUT, dialog1 + ParamSdk.SPLIT_CHAT + sb.toString());
+                    QuickReplyBuilder quickReplyBuilder = new QuickReplyBuilder.Builder("Apakah ada yang bisa dibantu lagi?")
+                            .add("Iya", "Menu Utama").add("Tidak", "Call Center kami akan menghubungi Anda untuk konfirmasi kembali appointment. Terima kasih & selamat beraktivias kembali.").build();
+
+                    output.put(OUTPUT, dialog1 + ParamSdk.SPLIT_CHAT + sb.toString() + ParamSdk.SPLIT_CHAT + quickReplyBuilder.toString());
+                } else if (jsonobj.getString("message").equalsIgnoreCase("This patient has an active appointment at this time. Cannot create more than 1 appointment at the same time or on the same doctor in one day.")) {
+                    String dialog1 = "Maaf, Anda sudah memiliki perjanjian yang aktif di waktu ini. Tidak dapat membuat lebih dari 1 perjanjian di waktu yang sama atau pada Dokter yang sama dalam satu hari. Terima kasih.";
+                    output.put(OUTPUT, dialog1);
+                } else if (jsonobj.getString("message").equalsIgnoreCase("Cannot create appointment because the doctor is unavailable at that time.")) {
+                    String dialog1 = "Mohon maaf. {bot_name} tidak bisa mendaftarkan perjanjian Anda. Karena Dokter yang Anda pilih, sedang tidak tersedia pada Jam Praktek tersebut.";
+                    output.put(OUTPUT, dialog1);
                 } else {
                     String dialog1 = "Mohon maaf. {bot_name} belum bisa mendaftarkan perjanjian Anda.";
                     output.put(OUTPUT, dialog1);
