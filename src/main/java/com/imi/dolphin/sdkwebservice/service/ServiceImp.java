@@ -1418,9 +1418,11 @@ public class ServiceImp implements IService {
                             String nameId = jObj.getString("name_id");
                             clearEntities.put("step_satu", id_spesialis);
 
-                            QuickReplyBuilder quickReplyBuilder = new QuickReplyBuilder.Builder("Baiklah anda telah memilih Spesialis " + nameId + ". Silahkan kirim lokasi anda untuk pencarian Siloam terdekat "
-                                    + "atau silahkan ketik nama Siloam hospitals yang ingin dituju.")
-                                    .add("Kirim Lokasi", "location").build();
+//                            QuickReplyBuilder quickReplyBuilder = new QuickReplyBuilder.Builder("Baiklah anda telah memilih Spesialis " + nameId + ". Silahkan kirim lokasi anda untuk pencarian Siloam terdekat "
+//                                    + "atau silahkan ketik nama Siloam hospitals yang ingin dituju.")
+//                                    .add("Kirim Lokasi", "location").build();
+                            QuickReplyBuilder quickReplyBuilder = new QuickReplyBuilder.Builder("Baiklah anda telah memilih Spesialis " + nameId + ". Silahkan ketik nama Siloam hospitals yang ingin dituju.")
+                                .add("Kirim Lokasi", "location").build();
                             output.put(OUTPUT, quickReplyBuilder.string());
                         }
                     } else {
@@ -1778,8 +1780,10 @@ public class ServiceImp implements IService {
                         String id_spesialis = jObj.getString("specialization_id");
                         String nameId = jObj.getString("name_id");
 
-                        QuickReplyBuilder quickReplyBuilder = new QuickReplyBuilder.Builder("Baiklah anda telah memilih " + nameId + ". Silahkan kirim lokasi anda untuk pencarian Siloam terdekat "
-                                + "atau silahkan ketik nama Siloam hospitals yang ingin dituju.")
+//                        QuickReplyBuilder quickReplyBuilder = new QuickReplyBuilder.Builder("Baiklah anda telah memilih " + nameId + ". Silahkan kirim lokasi anda untuk pencarian Siloam terdekat "
+//                                + "atau silahkan ketik nama Siloam hospitals yang ingin dituju.")
+//                                .add("Kirim Lokasi", "location").build();
+                        QuickReplyBuilder quickReplyBuilder = new QuickReplyBuilder.Builder("Baiklah anda telah memilih Spesialis " + nameId + ". Silahkan ketik nama Siloam hospitals yang ingin dituju.")
                                 .add("Kirim Lokasi", "location").build();
                         output.put(OUTPUT, quickReplyBuilder.string());
                         clearEntities.put("step_satu", id_spesialis);
