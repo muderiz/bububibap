@@ -2769,9 +2769,9 @@ public class ServiceImp implements IService {
                     sb.append("Tanggal Pemesanan : " + booking_date + "\n");
                     sb.append("Waktu Pemesanan : " + booking_time);
                     QuickReplyBuilder quickReplyBuilder = new QuickReplyBuilder.Builder("Apakah ada yang bisa dibantu lagi?")
-                            .add("Iya", "Menu Utama").add("Tidak", "Call Center kami akan menghubungi Anda untuk konfirmasi kembali appointment. Terima kasih & selamat beraktivias kembali.").build();
+                            .add("Iya", "Menu Utama").add("Tidak", "endappointment").build();
 
-                    output.put(OUTPUT, dialog1 + ParamSdk.SPLIT_CHAT + sb.toString() + ParamSdk.SPLIT_CHAT + quickReplyBuilder.toString());
+                    output.put(OUTPUT, dialog1 + ParamSdk.SPLIT_CHAT + sb.toString() + ParamSdk.SPLIT_CHAT + quickReplyBuilder.string());
                 } else if (jsonobj.getString("message").equalsIgnoreCase("This patient has an active appointment at this time. Cannot create more than 1 appointment at the same time or on the same doctor in one day.")) {
                     String dialog1 = "Maaf, Anda sudah memiliki perjanjian yang aktif di waktu ini. Tidak dapat membuat lebih dari 1 perjanjian di waktu yang sama atau pada Dokter yang sama dalam satu hari. Terima kasih.";
                     output.put(OUTPUT, dialog1);
