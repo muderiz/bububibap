@@ -1103,8 +1103,10 @@ public class ServiceImp implements IService {
                         String nameId = jObj.getString("name_id");
                         clearEntities.put("step_satu", id_spesialis);
 
-                        QuickReplyBuilder quickReplyBuilder = new QuickReplyBuilder.Builder("Baiklah anda telah memilih Spesialis " + nameId + ". Silahkan kirim lokasi anda untuk pencarian Siloam terdekat "
-                                + "atau silahkan ketik nama Siloam hospitals yang ingin dituju.")
+//                        QuickReplyBuilder quickReplyBuilder = new QuickReplyBuilder.Builder("Baiklah anda telah memilih Spesialis " + nameId + ". Silahkan kirim lokasi anda untuk pencarian Siloam terdekat "
+//                                + "atau silahkan ketik nama Siloam hospitals yang ingin dituju.")
+//                                .add("Kirim Lokasi", "location").build();
+                        QuickReplyBuilder quickReplyBuilder = new QuickReplyBuilder.Builder("Baiklah anda telah memilih Spesialis " + nameId + ". Silahkan ketik nama Siloam hospitals yang ingin dituju.")
                                 .add("Kirim Lokasi", "location").build();
                         output.put(OUTPUT, quickReplyBuilder.string());
                     }
@@ -1776,7 +1778,8 @@ public class ServiceImp implements IService {
                         clearEntities.put("step_dua", "");
                         extensionResult.setEntities(clearEntities);
                     } else {
-                        apiHospitalName = appProperties.getApiHospitalName() + lowerstepdua;
+//                        apiHospitalName = appProperties.getApiHospitalName() + lowerstepdua;
+                        apiHospitalName = appProperties.getApiHospitalName() + lowerstepdua.replace("siloam", "").trim();
                         jobj1 = GeneralExecuteAPI(apiHospitalName);
                         String idhos = "";
                         String hospitalName = "";
