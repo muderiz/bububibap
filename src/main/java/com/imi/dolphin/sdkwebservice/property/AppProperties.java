@@ -101,6 +101,9 @@ public class AppProperties {
     @Value("${siloam.api.specialistbyid}")
     String apiSpecialistbyId;
 
+    @Value("${siloam.api.specialisttop}")
+    String apiSpecialistTop;
+
     @Value("${siloam.api.specialist}")
     String apiSpecialist;
     //------------------//
@@ -142,8 +145,17 @@ public class AppProperties {
     @Value("${bookingTypeId}")
     String bookingTypeId;
 
-    @Value("${create.patient}")
-    String createPatient;
+    @Value("${channelId}")
+    String channelId;
+
+    @Value("${source}")
+    String source;
+
+    @Value("${isWaitingList}")
+    String isWaitingList;
+
+    @Value("${usernameBook}")
+    String usernameBook;
 
     @Value("${create.appointment}")
     String createAppointment;
@@ -319,6 +331,14 @@ public class AppProperties {
         this.apiSpecialist = apiSpecialist;
     }
 
+    public String getApiSpecialistTop() {
+        return apiSpecialistTop;
+    }
+
+    public void setApiSpecialistTop(String apiSpecialistTop) {
+        this.apiSpecialistTop = apiSpecialistTop;
+    }
+
     public String getApiSpecialistbyHospital() {
         return apiSpecialistbyHospital;
     }
@@ -423,6 +443,14 @@ public class AppProperties {
         this.userId = userId;
     }
 
+    public String getIsWaitingList() {
+        return isWaitingList;
+    }
+
+    public void setIsWaitingList(String isWaitingList) {
+        this.isWaitingList = isWaitingList;
+    }
+
     public String getBookingTypeId() {
         return bookingTypeId;
     }
@@ -431,12 +459,28 @@ public class AppProperties {
         this.bookingTypeId = bookingTypeId;
     }
 
-    public String getCreatePatient() {
-        return createPatient;
+    public String getChannelId() {
+        return channelId;
     }
 
-    public void setCreatePatient(String createPatient) {
-        this.createPatient = createPatient;
+    public void setChannelId(String channelId) {
+        this.channelId = channelId;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    public String getUsernameBook() {
+        return usernameBook;
+    }
+
+    public void setUsernameBook(String usernameBook) {
+        this.usernameBook = usernameBook;
     }
 
     public String getCreateAppointment() {

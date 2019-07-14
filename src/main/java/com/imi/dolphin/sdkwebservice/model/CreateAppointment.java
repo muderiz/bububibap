@@ -40,40 +40,9 @@ public class CreateAppointment {
     private Map<String, String> subdistrict;
     private Map<String, String> nationality;
     private Map<String, String> emergency_contact_detail;
-//    private static final String PEMBUKA = "{";
-//    private static final String PENUTUP = "}";
-//    private static final String BATAS = "\"";
-//    private static final String KOMA = "\",";
-//    public String build() {
-//        String result = PEMBUKA
-//                + "\"booking_id\":" + null + ","
-//                + "\"booking_type_id\":" + BATAS + booking_type_id + KOMA
-//                + "\"booking_no\":" + null + ","
-//                + "\"booking_date\":" + BATAS + booking_date + KOMA
-//                + "\"booking_time\":" + BATAS + booking_time + KOMA
-//                + "\"note\":" + BATAS + note + KOMA
-//                + "\"schedule_id\":" + BATAS + schedule_id + KOMA
-//                + "\"hospital_id\":" + BATAS + hospital_id + KOMA
-//                + "\"doctor_id\":" + BATAS + doctor_id + KOMA
-//                + "\"user_id\":" + BATAS + user_id + KOMA
-//                + "\"is_waiting_list\":" + BATAS + is_waiting_list + KOMA
-//                + "\"contact_id\":" + contact_id + ","
-//                + "\"name\":" + BATAS + name + KOMA
-//                + "\"date_of_birth\":" + BATAS + date_of_birth + KOMA
-//                + "\"phone_number\":" + BATAS + phone_number + KOMA
-//                + "\"address_line_1\":" + BATAS + address_line_1 + KOMA
-//                + "\"address_line_2\":" + BATAS + address_line_2 + KOMA
-//                + "\"email\":" + BATAS + email + KOMA
-//                + "\"sex\":" + PEMBUKA + "\"id\":" + "1" + "," + "\"name\":" + BATAS + sexname + BATAS + PENUTUP + ","
-//                + "\"city\":" + PEMBUKA + "\"id\":" + "1" + "," + "\"name\":" + BATAS + cityname + BATAS + PENUTUP + ","
-//                + "\"district\":" + PEMBUKA + "\"id\":" + "1" + "," + "\"name\":" + BATAS + districtname + BATAS + PENUTUP + ","
-//                + "\"subdistrict\":" + PEMBUKA + "\"id\":" + "1" + "," + "\"name\":" + BATAS + subdistrictid + BATAS + PENUTUP + ","
-//                + "\"nationality\":" + PEMBUKA + "\"id\":" + "1" + "," + "\"name\":" + BATAS + nationalityname + BATAS + PENUTUP + ","
-//                + "\"emergency_contact_detail\":" + PEMBUKA + "\"contact_name\":" + "\"\"" + "," + "\"contact_phone_number\":" + BATAS + emergencycontactnumber + BATAS + PENUTUP
-//                + PENUTUP;
-//        return result;
-//    }
-
+    
+    
+    
     public String getBooking_id() {
         return booking_id;
     }
