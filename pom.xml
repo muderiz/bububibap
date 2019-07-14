@@ -9,7 +9,7 @@
 	<version>0.0.1</version>
 	<packaging>jar</packaging>
 
-	<name>sdk-webservice-siloam(Backup)</name>
+	<name>sdk-webservice-siloam(v1.0)</name>
 	<description>Demo project for Spring Boot</description>
 
 	<parent>
