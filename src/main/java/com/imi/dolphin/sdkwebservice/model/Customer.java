@@ -30,7 +30,7 @@ public class Customer implements Serializable{
 	
 	/**
 	 * 
-	 * @return the name
+	 * @return the name 
 	 */
 	public String getName() {
 		return name;
@@ -38,7 +38,7 @@ public class Customer implements Serializable{
 	
 	/**
 	 * 
-	 * @param name
+	 * @param name Nama User
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -54,7 +54,7 @@ public class Customer implements Serializable{
 	
 	/**
 	 * 
-	 * @param address
+	 * @param address Alamat User
 	 */
 	public void setAddress(String address) {
 		this.address = address;
@@ -70,7 +70,7 @@ public class Customer implements Serializable{
 	
 	/**
 	 * 
-	 * @param phone
+	 * @param phone Phone User
 	 */
 	public void setPhone(String phone) {
 		this.phone = phone;
@@ -86,7 +86,7 @@ public class Customer implements Serializable{
 	
 	/**
 	 * 
-	 * @param email
+	 * @param email Email User
 	 */
 	public void setEmail(String email) {
 		this.email = email;

@@ -38,7 +38,7 @@ public class EasyMap implements Serializable {
 	/**
 	 * Get name
 	 * 
-	 * @return
+	 * @return String name
 	 */
 	public String getName() {
 		return name;
@@ -47,7 +47,7 @@ public class EasyMap implements Serializable {
 	/**
 	 * Set name
 	 * 
-	 * @param name
+	 * @param name Nama Data
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -56,7 +56,7 @@ public class EasyMap implements Serializable {
 	/**
 	 * Get value
 	 * 
-	 * @return
+	 * @return String value
 	 */
 	public String getValue() {
 		return value;
@@ -65,7 +65,7 @@ public class EasyMap implements Serializable {
 	/**
 	 * Set value
 	 * 
-	 * @param value
+	 * @param value Nama Entitas
 	 */
 	public void setValue(String value) {
 		this.value = value;

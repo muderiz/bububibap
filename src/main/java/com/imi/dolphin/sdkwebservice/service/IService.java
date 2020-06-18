@@ -24,6 +24,8 @@ public interface IService {
 
     ExtensionResult doTransferToAgent(ExtensionRequest extensionRequest);
 
+    ExtensionResult getImage(ExtensionRequest extensionRequest);
+
     ExtensionResult doSendLocation(ExtensionRequest extensionRequest);
 
     ExtensionResult TipePencarian(ExtensionRequest extensionRequest);

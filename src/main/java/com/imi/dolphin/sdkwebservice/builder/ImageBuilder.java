@@ -29,7 +29,7 @@ public class ImageBuilder {
 	
 	/**
 	 * 
-	 * @param buttonTemplateEntity
+	 * @param buttonTemplateEntity Entitas ButtonTemplate
 	 */
 	public ImageBuilder(ButtonTemplate buttonTemplateEntity) {
 		this.buttonTemplateEntity = buttonTemplateEntity;
@@ -56,7 +56,7 @@ public class ImageBuilder {
 
 	/**
 	 * 
-	 * @param buttonTemplateEntity
+	 * @param buttonTemplateEntity Entitas ButtonTemplate
 	 */
 	public void setButtonTemplateEntity(ButtonTemplate buttonTemplateEntity) {
 		this.buttonTemplateEntity = buttonTemplateEntity;

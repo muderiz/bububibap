@@ -71,6 +71,11 @@ public class AppProperties {
     @Value("${fieldName.ticketNumber}")
     String ticketNumber;
 
+    // API Base URL Siloam //   
+    @Value("${siloam.api.base.url}")
+    String apiBaseUrl;
+    //--------------------//
+
     //API Get Area & Hospital//
     @Value("${siloam.api.area}")
     String apiArea;
@@ -118,8 +123,14 @@ public class AppProperties {
     @Value("${siloam.api.leavedoctor}")
     String apiLeaveDoctor;
 
+    @Value("${siloam.api.leavedoctor.2}")
+    String apiLeaveDoctor_2;
+
     @Value("${siloam.api.doctorbyhospitalid&spesialis}")
     String apiDoctorbyhospitalIdSpecialist;
+
+    @Value("${siloam.api.doctorbyhospitalid&spesialis.2}")
+    String apiDoctorbyhospitalIdSpecialist_2;
 
     @Value("${siloam.api.doctorbyspesialis}")
     String apiDoctorbySpecialist;
@@ -127,8 +138,17 @@ public class AppProperties {
     @Value("${siloam.api.doctorschedule}")
     String apiDoctorschedule;
 
+    @Value("${siloam.api.doctorschedule.2}")
+    String apiDoctorschedule_2;
+
     @Value("${siloam.api.doctorappointment}")
     String apiDoctorappointment;
+
+    @Value("${siloam.api.doctorappointment.2}")
+    String apiDoctorappointment_2;
+
+    @Value("${siloam.api.doctorappointment.3}")
+    String apiDoctorappointment_3;
 
     @Value("${siloam.dummy.hospital}")
     String dummyHospital;
@@ -160,8 +180,18 @@ public class AppProperties {
     @Value("${create.appointment}")
     String createAppointment;
 
+    // Static Image Siloam
     @Value("${siloam.logo}")
     String siloamLogo;
+
+    @Value("${siloam.image.tipepencarian}")
+    String siloamImageTipePencarian;
+
+    @Value("${siloam.image.listhospitals}")
+    String siloamImageListHospitals;
+
+    @Value("${siloam.image.listspesialis}")
+    String siloamImageListSpesialis;
 
     public String getTicketNumber() {
         return ticketNumber;
@@ -499,6 +529,30 @@ public class AppProperties {
         this.siloamLogo = siloamLogo;
     }
 
+    public String getSiloamImageTipePencarian() {
+        return siloamImageTipePencarian;
+    }
+
+    public void setSiloamImageTipePencarian(String siloamImageTipePencarian) {
+        this.siloamImageTipePencarian = siloamImageTipePencarian;
+    }
+
+    public String getSiloamImageListHospitals() {
+        return siloamImageListHospitals;
+    }
+
+    public void setSiloamImageListHospitals(String siloamImageListHospitals) {
+        this.siloamImageListHospitals = siloamImageListHospitals;
+    }
+
+    public String getSiloamImageListSpesialis() {
+        return siloamImageListSpesialis;
+    }
+
+    public void setSiloamImageListSpesialis(String siloamImageListSpesialis) {
+        this.siloamImageListSpesialis = siloamImageListSpesialis;
+    }
+
     public String getApiHospitalbyId() {
         return apiHospitalbyId;
     }
@@ -521,6 +575,54 @@ public class AppProperties {
 
     public void setApiHospitalLive(String apiHospitalLive) {
         this.apiHospitalLive = apiHospitalLive;
+    }
+
+    public String getApiBaseUrl() {
+        return apiBaseUrl;
+    }
+
+    public void setApiBaseUrl(String apiBaseUrl) {
+        this.apiBaseUrl = apiBaseUrl;
+    }
+
+    public String getApiLeaveDoctor_2() {
+        return apiLeaveDoctor_2;
+    }
+
+    public void setApiLeaveDoctor_2(String apiLeaveDoctor_2) {
+        this.apiLeaveDoctor_2 = apiLeaveDoctor_2;
+    }
+
+    public String getApiDoctorbyhospitalIdSpecialist_2() {
+        return apiDoctorbyhospitalIdSpecialist_2;
+    }
+
+    public void setApiDoctorbyhospitalIdSpecialist_2(String apiDoctorbyhospitalIdSpecialist_2) {
+        this.apiDoctorbyhospitalIdSpecialist_2 = apiDoctorbyhospitalIdSpecialist_2;
+    }
+
+    public String getApiDoctorschedule_2() {
+        return apiDoctorschedule_2;
+    }
+
+    public void setApiDoctorschedule_2(String apiDoctorschedule_2) {
+        this.apiDoctorschedule_2 = apiDoctorschedule_2;
+    }
+
+    public String getApiDoctorappointment_2() {
+        return apiDoctorappointment_2;
+    }
+
+    public void setApiDoctorappointment_2(String apiDoctorappointment_2) {
+        this.apiDoctorappointment_2 = apiDoctorappointment_2;
+    }
+
+    public String getApiDoctorappointment_3() {
+        return apiDoctorappointment_3;
+    }
+
+    public void setApiDoctorappointment_3(String apiDoctorappointment_3) {
+        this.apiDoctorappointment_3 = apiDoctorappointment_3;
     }
 
 }

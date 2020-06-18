@@ -23,6 +23,7 @@ import com.imi.dolphin.sdkwebservice.model.ExtensionResult;
 import com.imi.dolphin.sdkwebservice.property.AppProperties;
 import com.imi.dolphin.sdkwebservice.service.IMailService;
 import com.imi.dolphin.sdkwebservice.service.IService;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 /**
  *
@@ -41,17 +42,27 @@ public class Controller {
     @Autowired
     IMailService svcMailService;
 
+    @CrossOrigin
     @RequestMapping("/forms")
     public String getStarted() {
         return "Hello Form, service port: " + appProperties.getServicePort() + ", " + appProperties.getFormId();
     }
 
+    @CrossOrigin
     @RequestMapping("/transferAgent")
     @PostMapping
     public ExtensionResult doTransferToAgent(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.doTransferToAgent(extensionRequest);
     }
 
+    @CrossOrigin
+    @RequestMapping("/getImage")
+    @PostMapping
+    public ExtensionResult getImage(@RequestBody ExtensionRequest extensionRequest) {
+        return svcService.getImage(extensionRequest);
+    }
+
+    @CrossOrigin
     @RequestMapping("/tipepencarian")
     @PostMapping
     public ExtensionResult TipePencarian(@RequestBody ExtensionRequest extensionRequest) {
@@ -59,24 +70,28 @@ public class Controller {
     }
 
     // Get Nearest Hospital //
+    @CrossOrigin
     @RequestMapping("/sendlocation")
     @PostMapping
     public ExtensionResult doSendLocation(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.doSendLocation(extensionRequest);
     }
 
+    @CrossOrigin
     @RequestMapping("/nearesthospital")
     @PostMapping
     public ExtensionResult doGetHospitalTerdekat(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.doGetHospitalTerdekat(extensionRequest);
     }
 
+    @CrossOrigin
     @RequestMapping("/callhospital")
     @PostMapping
     public ExtensionResult doCallHospital(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.doCallHospital(extensionRequest);
     }
 
+    @CrossOrigin
     @RequestMapping("/createappointment")
     @PostMapping
     public ExtensionResult doPostCreateAppointment(@RequestBody ExtensionRequest extensionRequest) {
@@ -84,18 +99,21 @@ public class Controller {
     }
 
     //------------------------//
+    @CrossOrigin
     @RequestMapping("/validatephone")
     @PostMapping
     public ExtensionResult doValidatePhone(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.doValidatePhone(extensionRequest);
     }
 
+    @CrossOrigin
     @RequestMapping("/valdate")
     @PostMapping
     public ExtensionResult doValidateDate(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.doValidateDate(extensionRequest);
     }
 
+    @CrossOrigin
     @RequestMapping("/SiloammenggunakanBPJS")
     @PostMapping
     public ExtensionResult SiloamMenggunakanBPJS(@RequestBody ExtensionRequest extensionRequest) {
@@ -103,48 +121,56 @@ public class Controller {
     }
 
     // New Booking Flow
+    @CrossOrigin
     @RequestMapping("/setkonfirmasitipe")
     @PostMapping
     public ExtensionResult SetKonfirmasiTipe(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.SetKonfirmasiTipe(extensionRequest);
     }
 
+    @CrossOrigin
     @RequestMapping("/setstepdua")
     @PostMapping
     public ExtensionResult setStepDua(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.setStepDua(extensionRequest);
     }
 
+    @CrossOrigin
     @RequestMapping("/setsteptiga")
     @PostMapping
     public ExtensionResult setStepTiga(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.setStepTiga(extensionRequest);
     }
 
+    @CrossOrigin
     @RequestMapping("/newgetdoctor")
     @PostMapping
     public ExtensionResult newGetDoctor(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.newGetDoctor(extensionRequest);
     }
 
+    @CrossOrigin
     @RequestMapping("/newgetscheduledoctorid")
     @PostMapping
     public ExtensionResult newGetScheduleDoctorId(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.newGetScheduleDoctorId(extensionRequest);
     }
 
+    @CrossOrigin
     @RequestMapping("/newgetjampraktek")
     @PostMapping
     public ExtensionResult newGetJamPraktek(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.newGetJamPraktek(extensionRequest);
     }
 
+    @CrossOrigin
     @RequestMapping("/tanyanamapasien")
     @PostMapping
     public ExtensionResult tanyaNamaPasien(@RequestBody ExtensionRequest extensionRequest) {
         return svcService.tanyaNamaPasien(extensionRequest);
     }
 
+    @CrossOrigin
     @RequestMapping("/validasinamapasien")
     @PostMapping
     public ExtensionResult validasiNamaPasien(@RequestBody ExtensionRequest extensionRequest) {

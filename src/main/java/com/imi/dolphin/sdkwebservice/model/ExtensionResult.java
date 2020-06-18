@@ -23,7 +23,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
  * @author reja
  *
  */
-@JsonInclude(Include.NON_NULL)
+    @JsonInclude(Include.NON_NULL)
 public class ExtensionResult implements Serializable {
 
     private static final long serialVersionUID = 1768303005374821099L;
@@ -107,7 +107,8 @@ public class ExtensionResult implements Serializable {
     }
 
     /**
-     * @param cont the cont to set
+     * 
+     * @param next next to set
      */
     public void setNext(boolean next) {
         this.next = next;

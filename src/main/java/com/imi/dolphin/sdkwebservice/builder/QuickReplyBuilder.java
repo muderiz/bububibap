@@ -29,7 +29,7 @@ public class QuickReplyBuilder {
 	
 	/**
 	 * 
-	 * @param builder
+	 * @param builder String Builder
 	 */
 	public QuickReplyBuilder(Builder builder) {
 		this.quickReply = builder.quickReply;
@@ -52,7 +52,7 @@ public class QuickReplyBuilder {
 
 		/**
 		 * 
-		 * @param title
+		 * @param title Berisi Message/String Dialog untuk menjelaskan Quickreply untuk apa
 		 */
 		public Builder(String title) {
 			if (quickReply == null) {
@@ -64,9 +64,9 @@ public class QuickReplyBuilder {
 
 		/**
 		 * 
-		 * @param label
-		 * @param payload
-		 * @return
+		 * @param label Berisi Nama dari Button Suggestion
+		 * @param payload Berisi Value dari button Suggestion
+		 * @return String quickreply
 		 */
 		public Builder add(String label, String payload) {
 			if (quickReply != null) {
